@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.url">${DB_URL}</property> <!-- jdbc:postgresql://localhost:3306/finex -->
+        <property name="hibernate.default_catalog">postgres</property>
+        <property name="hibernate.default_schema">${DB_SCHEMA}</property> <!-- worldserver -->
+        <property name="hibernate.connection.username">${DB_USER}</property>
+        <property name="hibernate.connection.password">${DB_PASSWORD}</property>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL95Dialect</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+        <property name="hibernate.hbm2ddl.auto">validate</property>
+        <property name="hibernate.connection.provider_class">org.hibernate.hikaricp.internal.HikariCPConnectionProvider</property>
+        <property name="hibernate.hikari.schema">${DB_SCHEMA}</property>
+        <property name="hibernate.hikari.minimumIdle">4</property>
+        <property name="hibernate.hikari.maximumPoolSize">20</property>
+        <property name="hibernate.hikari.idleTimeout">30000</property>
+    </session-factory>
+</hibernate-configuration>
