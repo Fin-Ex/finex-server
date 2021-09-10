@@ -10,12 +10,11 @@ import ru.finex.ws.WorldServerApplication;
  * @author m0nster.mind
  */
 @LoaderModule
-public class GameServerModule extends AbstractModule {
+public class WorldServerModule extends AbstractModule {
 
     @Override
     protected void configure() {
         bind(ServerContext.class).to(WorldServerApplication.class);
-        bind(ApplicationBuilt.class).to(WorldServerApplication.class);
     }
 
 }
