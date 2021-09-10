@@ -1,5 +1,6 @@
 package ru.finex.gs.service.impl;
 
+import com.hazelcast.core.HazelcastInstance;
 import lombok.RequiredArgsConstructor;
 import ru.finex.core.model.GameObject;
 import ru.finex.gs.model.Client;
@@ -16,12 +17,16 @@ import javax.inject.Singleton;
  * @author m0nster.mind
  */
 @Singleton
-@RequiredArgsConstructor(onConstructor_ = { @Inject })
 public class GameObjectServiceImpl implements GameObjectService {
 
-    private final Map<Integer, GameObject> gameObjects = new HashMap<>();
-
     private final PlayerFactory playerFactory;
+    private final Map<Integer, GameObject> gameObjects;
+
+    @Inject
+    public GameObjectServiceImpl(PlayerFactory playerFactory, HazelcastInstance hazelcast) {
+        this.playerFactory = playerFactory;
+        this.gameObjects = hazelcast.getMap(getClass().getCanonicalName() + "#gameObjects");
+    }
 
     @Override
     public GameObject createPlayer(Client client, int persistenceId) {

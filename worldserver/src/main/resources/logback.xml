@@ -3,8 +3,6 @@
 
     <include resource="colored-console.xml"/>
 
-    <logger name="ru.finex.gs.proto.network" level="DEBUG"/>
-
     <root level="info">
         <appender-ref ref="CONSOLE"/>
     </root>
