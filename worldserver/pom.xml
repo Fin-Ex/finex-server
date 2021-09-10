@@ -65,7 +65,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>ru.finex.gs.WorldServerApplication</mainClass>
+                            <mainClass>ru.finex.ws.WorldServerApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
