@@ -9,7 +9,7 @@ hazelcast:
       port-count: 50
       port: 11000
     outbound-ports:
-      - *
+      - "*"
     join:
       enabled: true
       multicast-group: 224.0.0.0
