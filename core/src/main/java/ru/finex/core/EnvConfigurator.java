@@ -2,11 +2,11 @@ package ru.finex.core;
 
 import org.apache.commons.lang3.StringUtils;
 
-import javax.inject.Singleton;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.inject.Singleton;
 
 /**
  * @author finfan
@@ -22,7 +22,7 @@ public class EnvConfigurator {
 			Matcher matcher = PATTERN.matcher(value);
 			while(matcher.find()) {
 				String envName = matcher.group(1);
-				String envValue = System.getenv().get(envName);
+				String envValue = Matcher.quoteReplacement(System.getenv().get(envName));
 				entry.setValue(matcher.replaceFirst(Objects.requireNonNullElse(envValue, StringUtils.EMPTY)));
 			}
 		});
