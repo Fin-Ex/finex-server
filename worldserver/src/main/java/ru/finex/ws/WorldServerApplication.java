@@ -25,7 +25,12 @@ public class WorldServerApplication implements ServerContext, ApplicationBuilt {
     @Inject private SelectorThread selectorThread;
 
     public static void main(String[] args) {
-        ServerApplication.start(WorldServerApplication.class.getPackageName(), args);
+        try {
+            ServerApplication.start(WorldServerApplication.class.getPackageName(), args);
+        } catch (Exception e) {
+            log.error("Fail to start server", e);
+            System.exit(-1);
+        }
     }
 
     @Override
