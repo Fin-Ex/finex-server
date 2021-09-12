@@ -32,7 +32,7 @@ Create a file `logback.xml` with content:
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <include resource="colored-console.xml"/>
+    <include resource="finex-logback-default.xml"/>
 
     <root level="info">
         <appender-ref ref="CONSOLE"/>
@@ -41,4 +41,4 @@ Create a file `logback.xml` with content:
 </configuration>
 ```
 
-Appender `CONSOLE` defined in imported resource `colored-console.xml`, its default console appender.
+Appender `CONSOLE` defined in imported resource `cfinex-logback-default.xml`, its default console appender.

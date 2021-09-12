@@ -9,6 +9,7 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import ru.finex.core.inject.InjectedModule;
 import ru.finex.core.inject.LoaderModule;
+import ru.finex.core.logback.LogbackConfiguration;
 import ru.finex.core.utils.InjectorUtils;
 
 import java.lang.reflect.Modifier;
@@ -24,6 +25,9 @@ public class ServerApplication {
 
     public static void start(String modulePackage, String[] args) {
         saveArguments(args);
+
+        LogbackConfiguration logbackConfiguration = new LogbackConfiguration();
+        logbackConfiguration.configureLogback();
 
         GlobalContext.rootPackage = modulePackage;
         GlobalContext.reflections = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forJavaClassPath()));
