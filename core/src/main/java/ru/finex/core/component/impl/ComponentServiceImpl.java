@@ -1,14 +1,15 @@
 package ru.finex.core.component.impl;
 
 import com.google.inject.Injector;
-import com.typesafe.config.Config;
+import lombok.RequiredArgsConstructor;
 import ru.finex.core.component.Component;
 import ru.finex.core.component.ComponentService;
 import ru.finex.core.component.event.OnComponentAttached;
 import ru.finex.core.component.event.OnComponentDeattached;
-import ru.finex.core.hocon.ConfigProvider;
 import ru.finex.core.model.GameObject;
 import ru.finex.core.pool.PoolService;
+import ru.finex.core.repository.GameObjectComponentTemplateRepository;
+import ru.finex.core.templates.GameObjectComponentTemplate;
 import ru.finex.core.utils.ClassUtils;
 
 import java.util.ArrayList;
@@ -23,29 +24,20 @@ import javax.inject.Singleton;
  * @author m0nster.mind
  */
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = { @Inject })
 public class ComponentServiceImpl implements ComponentService {
 
     private final Map<Integer, GameObjectComponents> goComponents = new HashMap<>();
-
     private final PoolService poolService;
-    private final Config componentConfig;
-
-    @Inject
-    public ComponentServiceImpl(PoolService poolService) {
-        this.poolService = poolService;
-        this.componentConfig = new ConfigProvider("components.conf")
-            .get();
-    }
+    private final GameObjectComponentTemplateRepository gameObjectComponentTemplateRepository;
 
     @Override
     public Class[] getComponentTypesForObject(String objectName) {
-        if (!componentConfig.hasPath(objectName)) {
-            return new Class[0];
-        }
-
-        return componentConfig.getStringList(objectName).stream()
+        return gameObjectComponentTemplateRepository.findByGameObjectTemplateName(objectName)
+            .stream()
+            .map(GameObjectComponentTemplate::getComponent)
             .map(ClassUtils::forName)
-            .toArray(Class[]::new);
+            .toArray(Class<?>[]::new);
     }
 
     @Override
