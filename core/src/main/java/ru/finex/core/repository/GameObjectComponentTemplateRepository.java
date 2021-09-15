@@ -2,7 +2,7 @@ package ru.finex.core.repository;
 
 import com.google.inject.ImplementedBy;
 import ru.finex.core.repository.impl.GameObjectComponentTemplateRepositoryImpl;
-import ru.finex.core.templates.GameObjectComponentTemplate;
+import ru.finex.core.model.entity.GameObjectComponentTemplate;
 
 import java.util.List;
 

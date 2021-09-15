@@ -9,7 +9,7 @@ import ru.finex.core.component.event.OnComponentDeattached;
 import ru.finex.core.model.GameObject;
 import ru.finex.core.pool.PoolService;
 import ru.finex.core.repository.GameObjectComponentTemplateRepository;
-import ru.finex.core.templates.GameObjectComponentTemplate;
+import ru.finex.core.model.entity.GameObjectComponentTemplate;
 import ru.finex.core.utils.ClassUtils;
 
 import java.util.ArrayList;

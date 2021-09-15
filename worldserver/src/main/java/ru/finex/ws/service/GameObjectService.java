@@ -9,6 +9,7 @@ import ru.finex.ws.model.Client;
 public interface GameObjectService {
 
     GameObject createPlayer(Client client, int persistenceId);
+    GameObject createGameObject(String template, int persistenceId);
 
     GameObject getGameObject(int runtimeId);
 

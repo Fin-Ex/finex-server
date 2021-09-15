@@ -18,8 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * FIXME m0nster.mind: обощить до GameObject
- * @author m0nster.mind
+ * @author finfan
  */
 @Singleton
 @RequiredArgsConstructor(onConstructor_ = { @Inject })

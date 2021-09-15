@@ -5,7 +5,7 @@ import org.hibernate.Transaction;
 import ru.finex.core.repository.AbstractCrudRepository;
 import ru.finex.core.repository.GameObjectTemplateRepository;
 import ru.finex.core.service.DbSessionService;
-import ru.finex.core.templates.GameObjectTemplate;
+import ru.finex.core.model.entity.GameObjectTemplate;
 
 import javax.inject.Inject;
 import javax.persistence.Query;
@@ -28,6 +28,7 @@ public class GameObjectTemplateRepositoryImpl
 		try(Session session = sessionService.openSession()) {
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("SELECT t FROM GameObjectTemplate t WHERE name = :name");
+			query.setParameter("name", name);
 			Object singleResult = query.getSingleResult();
 			transaction.commit();
 			return (GameObjectTemplate) singleResult;

@@ -3,7 +3,7 @@ package ru.finex.ws.player;
 import ru.finex.core.model.GameObject;
 
 /**
- * @author m0nster.mind
+ * @author finfan
  */
 public interface GameObjectFactory {
 

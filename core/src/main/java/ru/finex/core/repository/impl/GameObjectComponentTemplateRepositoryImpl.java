@@ -4,7 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import ru.finex.core.repository.AbstractCrudRepository;
 import ru.finex.core.repository.GameObjectComponentTemplateRepository;
-import ru.finex.core.templates.GameObjectComponentTemplate;
+import ru.finex.core.model.entity.GameObjectComponentTemplate;
 
 import java.util.List;
 import javax.persistence.Query;

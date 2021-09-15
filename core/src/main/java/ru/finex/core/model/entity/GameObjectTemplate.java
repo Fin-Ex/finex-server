@@ -1,4 +1,4 @@
-package ru.finex.core.templates;
+package ru.finex.core.model.entity;
 
 import lombok.Data;
 
