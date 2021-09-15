@@ -1,5 +1,6 @@
 package ru.finex.core.db;
 
+import com.google.inject.Provider;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -11,6 +12,7 @@ import ru.finex.core.model.entity.Entity;
 import ru.finex.core.service.DbSessionService;
 import ru.finex.core.service.MigrationService;
 
+import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -23,9 +25,14 @@ public class DbSessionServiceImpl implements DbSessionService {
     private final SessionFactory sessionFactory;
 
     @Inject
-    public DbSessionServiceImpl(ServiceRegistry serviceRegistry, MigrationService migrationService) {
-        migrationService.migrateToLastVersion();
-        migrationService.doneMigration();
+    public DbSessionServiceImpl(ServiceRegistry serviceRegistry, List<Provider<MigrationService>> migrationServices) {
+        migrationServices.stream()
+            .map(Provider::get)
+            .sorted()
+            .forEach(migrationService -> {
+                migrationService.migrateToLastVersion();
+                migrationService.doneMigration();
+            });
 
         MetadataSources metaSrc = new MetadataSources(serviceRegistry);
         GlobalContext.reflections.getSubTypesOf(Entity.class).forEach(metaSrc::addAnnotatedClass);
