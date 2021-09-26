@@ -7,9 +7,9 @@ import ru.finex.core.component.ComponentService;
 import ru.finex.core.component.event.OnComponentAttached;
 import ru.finex.core.component.event.OnComponentDeattached;
 import ru.finex.core.model.GameObject;
+import ru.finex.core.model.entity.GameObjectComponentTemplate;
 import ru.finex.core.pool.PoolService;
 import ru.finex.core.repository.GameObjectComponentTemplateRepository;
-import ru.finex.core.model.entity.GameObjectComponentTemplate;
 import ru.finex.core.utils.ClassUtils;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class ComponentServiceImpl implements ComponentService {
     public void addComponent(GameObject gameObject, Component component) {
         if (component.getGameObject() != null) {
             throw new RuntimeException(String.format("Trying attach component to %s, component already attached to %s game object.",
-                this.toString(),
+                gameObject.toString(),
                 component.getGameObject().toString())
             );
         }
@@ -77,6 +77,7 @@ public class ComponentServiceImpl implements ComponentService {
         OnComponentAttached event = poolService.getObject(OnComponentAttached.class);
         event.setComponent(component);
         gameObject.getEventBus().notify(event);
+        poolService.returnObject(event);
     }
 
     @Override
@@ -139,6 +140,7 @@ public class ComponentServiceImpl implements ComponentService {
         event.setGameObject(gameObject);
         event.setComponent(component);
         gameObject.getEventBus().notify(event);
+        poolService.returnObject(event);
     }
 
     @Override
