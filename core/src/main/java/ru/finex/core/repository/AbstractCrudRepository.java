@@ -5,9 +5,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import ru.finex.core.model.entity.Entity;
 import ru.finex.core.service.DbSessionService;
+import ru.finex.core.utils.ClassUtils;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.Query;
@@ -20,9 +19,10 @@ import javax.persistence.Query;
 @Slf4j
 public abstract class AbstractCrudRepository<T extends Entity> implements CrudRepository<T> {
 
+	private final Class<T> entityClass = ClassUtils.getGenericType(getClass(), 0);
+
 	@Inject
 	protected DbSessionService sessionService;
-	private Class<T> entityClass;
 
 	@Override
 	public T create(T entity) {
@@ -120,18 +120,4 @@ public abstract class AbstractCrudRepository<T extends Entity> implements CrudRe
 		}
 	}
 
-	@Inject
-	void initEntityClass() {
-		Class<?> type = getClass();
-		while (type.getCanonicalName().contains("EnhancerByGuice")) {
-			type = type.getSuperclass();
-		}
-
-		Type[] generics = ((ParameterizedType) type.getGenericSuperclass()).getActualTypeArguments();
-		try {
-			entityClass = (Class<T>) Class.forName(generics[1].getTypeName());
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-	}
 }

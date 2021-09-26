@@ -2,12 +2,13 @@ package ru.finex.core.repository.impl;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import ru.finex.core.model.entity.GameObjectTemplate;
 import ru.finex.core.repository.AbstractCrudRepository;
 import ru.finex.core.repository.GameObjectTemplateRepository;
 import ru.finex.core.service.DbSessionService;
-import ru.finex.core.model.entity.GameObjectTemplate;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.persistence.Query;
 
 /**
@@ -15,6 +16,7 @@ import javax.persistence.Query;
  * @project finex-server
  * @author finfan: 13.09.2021
  */
+@Singleton
 public class GameObjectTemplateRepositoryImpl
 	extends AbstractCrudRepository<GameObjectTemplate>
 	implements GameObjectTemplateRepository {

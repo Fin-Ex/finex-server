@@ -1,8 +1,8 @@
 package ru.finex.core.repository;
 
 import com.google.inject.ImplementedBy;
-import ru.finex.core.repository.impl.GameObjectTemplateRepositoryImpl;
 import ru.finex.core.model.entity.GameObjectTemplate;
+import ru.finex.core.repository.impl.GameObjectTemplateRepositoryImpl;
 
 /**
  *
@@ -11,5 +11,7 @@ import ru.finex.core.model.entity.GameObjectTemplate;
  */
 @ImplementedBy(GameObjectTemplateRepositoryImpl.class)
 public interface GameObjectTemplateRepository extends CrudRepository<GameObjectTemplate> {
+
 	GameObjectTemplate findByName(String name);
+
 }
