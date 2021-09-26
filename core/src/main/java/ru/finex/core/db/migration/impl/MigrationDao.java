@@ -1,4 +1,4 @@
-package ru.finex.core.db.migration;
+package ru.finex.core.db.migration.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

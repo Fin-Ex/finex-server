@@ -3,9 +3,8 @@ package ru.finex.core.inject.module;
 import com.google.inject.AbstractModule;
 import com.google.inject.matcher.Matchers;
 import com.typesafe.config.Config;
-import ru.finex.core.hocon.ConfigListener;
 import ru.finex.core.hocon.ApplicationConfigProvider;
-import ru.finex.core.inject.LoaderModule;
+import ru.finex.core.hocon.ConfigListener;
 
 /**
  * Модуль для HOCON-конфигурации.
@@ -13,7 +12,6 @@ import ru.finex.core.inject.LoaderModule;
  *
  * @author m0nster.mind
  */
-@LoaderModule
 public class HoconModule extends AbstractModule {
 
     @Override

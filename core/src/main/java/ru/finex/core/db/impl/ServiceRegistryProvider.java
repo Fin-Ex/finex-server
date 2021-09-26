@@ -1,13 +1,13 @@
-package ru.finex.core.db;
+package ru.finex.core.db.impl;
 
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.service.ServiceRegistry;
 import ru.finex.core.EnvConfigurator;
 
+import java.net.URL;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
-import java.net.URL;
 
 /**
  * @author m0nster.mind

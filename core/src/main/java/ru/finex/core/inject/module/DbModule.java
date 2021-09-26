@@ -4,15 +4,14 @@ import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 import org.hibernate.Session;
 import org.hibernate.service.ServiceRegistry;
-import ru.finex.core.db.DataSourceProvider;
-import ru.finex.core.db.DbSessionServiceImpl;
-import ru.finex.core.db.HibernateConfigProvider;
-import ru.finex.core.db.HibernateSessionProvider;
-import ru.finex.core.db.ServiceRegistryProvider;
-import ru.finex.core.db.migration.MigrationServiceImpl;
-import ru.finex.core.inject.LoaderModule;
-import ru.finex.core.service.DbSessionService;
-import ru.finex.core.service.MigrationService;
+import ru.finex.core.db.DbSessionService;
+import ru.finex.core.db.impl.DbSessionServiceImpl;
+import ru.finex.core.db.impl.HibernateConfigProvider;
+import ru.finex.core.db.impl.HibernateSessionProvider;
+import ru.finex.core.db.impl.ServiceRegistryProvider;
+import ru.finex.core.db.migration.MigrationService;
+import ru.finex.core.db.migration.impl.DataSourceProvider;
+import ru.finex.core.db.migration.impl.MigrationServiceImpl;
 
 import java.net.URL;
 import javax.sql.DataSource;
@@ -20,7 +19,6 @@ import javax.sql.DataSource;
 /**
  * @author m0nster.mind
  */
-@LoaderModule
 public class DbModule extends AbstractModule {
 
     @Override

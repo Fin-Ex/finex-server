@@ -1,8 +1,9 @@
-package ru.finex.core.db.migration;
+package ru.finex.core.db.migration.impl;
 
 import com.google.common.collect.ListMultimap;
 import lombok.extern.slf4j.Slf4j;
-import ru.finex.core.service.MigrationService;
+import ru.finex.core.GlobalContext;
+import ru.finex.core.db.migration.MigrationService;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -11,6 +12,7 @@ import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -21,6 +23,8 @@ import javax.inject.Singleton;
 @Slf4j
 @Singleton
 public class MigrationServiceImpl implements MigrationService {
+
+    private static final String AUTO_ROLLBACK_FLAG = "--evolution-auto-rollback";
 
     private final ListMultimap<String, MigrationData> migrations;
     private final MigrationDao migrationDao;
@@ -74,8 +78,20 @@ public class MigrationServiceImpl implements MigrationService {
                 String appliedChecksum = appliedChecksums.get(i);
 
                 if (!checksum.equals(appliedChecksum)) {
-                    log.warn("Detect changed evolution! Rollback exists migration '{}', version: {}", component, data.getVersion());
-                    migrationDao.rollbackAndDeleteRecursive(component, data.getVersion());
+                    log.error("Detect evolution changes: '{}' version {}. Current checksum '{}', new checksum '{}'",
+                        component, data.getVersion(), appliedChecksum, checksum);
+
+                    if (GlobalContext.arguments.containsKey(AUTO_ROLLBACK_FLAG)) {
+                        log.warn("Rollback evolutions {}+ for '{}'.", data.getVersion(), component);
+                        migrationDao.rollbackAndDeleteRecursive(component, data.getVersion());
+                    } else {
+                        throw new RuntimeException(String.format(
+                            "Evolution %s has changes! To enable auto rollback and deploy use '%s'",
+                            Optional.ofNullable(data.getName())
+                                .orElseGet(() -> getEvolutionFilename(data)),
+                            AUTO_ROLLBACK_FLAG
+                        ));
+                    }
                     isRollback = true;
                 }
             }
@@ -83,6 +99,10 @@ public class MigrationServiceImpl implements MigrationService {
             migrationDao.applyAndSave(data, checksum);
         }
 
+    }
+
+    private String getEvolutionFilename(MigrationData data) {
+        return data.getComponent() + "_" + data.getVersion();
     }
 
     private String calculateChecksum(MessageDigest digest, MigrationData data) {

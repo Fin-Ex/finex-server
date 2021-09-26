@@ -1,4 +1,4 @@
-package ru.finex.core.db;
+package ru.finex.core.db.migration.impl;
 
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;

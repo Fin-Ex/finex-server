@@ -1,8 +1,8 @@
-package ru.finex.core.db;
+package ru.finex.core.db.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
-import ru.finex.core.service.DbSessionService;
+import ru.finex.core.db.DbSessionService;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

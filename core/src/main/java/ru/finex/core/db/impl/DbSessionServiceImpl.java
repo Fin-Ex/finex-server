@@ -1,4 +1,4 @@
-package ru.finex.core.db;
+package ru.finex.core.db.impl;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -7,9 +7,9 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl;
 import org.hibernate.service.ServiceRegistry;
 import ru.finex.core.GlobalContext;
+import ru.finex.core.db.DbSessionService;
+import ru.finex.core.db.migration.MigrationService;
 import ru.finex.core.model.entity.Entity;
-import ru.finex.core.service.DbSessionService;
-import ru.finex.core.service.MigrationService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

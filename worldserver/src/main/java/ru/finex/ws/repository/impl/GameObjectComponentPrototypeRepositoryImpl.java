@@ -1,10 +1,10 @@
-package ru.finex.core.repository.impl;
+package ru.finex.ws.repository.impl;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import ru.finex.core.model.entity.GameObjectComponentTemplate;
 import ru.finex.core.repository.AbstractCrudRepository;
-import ru.finex.core.repository.GameObjectComponentTemplateRepository;
+import ru.finex.ws.model.entity.GameObjectComponentTemplate;
+import ru.finex.ws.repository.GameObjectComponentPrototypeRepository;
 
 import java.util.List;
 import javax.inject.Singleton;
@@ -16,9 +16,9 @@ import javax.persistence.Query;
  * @author finfan: 13.09.2021
  */
 @Singleton
-public class GameObjectComponentTemplateRepositoryImpl
+public class GameObjectComponentPrototypeRepositoryImpl
 	extends AbstractCrudRepository<GameObjectComponentTemplate>
-	implements GameObjectComponentTemplateRepository {
+	implements GameObjectComponentPrototypeRepository {
 
 	@Override
 	public List<GameObjectComponentTemplate> findByGameObjectTemplateName(String gameObjectTemplateName) {

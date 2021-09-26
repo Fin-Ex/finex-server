@@ -1,4 +1,4 @@
-package ru.finex.core.service;
+package ru.finex.core.db;
 
 import org.hibernate.Session;
 

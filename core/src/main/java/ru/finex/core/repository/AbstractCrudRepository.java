@@ -3,8 +3,8 @@ package ru.finex.core.repository;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import ru.finex.core.db.DbSessionService;
 import ru.finex.core.model.entity.Entity;
-import ru.finex.core.service.DbSessionService;
 import ru.finex.core.utils.ClassUtils;
 
 import java.util.List;

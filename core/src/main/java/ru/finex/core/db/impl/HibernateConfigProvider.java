@@ -1,4 +1,4 @@
-package ru.finex.core.db;
+package ru.finex.core.db.impl;
 
 import java.io.File;
 import java.net.MalformedURLException;

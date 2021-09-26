@@ -1,4 +1,4 @@
-package ru.finex.core.db.migration;
+package ru.finex.core.db.migration.impl;
 
 import com.google.common.collect.Streams;
 import lombok.AllArgsConstructor;

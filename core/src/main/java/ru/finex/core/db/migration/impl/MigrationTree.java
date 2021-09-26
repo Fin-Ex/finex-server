@@ -1,7 +1,8 @@
-package ru.finex.core.db.migration;
+package ru.finex.core.db.migration.impl;
 
 import lombok.RequiredArgsConstructor;
 import ru.finex.core.GlobalContext;
+import ru.finex.core.db.migration.Evolution;
 
 import java.util.LinkedList;
 import java.util.List;

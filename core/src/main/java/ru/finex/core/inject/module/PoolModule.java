@@ -1,14 +1,12 @@
 package ru.finex.core.inject.module;
 
 import com.google.inject.AbstractModule;
-import ru.finex.core.inject.LoaderModule;
 import ru.finex.core.pool.PoolService;
 import ru.finex.core.pool.impl.PoolServiceImpl;
 
 /**
  * @author m0nster.mind
  */
-@LoaderModule
 public class PoolModule extends AbstractModule {
 
     @Override
