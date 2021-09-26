@@ -7,9 +7,8 @@ import ru.finex.core.component.ComponentService;
 import ru.finex.core.component.event.OnComponentAttached;
 import ru.finex.core.component.event.OnComponentDeattached;
 import ru.finex.core.model.GameObject;
-import ru.finex.core.model.entity.GameObjectComponentTemplate;
 import ru.finex.core.pool.PoolService;
-import ru.finex.core.repository.GameObjectComponentTemplateRepository;
+import ru.finex.core.service.GameObjectPrototypeService;
 import ru.finex.core.utils.ClassUtils;
 
 import java.util.ArrayList;
@@ -29,13 +28,12 @@ public class ComponentServiceImpl implements ComponentService {
 
     private final Map<Integer, GameObjectComponents> goComponents = new HashMap<>();
     private final PoolService poolService;
-    private final GameObjectComponentTemplateRepository gameObjectComponentTemplateRepository;
+    private final GameObjectPrototypeService prototypeService;
 
     @Override
     public Class[] getComponentTypesForObject(String objectName) {
-        return gameObjectComponentTemplateRepository.findByGameObjectTemplateName(objectName)
+        return prototypeService.getComponentsByPrototypeName(objectName)
             .stream()
-            .map(GameObjectComponentTemplate::getComponent)
             .map(ClassUtils::forName)
             .toArray(Class<?>[]::new);
     }

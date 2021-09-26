@@ -3,18 +3,17 @@ package ru.finex.core.service;
 /**
  * @author m0nster.mind
  */
-public interface MigrationService extends Comparable<MigrationService> {
+public interface MigrationService {
 
-    int PRIORITY_CORE = 1;
+    /**
+     * Автоматическая миграция зарегистрированных компонентов через {@link ru.finex.core.db.migration.Evolution}.
+     */
+    void autoMigration();
 
-    void migrateToLastVersion();
-    void doneMigration();
-
-    int getPriority();
-
-    @Override
-    default int compareTo(MigrationService o) {
-        return Integer.compare(getPriority(), o.getPriority());
-    }
+    /**
+     * Миграция определенного компонента.
+     * @param component компонент
+     */
+    void migrate(String component);
 
 }

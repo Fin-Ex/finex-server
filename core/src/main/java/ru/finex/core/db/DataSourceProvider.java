@@ -1,6 +1,5 @@
 package ru.finex.core.db;
 
-import org.flywaydb.core.Flyway;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import org.hibernate.service.spi.Configurable;
@@ -11,25 +10,25 @@ import java.net.URL;
 import java.util.Properties;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
+import javax.inject.Provider;
 import javax.sql.DataSource;
 
 /**
  * @author m0nster.mind
  */
-@Singleton
-public class FlywayFactory {
+public class DataSourceProvider implements Provider<DataSource> {
 
     private final URL hibernateConfig;
     private final EnvConfigurator configurator;
 
     @Inject
-    public FlywayFactory(@Named("HibernateConfig") URL hibernateConfig, EnvConfigurator configurator) {
+    public DataSourceProvider(@Named("HibernateConfig") URL hibernateConfig, EnvConfigurator configurator) {
         this.hibernateConfig = hibernateConfig;
         this.configurator = configurator;
     }
 
-    public Flyway create(String service) {
+    @Override
+    public DataSource get() {
         Configuration configuration = new Configuration().configure(hibernateConfig);
         Properties properties = configuration.getProperties();
         configurator.configure(properties);
@@ -39,18 +38,6 @@ public class FlywayFactory {
             ((Configurable) connectionProvider).configure(properties);
         }
 
-        DataSource dataSource = connectionProvider.unwrap(DataSource.class);
-
-        return Flyway.configure()
-            .locations("evolution")
-            .dataSource(dataSource)
-            .sqlMigrationPrefix(service + "_v")
-            .undoSqlMigrationPrefix(service + "_u")
-            .repeatableSqlMigrationPrefix(service + "_r")
-            .table(service + "_evolutions")
-            .load();
+        return connectionProvider.unwrap(DataSource.class);
     }
-
-
-
 }
