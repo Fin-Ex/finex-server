@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Stage;
 import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import ru.finex.core.db.migration.Evolution;
@@ -32,7 +33,10 @@ public class ServerApplication {
         logbackConfiguration.configureLogback();
 
         GlobalContext.rootPackage = modulePackage;
-        GlobalContext.reflections = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forJavaClassPath()));
+        GlobalContext.reflections = new Reflections(new ConfigurationBuilder()
+            .setUrls(ClasspathHelper.forJavaClassPath())
+            .addScanners(Scanners.Resources)
+        );
 
         List<Module> modules = new ArrayList<>();
         modules.addAll(InjectorUtils.collectModules(ServerApplication.class.getPackageName(), LoaderModule.class));

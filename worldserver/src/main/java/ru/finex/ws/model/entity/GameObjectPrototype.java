@@ -18,7 +18,7 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "game_object_prototypes")
-public class GameObjectTemplate implements ru.finex.core.model.entity.Entity {
+public class GameObjectPrototype implements ru.finex.core.model.entity.Entity {
 	@Id
 	@Column(name = "id")
 	@SequenceGenerator(name = "game_object_prototypes_id_seq", sequenceName = "game_object_prototypes_id_seq", allocationSize = 1)

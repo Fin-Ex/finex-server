@@ -1,6 +1,7 @@
 package ru.finex.core.db.migration.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ArrayUtils;
 import ru.finex.core.GlobalContext;
 import ru.finex.core.db.migration.Evolution;
 
@@ -10,6 +11,7 @@ import java.util.Objects;
 import java.util.Queue;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.inject.Singleton;
 
@@ -22,7 +24,8 @@ public class MigrationTree {
     @RequiredArgsConstructor
     private static class Node {
         private final String value;
-        private int[] indices;
+        private int[] dependencies = new int[0];
+        private int[] xref = new int[0];
 
         @Override
         public boolean equals(Object o) {
@@ -60,6 +63,9 @@ public class MigrationTree {
         evolutions.stream()
             .filter(e -> !isRoot(e))
             .forEach(this::bindNodeIndices);
+
+        IntStream.range(0, nodes.length)
+            .forEach(this::bindNodeReferences);
     }
 
     private boolean isRoot(Evolution evolution) {
@@ -93,9 +99,19 @@ public class MigrationTree {
 
     private void bindNodeIndices(Evolution evolution) {
         Node node = findNode(evolution.value());
-        node.indices = Stream.of(evolution.dependencies())
+        node.dependencies = Stream.of(evolution.dependencies())
             .mapToInt(this::findIndex)
             .toArray();
+    }
+
+    private void bindNodeReferences(int index) {
+        Node masterNode = nodes[index];
+        for (int i = 0; i < nodes.length; i++) {
+            Node node = nodes[i];
+            if (ArrayUtils.contains(node.dependencies, index)) {
+                masterNode.xref = ArrayUtils.add(masterNode.xref, i);
+            }
+        }
     }
 
     public void applyOperation(Consumer<String> operation) {
@@ -106,10 +122,13 @@ public class MigrationTree {
 
         for (Integer index = awaitIndices.poll(); index != null; index = awaitIndices.poll()) {
             Node node = nodes[index];
-            operation.accept(node.value);
-            for (int dependencyIndex : node.indices) {
-                awaitIndices.add(dependencyIndex);
+
+            for (int xrefIndex : node.xref) {
+                awaitIndices.add(xrefIndex);
             }
+
+            operation.accept(node.value);
+
         }
     }
 

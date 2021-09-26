@@ -2,7 +2,7 @@ package ru.finex.ws.repository;
 
 import com.google.inject.ImplementedBy;
 import ru.finex.core.repository.CrudRepository;
-import ru.finex.ws.model.entity.GameObjectTemplate;
+import ru.finex.ws.model.entity.GameObjectPrototype;
 import ru.finex.ws.repository.impl.GameObjectPrototypeRepositoryImpl;
 
 /**
@@ -11,8 +11,8 @@ import ru.finex.ws.repository.impl.GameObjectPrototypeRepositoryImpl;
  * @author finfan: 13.09.2021
  */
 @ImplementedBy(GameObjectPrototypeRepositoryImpl.class)
-public interface GameObjectPrototypeRepository extends CrudRepository<GameObjectTemplate> {
+public interface GameObjectPrototypeRepository extends CrudRepository<GameObjectPrototype> {
 
-	GameObjectTemplate findByName(String name);
+	GameObjectPrototype findByName(String name);
 
 }

@@ -3,7 +3,7 @@ package ru.finex.ws.repository.impl;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import ru.finex.core.repository.AbstractCrudRepository;
-import ru.finex.ws.model.entity.GameObjectComponentTemplate;
+import ru.finex.ws.model.entity.GameObjectComponentPrototype;
 import ru.finex.ws.repository.GameObjectComponentPrototypeRepository;
 
 import java.util.List;
@@ -17,11 +17,11 @@ import javax.persistence.Query;
  */
 @Singleton
 public class GameObjectComponentPrototypeRepositoryImpl
-	extends AbstractCrudRepository<GameObjectComponentTemplate>
+	extends AbstractCrudRepository<GameObjectComponentPrototype>
 	implements GameObjectComponentPrototypeRepository {
 
 	@Override
-	public List<GameObjectComponentTemplate> findByGameObjectTemplateName(String gameObjectTemplateName) {
+	public List<GameObjectComponentPrototype> findByGameObjectTemplateName(String gameObjectTemplateName) {
 		Transaction transaction = null;
 		try(Session session = sessionService.openSession()) {
 			transaction = session.beginTransaction();
@@ -31,7 +31,7 @@ public class GameObjectComponentPrototypeRepositoryImpl
 				"JOIN GameObjectComponentTemplate component ON template.id = component.gameObjectTemplateId " +
 				"WHERE template.name = :gameObjectTemplateName");
 			query.setParameter("gameObjectTemplateName", gameObjectTemplateName);
-			List<GameObjectComponentTemplate> entities = query.getResultList();
+			List<GameObjectComponentPrototype> entities = query.getResultList();
 			transaction.commit();
 			return entities;
 		} catch (Exception e) {

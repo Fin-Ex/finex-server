@@ -49,29 +49,7 @@ public class MigrationDao {
             }
 
             connection.commit();
-            connection.releaseSavepoint(savepoint);
             connection.setAutoCommit(true);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public int getMaxVersionByComponent(String component) {
-        String query = """
-            select max(order)
-            from db_evolutions
-            where component = ?
-        """;
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, component);
-            try (ResultSet results = statement.executeQuery()) {
-                if (!results.first()) {
-                    return -1;
-                }
-
-                return results.getInt(1);
-            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -82,7 +60,7 @@ public class MigrationDao {
             select checksum
             from db_evolutions
             where component = ?
-            order by order asc
+            order by version asc
         """;
 
         try (Connection connection = dataSource.getConnection();
@@ -125,7 +103,6 @@ public class MigrationDao {
             }
 
             connection.commit();
-            connection.releaseSavepoint(savepoint);
             connection.setAutoCommit(true);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -194,7 +171,6 @@ public class MigrationDao {
             }
 
             connection.commit();
-            connection.releaseSavepoint(savepoint);
             connection.setAutoCommit(false);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -219,15 +195,15 @@ public class MigrationDao {
                 checksum,
                 up_queries,
                 down_queries
-            ) values (?, ?, ?, ?, ?)
+            ) values (?, ?, ?, ?::json, ?::json)
         """;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, data.getComponent());
             statement.setInt(2, data.getVersion());
             statement.setString(3, checksum);
-            statement.setString(4, gson.toJson(data.getUpQueries()));
-            statement.setString(5, gson.toJson(data.getDownQueries()));
+            statement.setObject(4, gson.toJson(data.getUpQueries()));
+            statement.setObject(5, gson.toJson(data.getDownQueries()));
             statement.execute();
         }
     }

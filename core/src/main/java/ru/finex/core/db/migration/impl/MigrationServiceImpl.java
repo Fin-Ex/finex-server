@@ -32,17 +32,19 @@ public class MigrationServiceImpl implements MigrationService {
 
     @Inject
     public MigrationServiceImpl(MigrationParser parser, MigrationDao migrationDao, MigrationTree migrationTree) {
-        migrations = parser.parseAll();
-        joinMigrations();
-
+        migrations = handleMigrations(parser);
         this.migrationDao = migrationDao;
         this.migrationTree = migrationTree;
+
+        migrationDao.install();
     }
 
-    private void joinMigrations() {
-        List<String> components = new ArrayList<>(migrations.keySet());
+    private ListMultimap<String, MigrationData> handleMigrations(MigrationParser parser) {
+        ListMultimap<String, MigrationData> migrationMultimap = parser.parseAll();
+
+        List<String> components = new ArrayList<>(migrationMultimap.keySet());
         for (String component : components) {
-            List<MigrationData> migrations = this.migrations.get(component);
+            List<MigrationData> migrations = migrationMultimap.get(component);
             List<MigrationData> joined = migrations.stream()
                 .mapToInt(MigrationData::getVersion)
                 .distinct()
@@ -56,6 +58,8 @@ public class MigrationServiceImpl implements MigrationService {
             migrations.clear();
             migrations.addAll(joined);
         }
+
+        return migrationMultimap;
     }
 
     @Override
@@ -77,23 +81,25 @@ public class MigrationServiceImpl implements MigrationService {
             if (i < appliedChecksums.size() && !isRollback) {
                 String appliedChecksum = appliedChecksums.get(i);
 
-                if (!checksum.equals(appliedChecksum)) {
-                    log.error("Detect evolution changes: '{}' version {}. Current checksum '{}', new checksum '{}'",
-                        component, data.getVersion(), appliedChecksum, checksum);
-
-                    if (GlobalContext.arguments.containsKey(AUTO_ROLLBACK_FLAG)) {
-                        log.warn("Rollback evolutions {}+ for '{}'.", data.getVersion(), component);
-                        migrationDao.rollbackAndDeleteRecursive(component, data.getVersion());
-                    } else {
-                        throw new RuntimeException(String.format(
-                            "Evolution %s has changes! To enable auto rollback and deploy use '%s'",
-                            Optional.ofNullable(data.getName())
-                                .orElseGet(() -> getEvolutionFilename(data)),
-                            AUTO_ROLLBACK_FLAG
-                        ));
-                    }
-                    isRollback = true;
+                if (checksum.equals(appliedChecksum)) {
+                    continue; // already applied
                 }
+
+                log.error("Detect evolution changes: '{}' version {}. Current checksum '{}', new checksum '{}'",
+                    component, data.getVersion(), appliedChecksum, checksum);
+
+                if (GlobalContext.arguments.containsKey(AUTO_ROLLBACK_FLAG)) {
+                    log.warn("Rollback evolutions {}+ for '{}'.", data.getVersion(), component);
+                    migrationDao.rollbackAndDeleteRecursive(component, data.getVersion());
+                } else {
+                    throw new RuntimeException(String.format(
+                        "Evolution %s has changes! To enable auto rollback and deploy use '%s'",
+                        Optional.ofNullable(data.getName())
+                            .orElseGet(() -> getEvolutionFilename(data)),
+                        AUTO_ROLLBACK_FLAG
+                    ));
+                }
+                isRollback = true;
             }
 
             migrationDao.applyAndSave(data, checksum);

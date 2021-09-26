@@ -2,7 +2,7 @@ package ru.finex.ws.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import ru.finex.core.service.GameObjectPrototypeService;
-import ru.finex.ws.model.entity.GameObjectComponentTemplate;
+import ru.finex.ws.model.entity.GameObjectComponentPrototype;
 import ru.finex.ws.repository.GameObjectComponentPrototypeRepository;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class GameObjectPrototypeServiceImpl implements GameObjectPrototypeServic
     public List<String> getComponentsByPrototypeName(String objectName) {
         return componentRepository.findByGameObjectTemplateName(objectName)
             .stream()
-            .map(GameObjectComponentTemplate::getComponent)
+            .map(GameObjectComponentPrototype::getComponent)
             .collect(Collectors.toList());
     }
 }

@@ -22,7 +22,7 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "game_object_component_prototypes")
-public class GameObjectComponentTemplate implements ru.finex.core.model.entity.Entity {
+public class GameObjectComponentPrototype implements ru.finex.core.model.entity.Entity {
 	@Id
 	@Column(name = "id")
 	@SequenceGenerator(name = "game_object_component_prototypes_id_seq", sequenceName = "game_object_component_prototypes_id_seq", allocationSize = 1)
@@ -30,7 +30,7 @@ public class GameObjectComponentTemplate implements ru.finex.core.model.entity.E
 	private int persistenceId;
 	@Column(name = "component", nullable = false)
 	private String component;
-	@JoinColumn(name = "game_object_prototype_id", referencedColumnName = "id", nullable = false)
+	@JoinColumn(name = "prototype_id", referencedColumnName = "id", nullable = false)
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private GameObjectTemplate gameObjectPrototype;
+	private GameObjectPrototype gameObjectPrototype;
 }

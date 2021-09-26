@@ -21,10 +21,11 @@ import javax.inject.Singleton;
 @Singleton
 public class MigrationParser {
 
-    private static final Pattern FILE_PATTERN = Pattern.compile("([\\w\\d]+)_([\\d]+)(?>_([\\w\\d_\\-]))?\\.sql");
-    private static final Pattern UP_PATTERN = Pattern.compile("#\\s*---\\s*!Ups");
-    private static final Pattern DOWN_PATTERN = Pattern.compile("#\\s*---\\s*!Downs");
+    private static final Pattern FILE_PATTERN = Pattern.compile("([\\w\\d]+)_(\\d+)(?>_([\\w\\d_\\-]+))?\\.sql");
+    private static final Pattern UP_PATTERN = Pattern.compile("#\\s*---\\s*!Ups\\s*");
+    private static final Pattern DOWN_PATTERN = Pattern.compile("#\\s*---\\s*!Downs\\s*");
     private static final Pattern PROCEDURE = Pattern.compile(";;");
+    private static final Pattern END_QUERY = Pattern.compile(";");
 
     public ListMultimap<String, MigrationData> parseAll() {
         return GlobalContext.reflections.getResources(FILE_PATTERN)
@@ -65,7 +66,7 @@ public class MigrationParser {
 
         List<String> queries = data.getUpQueries();
         StringBuilder query = new StringBuilder();
-        String[] lines = content.split("\n");
+        String[] lines = content.split("(\r\n)|\r|\n");
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
 
@@ -83,15 +84,17 @@ public class MigrationParser {
                 queries = data.getDownQueries();
             }
 
-            if (line.charAt(0) == '#' || StringUtils.isBlank(line)) {
+            if (StringUtils.isBlank(line) || line.charAt(0) == '#') {
                 continue;
             }
 
             boolean endQuery = false;
             Matcher procedureMatcher = PROCEDURE.matcher(line);
+            Matcher endQueryMatcher = END_QUERY.matcher(line);
             if (procedureMatcher.find()) {
                 line = procedureMatcher.replaceAll(";");
-            } else if (line.endsWith(";")) {
+            } else if (endQueryMatcher.find()) {
+                line = endQueryMatcher.replaceFirst("");
                 endQuery = true;
             }
 

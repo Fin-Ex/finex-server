@@ -4,7 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import ru.finex.core.db.DbSessionService;
 import ru.finex.core.repository.AbstractCrudRepository;
-import ru.finex.ws.model.entity.GameObjectTemplate;
+import ru.finex.ws.model.entity.GameObjectPrototype;
 import ru.finex.ws.repository.GameObjectPrototypeRepository;
 
 import javax.inject.Inject;
@@ -18,14 +18,14 @@ import javax.persistence.Query;
  */
 @Singleton
 public class GameObjectPrototypeRepositoryImpl
-	extends AbstractCrudRepository<GameObjectTemplate>
+	extends AbstractCrudRepository<GameObjectPrototype>
 	implements GameObjectPrototypeRepository {
 
 	@Inject
 	private DbSessionService sessionService;
 
 	@Override
-	public GameObjectTemplate findByName(String name) {
+	public GameObjectPrototype findByName(String name) {
 		Transaction transaction = null;
 		try(Session session = sessionService.openSession()) {
 			transaction = session.beginTransaction();
@@ -33,7 +33,7 @@ public class GameObjectPrototypeRepositoryImpl
 			query.setParameter("name", name);
 			Object singleResult = query.getSingleResult();
 			transaction.commit();
-			return (GameObjectTemplate) singleResult;
+			return (GameObjectPrototype) singleResult;
 		} catch (Exception e) {
 			if(transaction != null) {
 				transaction.rollback();
