@@ -11,3 +11,7 @@ There is a third generation of FinEx MMO servers.
  - FinEx Server (third generation)
  - KT Server (second generation, abandoned)
  - WGP Server (first generation)
+
+# Requirements
+ - Java 17+
+ - PostgreSQL
