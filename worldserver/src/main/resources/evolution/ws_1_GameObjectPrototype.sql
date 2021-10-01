@@ -10,7 +10,7 @@ comment on column game_object_prototypes."name" is 'Name of game object prototyp
 create table if not exists game_object_component_prototypes(
     id serial primary key,
     component varchar not null,
-    prototype_id int not null references game_object_prototypes(id)
+    prototype_id int not null references game_object_prototypes(id) on delete cascade on update cascade
 );
 comment on table game_object_component_prototypes is 'Component list for specified game object prototype';
 comment on column game_object_component_prototypes.component is 'Canonical class name to specified component';
