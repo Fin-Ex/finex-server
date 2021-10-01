@@ -1,10 +1,14 @@
 package ru.finex.ws.service.impl;
 
-import com.hazelcast.core.HazelcastInstance;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import ru.finex.core.cluster.impl.Clustered;
+import ru.finex.core.events.cluster.ClusterEventBus;
 import ru.finex.core.model.GameObject;
-import ru.finex.ws.model.Client;
-import ru.finex.ws.player.GameObjectFactory;
-import ru.finex.ws.player.PlayerFactory;
+import ru.finex.core.model.GameObjectEvent;
+import ru.finex.core.pool.PoolService;
+import ru.finex.ws.model.event.GameObjectDestroyed;
+import ru.finex.ws.object.GameObjectFactory;
 import ru.finex.ws.service.GameObjectService;
 
 import java.util.Map;
@@ -16,22 +20,22 @@ import javax.inject.Singleton;
  * @author m0nster.mind
  */
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = { @Inject })
 public class GameObjectServiceImpl implements GameObjectService {
 
     private final GameObjectFactory gameObjectFactory;
-    private final PlayerFactory playerFactory;
-    private final Map<Integer, GameObject> gameObjects;
+    private final PoolService poolService;
 
-    @Inject
-    public GameObjectServiceImpl(GameObjectFactory gameObjectFactory, PlayerFactory playerFactory, HazelcastInstance hazelcast) {
-        this.gameObjectFactory = gameObjectFactory;
-        this.playerFactory = playerFactory;
-        this.gameObjects = hazelcast.getMap(getClass().getCanonicalName() + "#gameObjects");
-    }
+    @Clustered
+    private Map<Integer, GameObject> gameObjects;
+
+    @Getter
+    @Clustered(GameObjectEvent.CHANNEL)
+    private ClusterEventBus<GameObjectEvent> eventBus;
 
     @Override
-    public GameObject createPlayer(Client client, int persistenceId) {
-        GameObject player = playerFactory.createPlayer(client, persistenceId);
+    public GameObject createPlayer(int persistenceId) {
+        GameObject player = gameObjectFactory.createGameObject("player", persistenceId);
         Objects.requireNonNull(player, "Player is null");
         gameObjects.put(player.getRuntimeId(), player);
         return player;
@@ -49,4 +53,13 @@ public class GameObjectServiceImpl implements GameObjectService {
     public GameObject getGameObject(int runtimeId) {
         return gameObjects.get(runtimeId);
     }
+
+    @Override
+    public void destroyObject(GameObject gameObject) {
+        GameObjectDestroyed event = poolService.getObject(GameObjectDestroyed.class);
+        event.setGameObject(gameObject);
+        eventBus.notify(event); // m0nster.mind: didnt return object to pool, notify is async
+        gameObjects.remove(gameObject.getRuntimeId());
+    }
+
 }

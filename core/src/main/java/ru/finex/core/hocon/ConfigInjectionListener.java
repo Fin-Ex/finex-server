@@ -3,6 +3,7 @@ package ru.finex.core.hocon;
 import com.google.inject.spi.InjectionListener;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
+import com.typesafe.config.ConfigException;
 import lombok.RequiredArgsConstructor;
 import ru.finex.core.utils.ClassUtils;
 
@@ -26,39 +27,51 @@ public class ConfigInjectionListener<I> implements InjectionListener<I> {
         Config config = configProvider.get();
         Class<?> fieldType = field.getType();
 
-        if (!config.hasPath(path)) {
+        boolean isNull;
+        try {
+            isNull = config.getIsNull(path);
+        } catch (ConfigException.Missing e) {
             if (acceptMissing) {
                 return;
             }
 
-            throw new RuntimeException("Missing config path: '" + path + "', required in: " +
-                ClassUtils.toStringClassAndField(injectee.getClass(), field));
+            throw new RuntimeException(String.format(
+                "Missing config path: '%s', required in: %s",
+                path,
+                ClassUtils.toStringClassAndField(injectee.getClass(), field)
+            ));
         }
 
-        if (config.getIsNull(path)) {
+        if (isNull) {
             if (acceptNullable) {
                 return;
             }
 
-            throw new RuntimeException("Null value in config path: '" + path + "', required in: " +
-                ClassUtils.toStringClassAndField(injectee.getClass(), field));
+            throw new RuntimeException(String.format(
+                "Null value in config path: '%s', required in: %s",
+                path,
+                ClassUtils.toStringClassAndField(injectee.getClass(), field)
+            ));
         }
 
         try {
             if (fieldType.isPrimitive()) {
-                injectPrimitive(injectee, fieldType, config);
+                injectPrimitive(injectee, fieldType, config, path);
             } else if (String.class.isAssignableFrom(fieldType)) {
                 field.set(injectee, config.getString(path));
             } else {
                 field.set(injectee, ConfigBeanFactory.create(config.getConfig(path), fieldType));
             }
         } catch (ReflectiveOperationException e) {
-            throw new RuntimeException("Fail to inject config-value: '" + path + "' for '" +
-                ClassUtils.toStringClassAndField(injectee.getClass(), field) + "' member.");
+            throw new RuntimeException(String.format(
+                "Fail to inject config-value: '%s' for '%s' member",
+                path,
+                ClassUtils.toStringClassAndField(injectee.getClass(), field)
+            ));
         }
     }
 
-    private void injectPrimitive(I injectee, Class<?> fieldType, Config config) throws ReflectiveOperationException {
+    private void injectPrimitive(I injectee, Class<?> fieldType, Config config, String path) throws ReflectiveOperationException {
         if (byte.class.isAssignableFrom(fieldType)) {
             field.setByte(injectee, (byte) config.getInt(path));
         } else if (short.class.isAssignableFrom(fieldType)) {
@@ -68,7 +81,11 @@ public class ConfigInjectionListener<I> implements InjectionListener<I> {
         } else if (long.class.isAssignableFrom(fieldType)) {
             field.setLong(injectee, config.getLong(path));
         } else {
-            throw new RuntimeException("Unsupported config-type: " + fieldType.getCanonicalName() + " " + path);
+            throw new RuntimeException(String.format(
+                "Unsupported config-type: %s %s",
+                fieldType.getCanonicalName(),
+                path
+            ));
         }
     }
 

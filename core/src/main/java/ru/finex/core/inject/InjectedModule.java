@@ -10,7 +10,9 @@ import java.lang.annotation.Target;
  * Вторичные модули, в которых возможно использовать инжектирование классов с уровня {@link LoaderModule}.
  *
  * @author m0nster.mind
+ * @deprecated {@link com.google.inject.PrivateModule}
  */
+@Deprecated(forRemoval = true)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface InjectedModule {

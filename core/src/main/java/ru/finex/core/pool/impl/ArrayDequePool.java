@@ -3,6 +3,7 @@ package ru.finex.core.pool.impl;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.PooledObjectFactory;
+import ru.finex.core.pool.Cleanable;
 import ru.finex.core.utils.FixedArrayDeque;
 
 import java.util.ArrayDeque;
@@ -57,11 +58,19 @@ public class ArrayDequePool<E> implements ObjectPool<E> {
 
     @Override
     public void invalidateObject(E obj) throws Exception {
+        if (obj instanceof Cleanable cleanable) {
+            cleanable.clear();
+        }
+
         values.add(obj);
     }
 
     @Override
     public void returnObject(E obj) throws Exception {
+        if (obj instanceof Cleanable cleanable) {
+            cleanable.clear();
+        }
+
         values.add(obj);
     }
 }
