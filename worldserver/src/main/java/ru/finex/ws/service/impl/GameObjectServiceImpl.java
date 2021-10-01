@@ -34,14 +34,6 @@ public class GameObjectServiceImpl implements GameObjectService {
     private ClusterEventBus<GameObjectEvent> eventBus;
 
     @Override
-    public GameObject createPlayer(int persistenceId) {
-        GameObject player = gameObjectFactory.createGameObject("player", persistenceId);
-        Objects.requireNonNull(player, "Player is null");
-        gameObjects.put(player.getRuntimeId(), player);
-        return player;
-    }
-
-    @Override
     public GameObject createGameObject(String template, int persistenceId) {
         GameObject gameObject = gameObjectFactory.createGameObject(template, persistenceId);
         Objects.requireNonNull(gameObject, "Game object is null");

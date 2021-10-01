@@ -14,9 +14,7 @@ public interface GameObjectService {
 
     ClusterEventBus<GameObjectEvent> getEventBus();
 
-    GameObject createPlayer(int persistenceId);
     GameObject createGameObject(String template, int persistenceId);
-
     void destroyObject(GameObject gameObject);
 
     GameObject getGameObject(int runtimeId);
