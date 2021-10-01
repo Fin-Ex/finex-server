@@ -5,7 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import ru.finex.core.db.DbSessionService;
 import ru.finex.core.model.entity.Entity;
-import ru.finex.core.utils.ClassUtils;
+import ru.finex.core.utils.GenericUtils;
 
 import java.util.List;
 import javax.inject.Inject;
@@ -19,7 +19,7 @@ import javax.persistence.Query;
 @Slf4j
 public abstract class AbstractCrudRepository<T extends Entity> implements CrudRepository<T> {
 
-	private final Class<T> entityClass = ClassUtils.getGenericType(getClass(), 0);
+	private final Class<T> entityClass = GenericUtils.getGenericType(getClass(), 0);
 
 	@Inject
 	protected DbSessionService sessionService;

@@ -1,9 +1,9 @@
 package ru.finex.ws.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import ru.finex.core.service.GameObjectPrototypeService;
 import ru.finex.ws.model.entity.GameObjectComponentPrototype;
 import ru.finex.ws.repository.GameObjectComponentPrototypeRepository;
+import ru.finex.ws.service.GameObjectPrototypeService;
 
 import java.util.List;
 import java.util.stream.Collectors;

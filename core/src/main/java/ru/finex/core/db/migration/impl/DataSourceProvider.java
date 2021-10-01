@@ -4,7 +4,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import org.hibernate.service.spi.Configurable;
 import ru.finex.core.EnvConfigurator;
-import ru.finex.core.utils.Classes;
+import ru.finex.core.utils.ClassUtils;
 
 import java.net.URL;
 import java.util.Properties;
@@ -32,10 +32,10 @@ public class DataSourceProvider implements Provider<DataSource> {
         Configuration configuration = new Configuration().configure(hibernateConfig);
         Properties properties = configuration.getProperties();
         configurator.configure(properties);
-        Class<?> providerClass = Classes.getClass(properties.getProperty("hibernate.connection.provider_class"));
-        ConnectionProvider connectionProvider = (ConnectionProvider) Classes.createInstance(providerClass);
-        if (connectionProvider instanceof Configurable) {
-            ((Configurable) connectionProvider).configure(properties);
+        Class<?> providerClass = ClassUtils.forName(properties.getProperty("hibernate.connection.provider_class"));
+        ConnectionProvider connectionProvider = (ConnectionProvider) ClassUtils.createInstance(providerClass);
+        if (connectionProvider instanceof Configurable configurable) {
+            configurable.configure(properties);
         }
 
         return connectionProvider.unwrap(DataSource.class);

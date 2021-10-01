@@ -11,6 +11,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,17 +23,24 @@ public class ConfigListener implements TypeListener {
     public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter) {
         Class<? super I> clazz = type.getRawType();
 
-        Map<Field, InjectionContext> injectionContexts = new HashMap<>();
-
-        InjectionContext classContext = createClassContext(clazz);
-        Field[] fields;
+        List<Field> fields;
         if (clazz.isAnnotationPresent(ConfigResource.class)) {
-            fields = FieldUtils.getAllFields(clazz);
+            fields = FieldUtils.getAllFieldsList(clazz);
         } else {
-            fields = FieldUtils.getFieldsWithAnnotation(clazz, ConfigResource.class);
+            fields = FieldUtils.getFieldsListWithAnnotation(clazz, ConfigResource.class);
         }
 
+        if (fields.isEmpty()) {
+            return;
+        }
+
+        InjectionContext classContext = createClassContext(clazz);
+        Map<Field, InjectionContext> injectionContexts = new HashMap<>();
         for (Field field : fields) {
+            if (Modifier.isTransient(field.getModifiers())) {
+                continue;
+            }
+
             InjectionContext ctx = createFieldContext(classContext, clazz, field);
             if (ctx != null) {
                 injectionContexts.put(field, ctx);

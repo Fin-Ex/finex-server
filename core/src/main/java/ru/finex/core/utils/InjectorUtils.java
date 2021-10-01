@@ -25,7 +25,7 @@ public class InjectorUtils {
             .stream()
             .filter(e -> e.getCanonicalName().startsWith(rootPackage))
             .filter(e -> !Modifier.isAbstract(e.getModifiers()) && !Modifier.isInterface(e.getModifiers()))
-            .map(Classes::createInstance)
+            .map(ClassUtils::createInstance)
             .map(e -> (Module) e)
             .collect(Collectors.toList());
     }

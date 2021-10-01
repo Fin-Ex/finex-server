@@ -1,0 +1,11 @@
+package ru.finex.core.utils;
+
+/**
+ * @author m0nster.mind
+ */
+public interface Holder<T> {
+
+    void set(T value);
+    T get();
+
+}
