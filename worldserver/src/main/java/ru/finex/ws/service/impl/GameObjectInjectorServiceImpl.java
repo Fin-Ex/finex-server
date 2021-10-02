@@ -16,6 +16,8 @@ import ru.finex.ws.inject.module.gameplay.GameObjectModule;
 import ru.finex.ws.model.GameObjectImpl;
 import ru.finex.ws.model.event.GameObjectDestroyed;
 import ru.finex.ws.service.GameObjectInjectorService;
+import ru.finex.ws.tick.RegisterTick;
+import ru.finex.ws.tick.TickStage;
 
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +64,8 @@ public class GameObjectInjectorServiceImpl implements GameObjectInjectorService 
         return injectors.get(goRuntimeId);
     }
 
-    public void onInputProcessing() { // FIXME m0nster.mind: call at INPUT
+    @RegisterTick(TickStage.PRE_INPUT)
+    public void onInputProcessing() {
         eventSubscription.processEvents(this::processGameObjectEvent);
     }
 

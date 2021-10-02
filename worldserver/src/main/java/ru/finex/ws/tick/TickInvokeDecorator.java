@@ -3,8 +3,8 @@ package ru.finex.ws.tick;
 /**
  * @author m0nster.mind
  */
-public class TickServiceImpl {
+public interface TickInvokeDecorator {
 
-
+    void onTick();
 
 }

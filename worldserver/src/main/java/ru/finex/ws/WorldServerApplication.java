@@ -24,7 +24,8 @@ public class WorldServerApplication implements ServerContext, ApplicationBuilt {
     @Getter @Setter
     private Injector injector;
 
-    @Inject private SelectorThread selectorThread;
+    @Inject
+    private SelectorThread selectorThread;
 
     public static void main(String[] args) {
         try {

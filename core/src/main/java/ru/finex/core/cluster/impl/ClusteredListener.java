@@ -83,7 +83,7 @@ public class ClusteredListener implements TypeListener {
             if (clustered == null) {
                 value = encounter.getProvider(type).get();
             } else {
-                String methodName = parameter.getName();
+                String methodName = method.getName();
                 String parameterName = parameter.getName();
                 String name = getName(clazz, methodName, parameterName, clustered);
                 value = provideObject(clientProvider, clazz, type, methodName, parameter, name);

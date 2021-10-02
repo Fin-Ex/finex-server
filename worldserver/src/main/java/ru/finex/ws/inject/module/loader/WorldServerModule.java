@@ -1,6 +1,7 @@
 package ru.finex.ws.inject.module.loader;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.matcher.Matchers;
 import ru.finex.core.ServerContext;
 import ru.finex.core.component.ComponentService;
 import ru.finex.core.inject.LoaderModule;
@@ -11,6 +12,7 @@ import ru.finex.core.inject.module.PersistenceModule;
 import ru.finex.core.inject.module.PoolModule;
 import ru.finex.ws.WorldServerApplication;
 import ru.finex.ws.service.impl.ComponentServiceImpl;
+import ru.finex.ws.tick.impl.RegisterTickListener;
 
 /**
  * @author m0nster.mind
@@ -27,6 +29,7 @@ public class WorldServerModule extends AbstractModule {
         install(new PersistenceModule());
         install(new PoolModule());
         bind(ComponentService.class).to(ComponentServiceImpl.class);
+        bindListener(Matchers.any(), new RegisterTickListener());
     }
 
 }
