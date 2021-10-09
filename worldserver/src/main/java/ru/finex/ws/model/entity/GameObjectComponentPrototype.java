@@ -22,12 +22,12 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "game_object_component_prototypes")
-public class GameObjectComponentPrototype implements ru.finex.core.model.entity.Entity {
+public class GameObjectComponentPrototype implements ru.finex.core.model.entity.Entity<Integer> {
 	@Id
 	@Column(name = "id")
 	@SequenceGenerator(name = "game_object_component_prototypes_id_seq", sequenceName = "game_object_component_prototypes_id_seq", allocationSize = 1)
 	@GeneratedValue(generator = "game_object_component_prototypes_id_seq", strategy = GenerationType.SEQUENCE)
-	private int persistenceId;
+	private Integer persistenceId;
 	@Column(name = "component", nullable = false)
 	private String component;
 	@JoinColumn(name = "prototype_id", referencedColumnName = "id", nullable = false)

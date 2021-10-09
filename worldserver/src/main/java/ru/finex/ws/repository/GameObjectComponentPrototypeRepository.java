@@ -13,7 +13,7 @@ import java.util.List;
  * @author finfan: 13.09.2021
  */
 @ImplementedBy(GameObjectComponentPrototypeRepositoryImpl.class)
-public interface GameObjectComponentPrototypeRepository extends CrudRepository<GameObjectComponentPrototype> {
+public interface GameObjectComponentPrototypeRepository extends CrudRepository<GameObjectComponentPrototype, Integer> {
 
 	List<GameObjectComponentPrototype> findByGameObjectTemplateName(String gameObjectTemplateName);
 

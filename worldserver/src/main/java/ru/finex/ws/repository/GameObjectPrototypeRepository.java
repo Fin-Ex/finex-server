@@ -11,7 +11,7 @@ import ru.finex.ws.repository.impl.GameObjectPrototypeRepositoryImpl;
  * @author finfan: 13.09.2021
  */
 @ImplementedBy(GameObjectPrototypeRepositoryImpl.class)
-public interface GameObjectPrototypeRepository extends CrudRepository<GameObjectPrototype> {
+public interface GameObjectPrototypeRepository extends CrudRepository<GameObjectPrototype, Integer> {
 
 	GameObjectPrototype findByName(String name);
 

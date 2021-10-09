@@ -1,13 +1,11 @@
 package ru.finex.ws.repository.impl;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
-import ru.finex.core.db.DbSessionService;
+import ru.finex.core.db.impl.TransactionalContext;
 import ru.finex.core.repository.AbstractCrudRepository;
 import ru.finex.ws.model.entity.GameObjectPrototype;
 import ru.finex.ws.repository.GameObjectPrototypeRepository;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.Query;
 
@@ -18,26 +16,21 @@ import javax.persistence.Query;
  */
 @Singleton
 public class GameObjectPrototypeRepositoryImpl
-	extends AbstractCrudRepository<GameObjectPrototype>
+	extends AbstractCrudRepository<GameObjectPrototype, Integer>
 	implements GameObjectPrototypeRepository {
-
-	@Inject
-	private DbSessionService sessionService;
 
 	@Override
 	public GameObjectPrototype findByName(String name) {
-		Transaction transaction = null;
-		try(Session session = sessionService.openSession()) {
-			transaction = session.beginTransaction();
+		TransactionalContext ctx = TransactionalContext.get();
+		Session session = ctx.session();
+		try {
 			Query query = session.createQuery("SELECT t FROM GameObjectTemplate t WHERE name = :name");
 			query.setParameter("name", name);
 			Object singleResult = query.getSingleResult();
-			transaction.commit();
+			ctx.commit(session);
 			return (GameObjectPrototype) singleResult;
 		} catch (Exception e) {
-			if(transaction != null) {
-				transaction.rollback();
-			}
+			ctx.rollback(session);
 			throw new RuntimeException(e);
 		}
 	}

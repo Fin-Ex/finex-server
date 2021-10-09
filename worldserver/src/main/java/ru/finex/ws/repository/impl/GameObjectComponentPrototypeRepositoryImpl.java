@@ -1,7 +1,7 @@
 package ru.finex.ws.repository.impl;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+import ru.finex.core.db.impl.TransactionalContext;
 import ru.finex.core.repository.AbstractCrudRepository;
 import ru.finex.ws.model.entity.GameObjectComponentPrototype;
 import ru.finex.ws.repository.GameObjectComponentPrototypeRepository;
@@ -17,14 +17,14 @@ import javax.persistence.Query;
  */
 @Singleton
 public class GameObjectComponentPrototypeRepositoryImpl
-	extends AbstractCrudRepository<GameObjectComponentPrototype>
+	extends AbstractCrudRepository<GameObjectComponentPrototype, Integer>
 	implements GameObjectComponentPrototypeRepository {
 
 	@Override
 	public List<GameObjectComponentPrototype> findByGameObjectTemplateName(String gameObjectTemplateName) {
-		Transaction transaction = null;
-		try(Session session = sessionService.openSession()) {
-			transaction = session.beginTransaction();
+		TransactionalContext ctx = TransactionalContext.get();
+		Session session = ctx.session();
+		try {
 			Query query = session.createQuery(
 				"SELECT component " +
 				"FROM GameObjectTemplate template " +
@@ -32,12 +32,10 @@ public class GameObjectComponentPrototypeRepositoryImpl
 				"WHERE template.name = :gameObjectTemplateName");
 			query.setParameter("gameObjectTemplateName", gameObjectTemplateName);
 			List<GameObjectComponentPrototype> entities = query.getResultList();
-			transaction.commit();
+			ctx.commit(session);
 			return entities;
 		} catch (Exception e) {
-			if(transaction != null) {
-				transaction.rollback();
-			}
+			ctx.rollback(session);
 			throw new RuntimeException(e);
 		}
 	}

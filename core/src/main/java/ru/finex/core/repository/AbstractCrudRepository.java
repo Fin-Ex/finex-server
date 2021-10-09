@@ -2,120 +2,104 @@ package ru.finex.core.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
-import ru.finex.core.db.DbSessionService;
+import ru.finex.core.db.impl.TransactionalContext;
 import ru.finex.core.model.entity.Entity;
 import ru.finex.core.utils.GenericUtils;
 
+import java.io.Serializable;
 import java.util.List;
-import javax.inject.Inject;
 import javax.persistence.Query;
 
 /**
- *
  * @project finex-server
  * @author finfan: 13.09.2021
  */
 @Slf4j
-public abstract class AbstractCrudRepository<T extends Entity> implements CrudRepository<T> {
+public abstract class AbstractCrudRepository<T extends Entity<ID>, ID extends Serializable> implements CrudRepository<T, ID> {
 
-	private final Class<T> entityClass = GenericUtils.getGenericType(getClass(), 0);
-
-	@Inject
-	protected DbSessionService sessionService;
+	protected final Class<T> entityClass = GenericUtils.getGenericType(getClass(), 0);
 
 	@Override
 	public T create(T entity) {
-		Transaction transaction = null;
-		try(Session session = sessionService.openSession()) {
-			transaction = session.beginTransaction();
-			int persistenceId = (int) session.save(entity);
+		TransactionalContext ctx = TransactionalContext.get();
+		Session session = ctx.session();
+		try {
+			ID persistenceId = (ID) session.save(entity);
+			ctx.commit(session);
+
 			entity.setPersistenceId(persistenceId);
-			transaction.commit();
 			return entity;
 		} catch (Exception e) {
-			if(transaction != null) {
-				transaction.rollback();
-			}
+			ctx.rollback(session);
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
 	public void update(T entity) {
-		Transaction transaction = null;
-		try(Session session = sessionService.openSession()) {
-			transaction = session.beginTransaction();
+		TransactionalContext ctx = TransactionalContext.get();
+		Session session = ctx.session();
+		try {
 			session.update(entity);
-			transaction.commit();
+			ctx.commit(session);
 		} catch (Exception e) {
-			if(transaction != null) {
-				transaction.rollback();
-			}
+			ctx.rollback(session);
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
 	public T restore(T entity) {
-		Transaction transaction = null;
-		try(Session session = sessionService.openSession()) {
-			transaction = session.beginTransaction();
+		TransactionalContext ctx = TransactionalContext.get();
+		Session session = ctx.session();
+		try {
 			session.load(entity, entity.getPersistenceId());
-			transaction.commit();
+			ctx.commit(session);
 			return entity;
 		} catch (Exception e) {
-			if(transaction != null) {
-				transaction.rollback();
-			}
+			ctx.rollback(session);
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
 	public void delete(T entity) {
-		Transaction transaction = null;
-		try(Session session = sessionService.openSession()) {
-			transaction = session.beginTransaction();
+		TransactionalContext ctx = TransactionalContext.get();
+		Session session = ctx.session();
+		try {
 			session.delete(entity);
-			transaction.commit();
+			ctx.commit(session);
 		} catch (Exception e) {
-			if(transaction != null) {
-				transaction.rollback();
-			}
+			ctx.rollback(session);
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
 	public List<T> findAll() {
-		Transaction transaction = null;
-		try(Session session = sessionService.openSession()) {
-			transaction = session.beginTransaction();
+		TransactionalContext ctx = TransactionalContext.get();
+		Session session = ctx.session();
+		try {
 			Query query = session.createQuery("SELECT t FROM " + entityClass.getSimpleName() + " t");
 			List<T> entities = query.getResultList();
-			transaction.commit();
+			ctx.commit(session);
 			return entities;
 		} catch (Exception e) {
-			if(transaction != null) {
-				transaction.rollback();
-			}
+			ctx.rollback(session);
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	public T findById(int id) {
-		Transaction transaction = null;
-		try(Session session = sessionService.openSession()) {
-			transaction = session.beginTransaction();
+	public T findById(ID id) {
+		TransactionalContext ctx = TransactionalContext.get();
+		Session session = ctx.session();
+		try {
 			T entity = session.find(entityClass, id);
-			transaction.commit();
+			ctx.commit(session);
 			return entity;
 		} catch (Exception e) {
-			if(transaction != null) {
-				transaction.rollback();
-			}
+			ctx.rollback(session);
 			throw new RuntimeException(e);
 		}
 	}

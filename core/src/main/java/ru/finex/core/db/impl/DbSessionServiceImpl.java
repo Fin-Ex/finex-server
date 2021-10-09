@@ -1,5 +1,6 @@
 package ru.finex.core.db.impl;
 
+import lombok.Getter;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -20,6 +21,7 @@ import javax.inject.Singleton;
 @Singleton
 public class DbSessionServiceImpl implements DbSessionService {
 
+    @Getter
     private final SessionFactory sessionFactory;
 
     @Inject

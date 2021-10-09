@@ -1,24 +1,26 @@
 package ru.finex.core.model.entity;
 
+import java.io.Serializable;
+
 /**
  * Общий интерфейс для всех персистентных сущностей.
  *
  * @author m0nster.mind
  */
-public interface Entity {
+public interface Entity<ID extends Serializable> {
 
     /**
      * Получить ID (primary key) под которым идет сохранение сущности в БД.
      *
      * @return ID
      */
-    int getPersistenceId();
+    ID getPersistenceId();
 
     /**
      * Установить ID (primary key) сущности.
      *
      * @param persistenceId ID
      */
-    void setPersistenceId(int persistenceId);
+    void setPersistenceId(ID persistenceId);
 
 }
