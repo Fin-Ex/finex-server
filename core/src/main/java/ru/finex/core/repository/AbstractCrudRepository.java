@@ -2,13 +2,13 @@ package ru.finex.core.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 import ru.finex.core.db.impl.TransactionalContext;
 import ru.finex.core.model.entity.Entity;
 import ru.finex.core.utils.GenericUtils;
 
 import java.io.Serializable;
 import java.util.List;
-import javax.persistence.Query;
 
 /**
  * @project finex-server
@@ -80,7 +80,7 @@ public abstract class AbstractCrudRepository<T extends Entity<ID>, ID extends Se
 		TransactionalContext ctx = TransactionalContext.get();
 		Session session = ctx.session();
 		try {
-			Query query = session.createQuery("SELECT t FROM " + entityClass.getSimpleName() + " t");
+			Query<T> query = session.createQuery("SELECT t FROM " + entityClass.getSimpleName() + " t", entityClass);
 			List<T> entities = query.getResultList();
 			ctx.commit(session);
 			return entities;

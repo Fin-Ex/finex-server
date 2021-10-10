@@ -41,7 +41,8 @@
 	<modules>
 		<module>core</module>
 		<module>worldserver</module>
-	</modules>
+        <module>authserver</module>
+    </modules>
 
 	<build>
 		<plugins>
