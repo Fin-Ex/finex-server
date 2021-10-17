@@ -10,6 +10,7 @@ import java.util.ListIterator;
 /**
  * @author m0nster.mind
  */
+@SuppressWarnings("checkstyle:JavadocType")
 public class SortedArrayList<E> implements List<E> {
 
     private final ArrayList<E> list;
@@ -69,8 +70,18 @@ public class SortedArrayList<E> implements List<E> {
     }
 
     @Override
+    public void add(int index, E element) {
+        list.add(index, element);
+    }
+
+    @Override
     public boolean remove(Object o) {
         return list.remove(o);
+    }
+
+    @Override
+    public E remove(int index) {
+        return list.remove(index);
     }
 
     @Override
@@ -113,16 +124,6 @@ public class SortedArrayList<E> implements List<E> {
     @Override
     public E set(int index, E element) {
         return list.set(index, element);
-    }
-
-    @Override
-    public void add(int index, E element) {
-        list.add(index, element);
-    }
-
-    @Override
-    public E remove(int index) {
-        return list.remove(index);
     }
 
     @Override

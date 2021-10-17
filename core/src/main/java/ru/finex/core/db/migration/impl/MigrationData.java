@@ -24,6 +24,7 @@ public class MigrationData {
     private List<String> upQueries = new ArrayList<>();
     private List<String> downQueries = new ArrayList<>();
 
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public static MigrationData combine(MigrationData o1, MigrationData o2) {
         return new MigrationData(
             o1.getComponent(),

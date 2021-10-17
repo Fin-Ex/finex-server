@@ -10,28 +10,26 @@ import javax.inject.Singleton;
 import javax.persistence.Query;
 
 /**
- *
- * @project finex-server
- * @author finfan: 13.09.2021
+ * @author finfan
  */
 @Singleton
 public class GameObjectPrototypeRepositoryImpl
-	extends AbstractCrudRepository<GameObjectPrototype, Integer>
-	implements GameObjectPrototypeRepository {
+    extends AbstractCrudRepository<GameObjectPrototype, Integer>
+    implements GameObjectPrototypeRepository {
 
-	@Override
-	public GameObjectPrototype findByName(String name) {
-		TransactionalContext ctx = TransactionalContext.get();
-		Session session = ctx.session();
-		try {
-			Query query = session.createQuery("SELECT t FROM GameObjectTemplate t WHERE name = :name");
-			query.setParameter("name", name);
-			Object singleResult = query.getSingleResult();
-			ctx.commit(session);
-			return (GameObjectPrototype) singleResult;
-		} catch (Exception e) {
-			ctx.rollback(session);
-			throw new RuntimeException(e);
-		}
-	}
+    @Override
+    public GameObjectPrototype findByName(String name) {
+        TransactionalContext ctx = TransactionalContext.get();
+        Session session = ctx.session();
+        try {
+            Query query = session.createQuery("SELECT t FROM GameObjectTemplate t WHERE name = :name");
+            query.setParameter("name", name);
+            Object singleResult = query.getSingleResult();
+            ctx.commit(session);
+            return (GameObjectPrototype) singleResult;
+        } catch (Exception e) {
+            ctx.rollback(session);
+            throw new RuntimeException(e);
+        }
+    }
 }

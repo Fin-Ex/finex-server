@@ -6,13 +6,12 @@ import ru.finex.ws.model.entity.GameObjectPrototype;
 import ru.finex.ws.repository.impl.GameObjectPrototypeRepositoryImpl;
 
 /**
- *
- * @project finex-server
- * @author finfan: 13.09.2021
+ * @author finfan
  */
 @ImplementedBy(GameObjectPrototypeRepositoryImpl.class)
 public interface GameObjectPrototypeRepository extends CrudRepository<GameObjectPrototype, Integer> {
 
-	GameObjectPrototype findByName(String name);
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
+    GameObjectPrototype findByName(String name);
 
 }

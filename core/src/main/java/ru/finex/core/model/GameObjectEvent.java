@@ -9,6 +9,10 @@ public interface GameObjectEvent extends Cleanable {
 
     String CHANNEL = "ru.finex.core.model.GameObject";
 
+    /**
+     * Игровой объект, который является инициатором события.
+     * @return игровой объект
+     */
     GameObject getGameObject();
 
 }

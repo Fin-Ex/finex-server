@@ -6,9 +6,11 @@ import ru.finex.core.persistence.PersistenceObject;
 /**
  * @author m0nster.mind
  */
+@SuppressWarnings("checkstyle:MissingJavadocMethod")
 public interface Component extends PersistenceObject {
 
     GameObject getGameObject();
+
     void setGameObject(GameObject gameObject);
 
     default boolean isType(Class<?> type) {

@@ -7,32 +7,36 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * @param <E> event type
  * @author m0nster.mind
- * @date 23.03.2018
  */
 public class LocalEventBus<E> implements EventBus<E> {
 
-	private final Set<AbstractEventSubscription<?>> subscriptions = ConcurrentHashMap.newKeySet();
+    private final Set<AbstractEventSubscription<?>> subscriptions = ConcurrentHashMap.newKeySet();
 
-	@SuppressWarnings({"rawtypes", "unchecked"})
-	public void notify(E object) {
-		for (AbstractEventSubscription subscription : subscriptions) {
-			subscription.execute(object);
-		}
-	}
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
+    public void notify(E object) {
+        for (AbstractEventSubscription subscription : subscriptions) {
+            subscription.execute(object);
+        }
+    }
 
-	public EventSubscription<E> subscribe() {
-		final SingleEventSubscription<E> subscription = new SingleEventSubscription<>();
-		subscriptions.add(subscription);
-		return subscription;
-	}
+    @Override
+    public EventSubscription<E> subscribe() {
+        final SingleEventSubscription<E> subscription = new SingleEventSubscription<>();
+        subscriptions.add(subscription);
+        return subscription;
+    }
 
-	public void unsubscribe(EventSubscription<E> subscription) {
-		subscriptions.remove(subscription);
-	}
+    @Override
+    public void unsubscribe(EventSubscription<E> subscription) {
+        subscriptions.remove(subscription);
+    }
 
-	public void unsubscribeAll() {
-		subscriptions.clear();
-	}
+    @Override
+    public void unsubscribeAll() {
+        subscriptions.clear();
+    }
 
 }

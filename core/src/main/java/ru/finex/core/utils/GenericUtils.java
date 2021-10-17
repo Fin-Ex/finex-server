@@ -18,6 +18,7 @@ public class GenericUtils {
      * @return класс генерика или null
      * @throws IllegalArgumentException в случае, если order больше, чем количество генериков у класса
      */
+    @SuppressWarnings({"checkstyle:JavadocMethod", "checkstyle:ParameterAssignment"})
     public static <T> Class<T> getGenericType(Class<?> type, int order) throws IllegalArgumentException {
         while (type.getCanonicalName().contains("EnhancerByGuice")) {
             type = type.getSuperclass();
@@ -43,6 +44,7 @@ public class GenericUtils {
      * @return класс генерика или null
      * @throws IllegalArgumentException в случае, если order больше, чем количество генериков у класса
      */
+    @SuppressWarnings({"checkstyle:JavadocMethod", "checkstyle:ParameterAssignment"})
     public static <T> Class<T> getInterfaceGenericType(Class<?> type, Class<?> interfaceType, int order) throws IllegalArgumentException {
         while (type.getCanonicalName().contains("EnhancerByGuice")) {
             type = type.getSuperclass();

@@ -10,6 +10,7 @@ import static ru.finex.ws.tick.TickLevel.LEVEL_UPDATE;
 /**
  * @author m0nster.mind
  */
+@SuppressWarnings("checkstyle:MissingJavadocMethod")
 @RequiredArgsConstructor
 public enum TickStage {
     PRE_INPUT(LEVEL_INPUT),
@@ -22,9 +23,23 @@ public enum TickStage {
     UPDATE(LEVEL_UPDATE),
     POST_UPDATE(LEVEL_UPDATE);
 
-    public static final TickStage[] INPUT_STAGES = { PRE_INPUT, INPUT, POST_INPUT };
-    public static final TickStage[] PHYSICS_STAGES = { PRE_PHYSICS, PHYSICS, POST_PHYSICS };
-    public static final TickStage[] UPDATE_STAGES = { PRE_UPDATE, UPDATE, POST_UPDATE };
+    public static final TickStage[] INPUT_STAGES = {
+        PRE_INPUT,
+        INPUT,
+        POST_INPUT
+    };
+
+    public static final TickStage[] PHYSICS_STAGES = {
+        PRE_PHYSICS,
+        PHYSICS,
+        POST_PHYSICS
+    };
+
+    public static final TickStage[] UPDATE_STAGES = {
+        PRE_UPDATE,
+        UPDATE,
+        POST_UPDATE
+    };
 
     @Getter
     private final int level;

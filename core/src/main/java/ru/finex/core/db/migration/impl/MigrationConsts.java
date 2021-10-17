@@ -20,8 +20,8 @@ public class MigrationConsts {
         )
         """;
 
-    public static final String MIGRATION_INDEX = """
-        create unique index if not exists db_evolutions_component_version_idx on db_evolutions(component, version)
-    """;
+    @SuppressWarnings("checkstyle:Indentation")
+    public static final String MIGRATION_INDEX =
+        "create unique index if not exists db_evolutions_component_version_idx on db_evolutions(component, version)";
 
 }

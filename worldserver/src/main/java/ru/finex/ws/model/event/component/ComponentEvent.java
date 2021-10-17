@@ -8,6 +8,10 @@ import ru.finex.core.model.GameObjectEvent;
  */
 public interface ComponentEvent extends GameObjectEvent {
 
+    /**
+     * Компонент, который является инициатором события.
+     * @return компонент
+     */
     Component getComponent();
 
 }

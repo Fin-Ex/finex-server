@@ -19,6 +19,7 @@ import org.redisson.client.protocol.Encoder;
  *
  * @author m0nster.mind
  */
+@SuppressWarnings("checkstyle:all")
 public class Kryo5Codec extends BaseCodec {
 
     private final Pool<Kryo> kryoPool;

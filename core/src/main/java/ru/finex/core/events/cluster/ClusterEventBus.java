@@ -7,6 +7,7 @@ import ru.finex.core.utils.GenericUtils;
 /**
  * @author m0nster.mind
  */
+@SuppressWarnings({"checkstyle:JavadocType", "checkstyle:MissingJavadocMethod"})
 public class ClusterEventBus<E> {
 
     private final RTopic topic;

@@ -4,6 +4,8 @@ import org.redisson.api.RBucket;
 import ru.finex.core.utils.Holder;
 
 /**
+ * @param value stored value
+ * @param <T> stored class
  * @author m0nster.mind
  */
 public record BucketAdapter<T>(RBucket<T> value) implements Holder<T> {

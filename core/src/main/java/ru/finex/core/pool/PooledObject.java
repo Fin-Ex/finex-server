@@ -28,5 +28,4 @@ public @interface PooledObject {
 
     Class<? extends PooledObjectFactory> factory() default SimplePooledObjectFactory.class;
 
-
 }

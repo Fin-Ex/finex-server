@@ -16,12 +16,14 @@ import javax.inject.Singleton;
 /**
  * @author m0nster.mind
  */
+@SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:UncommentedMain"})
 @Slf4j
 @Singleton
 @Evolution("ws")
 public class WorldServerApplication implements ServerContext, ApplicationBuilt {
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private Injector injector;
 
     @Inject

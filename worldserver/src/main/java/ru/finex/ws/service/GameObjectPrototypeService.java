@@ -11,6 +11,7 @@ import java.util.List;
 @ImplementedBy(GameObjectPrototypeServiceImpl.class)
 public interface GameObjectPrototypeService {
 
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
     List<String> getComponentsByPrototypeName(String objectName);
 
 }

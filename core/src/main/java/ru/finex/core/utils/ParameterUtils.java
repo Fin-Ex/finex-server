@@ -12,6 +12,7 @@ import java.util.List;
  * @author m0nster.mind
  */
 @UtilityClass
+@SuppressWarnings("checkstyle:MissingJavadocMethod")
 public class ParameterUtils {
 
     public static List<Method> getMethodsWithParameterAnnotation(Class<?> type, Class<? extends Annotation> annotationType,
@@ -37,6 +38,7 @@ public class ParameterUtils {
         return result;
     }
 
+    @SuppressWarnings("checkstyle:UnnecessaryParentheses")
     private static List<Class<?>> getAllSuperclassesAndInterfaces(final Class<?> cls) {
         if (cls == null) {
             return null;

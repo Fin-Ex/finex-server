@@ -11,10 +11,12 @@ import ru.finex.ws.model.Client;
  */
 public class GameWorkerThread extends Thread {
 
-    @Getter @Setter(AccessLevel.PROTECTED)
+    @Getter
+    @Setter(AccessLevel.PROTECTED)
     private Client client;
 
-    @Getter @Setter(AccessLevel.PROTECTED)
+    @Getter
+    @Setter(AccessLevel.PROTECTED)
     private GameObject gameObject;
 
     /**

@@ -13,6 +13,7 @@ import javax.inject.Provider;
 /**
  * @author m0nster.mind
  */
+@SuppressWarnings("checkstyle:JavadocType")
 @RequiredArgsConstructor
 public class ConfigInjectionListener<I> implements InjectionListener<I> {
 
@@ -22,6 +23,7 @@ public class ConfigInjectionListener<I> implements InjectionListener<I> {
     private final boolean acceptMissing;
     private final boolean acceptNullable;
 
+    @SuppressWarnings("checkstyle:ReturnCount")
     @Override
     public void afterInjection(I injectee) {
         Config config = configProvider.get();

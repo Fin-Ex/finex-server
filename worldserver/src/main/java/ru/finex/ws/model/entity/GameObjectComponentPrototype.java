@@ -15,22 +15,22 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
- *
- * @project finex-server
- * @author finfan: 13.09.2021
+ * @author finfan
  */
 @Data
 @Entity
 @Table(name = "game_object_component_prototypes")
 public class GameObjectComponentPrototype implements ru.finex.core.model.entity.Entity<Integer> {
-	@Id
-	@Column(name = "id")
-	@SequenceGenerator(name = "game_object_component_prototypes_id_seq", sequenceName = "game_object_component_prototypes_id_seq", allocationSize = 1)
-	@GeneratedValue(generator = "game_object_component_prototypes_id_seq", strategy = GenerationType.SEQUENCE)
-	private Integer persistenceId;
-	@Column(name = "component", nullable = false)
-	private String component;
-	@JoinColumn(name = "prototype_id", referencedColumnName = "id", nullable = false)
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private GameObjectPrototype gameObjectPrototype;
+    @Id
+    @Column(name = "id")
+    @SequenceGenerator(name = "game_object_component_prototypes_id_seq", sequenceName = "game_object_component_prototypes_id_seq", allocationSize = 1)
+    @GeneratedValue(generator = "game_object_component_prototypes_id_seq", strategy = GenerationType.SEQUENCE)
+    private Integer persistenceId;
+
+    @Column(name = "component", nullable = false)
+    private String component;
+
+    @JoinColumn(name = "prototype_id", referencedColumnName = "id", nullable = false)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private GameObjectPrototype gameObjectPrototype;
 }

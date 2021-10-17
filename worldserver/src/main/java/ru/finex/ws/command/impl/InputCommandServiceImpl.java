@@ -25,6 +25,7 @@ public class InputCommandServiceImpl extends AbstractCommandService<AbstractGame
         return new ArrayDeque<>(512);
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Override
     protected Queue<AbstractGameObjectCommand> createQueue() {
         return new ArrayBlockingQueue<>(2048);

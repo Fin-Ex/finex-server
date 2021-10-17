@@ -80,8 +80,8 @@ public class TransactionalMethodInterceptor implements MethodInterceptor {
 
     private static boolean canRollback(Transactional transactional, Exception e) {
         Class[] rollbackOn = transactional.rollbackOn();
-        return Stream.of(transactional.dontRollbackOn()).noneMatch(exception -> exception.isInstance(e))
-            && (Stream.of(rollbackOn).anyMatch(exception -> exception.isInstance(e)) || rollbackOn.length == 0);
+        return Stream.of(transactional.dontRollbackOn()).noneMatch(exception -> exception.isInstance(e)) &&
+            (Stream.of(rollbackOn).anyMatch(exception -> exception.isInstance(e)) || rollbackOn.length == 0);
     }
 
     private static void closeSession(TransactionalContext context, TxType strategy) {

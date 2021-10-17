@@ -30,9 +30,13 @@ public class ClusteredProviders {
             ));
     }
 
+    /**
+     * Search clustered provider by specified type.
+     * @param type type
+     * @return clustered provider or null if provider not found
+     */
     public ClusteredProvider<?> get(Class<?> type) {
         return providers.get(type);
     }
-
 
 }

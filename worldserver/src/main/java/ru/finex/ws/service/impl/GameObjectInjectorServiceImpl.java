@@ -27,6 +27,7 @@ import java.util.Objects;
 /**
  * @author m0nster.mind
  */
+@SuppressWarnings("checkstyle:MissingJavadocMethod")
 @RequiredArgsConstructor(onConstructor_ = { @Inject })
 public class GameObjectInjectorServiceImpl implements GameObjectInjectorService {
 

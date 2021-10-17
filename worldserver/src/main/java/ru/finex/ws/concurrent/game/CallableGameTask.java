@@ -10,6 +10,7 @@ import java.util.concurrent.Callable;
 /**
  * Игровая задача.
  *
+ * @param <T> результат выполнения задачи
  * @author m0nster.mind
  */
 public class CallableGameTask<T> extends CallableServerTask<T> implements GameTask {
@@ -22,6 +23,7 @@ public class CallableGameTask<T> extends CallableServerTask<T> implements GameTa
 
     /**
      * Создать игровую задачу.
+     *
      * @param callable задача
      * @param client клиент, который выполняет данную задачу
      */
@@ -31,6 +33,7 @@ public class CallableGameTask<T> extends CallableServerTask<T> implements GameTa
 
     /**
      * Создать игровую задачу.
+     *
      * @param callable задача
      * @param client клиент, который выполняет данную задачу
      * @param gameObject игрок, который выполняет данную задачу (can be null)

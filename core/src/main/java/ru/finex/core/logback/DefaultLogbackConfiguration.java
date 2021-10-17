@@ -16,8 +16,11 @@ import org.slf4j.impl.StaticLoggerBinder;
  */
 public class DefaultLogbackConfiguration {
 
-    private final static String PATTERN = "%d{yyyy-MM-dd HH:mm:ss.SSS} [%magenta(%thread)] %highlight(%-5level) %cyan(%logger{15}): %msg%n";
+    private static final String PATTERN = "%d{yyyy-MM-dd HH:mm:ss.SSS} [%magenta(%thread)] %highlight(%-5level) %cyan(%logger{15}): %msg%n";
 
+    /**
+     * Apply default logging configuration.
+     */
     public void applyDefault() {
         LoggerContext ctx = (LoggerContext) StaticLoggerBinder.getSingleton().getLoggerFactory();
         ctx.stop();

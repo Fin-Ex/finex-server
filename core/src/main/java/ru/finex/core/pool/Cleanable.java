@@ -5,6 +5,9 @@ package ru.finex.core.pool;
  */
 public interface Cleanable {
 
+    /**
+     * Reset all inner variables.
+     */
     void clear();
 
 }

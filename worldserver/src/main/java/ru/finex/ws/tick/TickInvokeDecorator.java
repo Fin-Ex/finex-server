@@ -5,6 +5,7 @@ package ru.finex.ws.tick;
  */
 public interface TickInvokeDecorator {
 
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
     void onTick();
 
 }

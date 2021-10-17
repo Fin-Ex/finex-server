@@ -8,6 +8,7 @@ import java.util.Map;
 /**
  * @author m0nster.mind
  */
+@SuppressWarnings("checkstyle:VisibilityModifier")
 public class GlobalContext {
 
     public static Injector injector;

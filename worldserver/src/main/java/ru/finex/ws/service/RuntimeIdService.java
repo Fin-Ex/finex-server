@@ -9,6 +9,10 @@ import ru.finex.ws.id.RuntimeIdServiceImpl;
 @ImplementedBy(RuntimeIdServiceImpl.class)
 public interface RuntimeIdService {
 
+    /**
+     * Generates runtime ID.
+     * @return runtime ID
+     */
     int generateId();
 
 }

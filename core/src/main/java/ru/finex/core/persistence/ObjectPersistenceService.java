@@ -1,7 +1,5 @@
 package ru.finex.core.persistence;
 
-import ru.finex.core.persistence.PersistenceObject;
-
 /**
  * Сервис для управления персистенцией.
  *

@@ -20,6 +20,7 @@ import javax.sql.DataSource;
  * @author m0nster.mind
  */
 @Singleton
+@SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:Indentation"})
 public class MigrationDao {
 
     private final Gson gson = new Gson();
@@ -79,6 +80,7 @@ public class MigrationDao {
         }
     }
 
+    @SuppressWarnings("checkstyle:NestedTryDepth")
     public void rollbackAndDeleteRecursive(String component, int version) {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(false);
@@ -132,7 +134,7 @@ public class MigrationDao {
                 while (results.next()) {
                     List<String> queries = gson.fromJson(
                         results.getString(1),
-                        new TypeToken<List<String>>() {}.getType()
+                        new TypeToken<List<String>>() { }.getType()
                     );
                     result.addAll(queries);
                 }

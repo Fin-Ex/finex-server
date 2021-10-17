@@ -11,7 +11,9 @@ import java.util.Deque;
 import java.util.NoSuchElementException;
 
 /**
- * {@inheritDoc}
+ * {@inheritDoc}.
+ *
+ * @param <E> pooled class
  * @author m0nster.mind
  */
 public class ArrayDequePool<E> implements ObjectPool<E> {

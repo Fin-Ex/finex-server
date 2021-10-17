@@ -16,18 +16,10 @@ import javax.inject.Inject;
  * @author m0nster.mind
  * @see javax.transaction.Transactional
  */
+@SuppressWarnings("checkstyle:MissingJavadocMethod")
 public class TransactionalContext {
 
-    private final static ThreadLocal<TransactionalContext> local = new ThreadLocal<>();
-    public static TransactionalContext get() {
-        TransactionalContext ctx = local.get();
-        if (ctx == null) {
-            ctx = GlobalContext.injector.getInstance(TransactionalContext.class);
-            local.set(ctx);
-        }
-
-        return ctx;
-    }
+    private static final ThreadLocal<TransactionalContext> LOCAL = new ThreadLocal<>();
 
     private final ArrayDeque<Session> sessionStack = new ArrayDeque<>();
 
@@ -37,6 +29,16 @@ public class TransactionalContext {
     @Inject
     public TransactionalContext(DbSessionService sessionService) {
         sessionFactory = sessionService.getSessionFactory();
+    }
+
+    public static TransactionalContext get() {
+        TransactionalContext ctx = LOCAL.get();
+        if (ctx == null) {
+            ctx = GlobalContext.injector.getInstance(TransactionalContext.class);
+            LOCAL.set(ctx);
+        }
+
+        return ctx;
     }
 
     void putSession(Session session) {
@@ -51,7 +53,10 @@ public class TransactionalContext {
         return !sessionStack.isEmpty();
     }
 
-    /** Получение текущий сессии и начало/продолжение транзакции. */
+    /**
+     * Получение текущий сессии и начало/продолжение транзакции.
+     * @return {@link Session}
+     */
     public Session session() {
         Session session = sessionStack.peekFirst();
         if (session == null) {
