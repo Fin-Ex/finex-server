@@ -12,6 +12,7 @@ import javax.persistence.NoResultException;
 /**
  * @author m0nster.mind
  */
+@SuppressWarnings("checkstyle:Indentation")
 @Singleton
 public class UserRepositoryImpl extends AbstractCrudRepository<UserEntity, Long> implements UserRepository {
 

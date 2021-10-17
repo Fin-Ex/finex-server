@@ -28,6 +28,10 @@ public class AuthServerApplication implements ServerContext, ApplicationBuilt {
     @Inject
     private SelectorThread selectorThread;
 
+    /**
+     * Entry point.
+     * @param args arguments
+     */
     public static void main(String[] args) {
         try {
             ServerApplication.start(AuthServerApplication.class.getPackageName(), args);

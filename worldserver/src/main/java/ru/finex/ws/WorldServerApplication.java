@@ -16,7 +16,6 @@ import javax.inject.Singleton;
 /**
  * @author m0nster.mind
  */
-@SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:UncommentedMain"})
 @Slf4j
 @Singleton
 @Evolution("ws")
@@ -29,6 +28,10 @@ public class WorldServerApplication implements ServerContext, ApplicationBuilt {
     @Inject
     private SelectorThread selectorThread;
 
+    /**
+     * Entry point.
+     * @param args arguments
+     */
     public static void main(String[] args) {
         try {
             ServerApplication.start(WorldServerApplication.class.getPackageName(), args);

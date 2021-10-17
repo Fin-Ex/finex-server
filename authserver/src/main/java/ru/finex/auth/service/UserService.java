@@ -51,9 +51,9 @@ public interface UserService {
     void createUser(String login, String password, String hash) throws DuplicateUserException;
 
     /**
-     * Generate a new random password for user and send it to
-     * @param login
-     * @throws UserNotFoundException
+     * Generate a new random password for user and send it to.
+     * @param login login name
+     * @throws UserNotFoundException user with specified login not found
      */
     void restorePassword(String login) throws UserNotFoundException;
 

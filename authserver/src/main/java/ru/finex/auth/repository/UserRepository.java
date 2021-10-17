@@ -11,7 +11,17 @@ import ru.finex.core.repository.CrudRepository;
 @ImplementedBy(UserRepositoryImpl.class)
 public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
+    /**
+     * Find user by login name.
+     * @param login login name
+     * @return user or null if not exists
+     */
     UserEntity findByLogin(String login);
+
+    /**
+     * Clear user TOTP secret.
+     * @param id user ID
+     */
     void clearSecret(Long id);
 
 }

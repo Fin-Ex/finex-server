@@ -10,5 +10,6 @@ import javax.inject.Singleton;
  * @author m0nster.mind
  */
 @Singleton
-public class RestorePasswordCodeRepositoryImpl extends AbstractCrudRepository<RestorePasswordCodeEntity, Long> implements RestorePasswordCodeRepository {
+public class RestorePasswordCodeRepositoryImpl extends AbstractCrudRepository<RestorePasswordCodeEntity, Long>
+    implements RestorePasswordCodeRepository {
 }

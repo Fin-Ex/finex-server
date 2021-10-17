@@ -57,6 +57,10 @@ public class UserServiceImpl implements UserService {
         return checkPassword(user, hashedPassword);
     }
 
+    private boolean checkPassword(UserEntity user, String password) {
+        return Objects.equals(user.getPassword(), password);
+    }
+
     private String hashPassword(String password, String hash) {
         MessageDigest messageDigest;
         try {
@@ -66,10 +70,6 @@ public class UserServiceImpl implements UserService {
         }
 
         return new String(Base64.getEncoder().encode(messageDigest.digest(password.getBytes())));
-    }
-
-    private boolean checkPassword(UserEntity user, String password) {
-        return Objects.equals(user.getPassword(), password);
     }
 
     @Transactional

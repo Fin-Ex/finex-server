@@ -11,6 +11,7 @@ import javax.inject.Singleton;
 /**
  * @author m0nster.mind
  */
+@SuppressWarnings("checkstyle:Indentation")
 @Singleton
 public class TOTPRecoveryCodeRepositoryImpl extends AbstractCrudRepository<TOTPRecoveryCodeEntity, Long> implements TOTPRecoveryCodeRepository {
 

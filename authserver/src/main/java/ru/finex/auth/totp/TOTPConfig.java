@@ -11,7 +11,7 @@ import ru.finex.core.hocon.ConfigResource;
 @ConfigResource
 public class TOTPConfig {
 
-    public static enum TimeProviderType {
+    public enum TimeProviderType {
         LOCAL,
         NTP
     }

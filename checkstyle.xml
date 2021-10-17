@@ -188,7 +188,7 @@
         <module name="JavadocTagContinuationIndentation"/>
         <!-- See http://checkstyle.sourceforge.net/config_javadoc.html#AtclauseOrder -->
         <module name="AtclauseOrder">
-            <property name="tagOrder" value="@exception, @param, @return, @serial, @serialData, @serialField, @throws, @author, @since, @version, @see, @deprecated"/>
+            <property name="tagOrder" value="@param, @return, @exception, @serial, @serialData, @serialField, @throws, @author, @since, @version, @see, @deprecated"/>
         </module>
 
         <!-- Miscellaneous other checks -->
@@ -196,8 +196,6 @@
         <module name="TodoComment">
             <property name="severity" value="warning"/>
         </module>
-        <!-- See http://checkstyle.sourceforge.net/config_misc.html#UncommentedMain -->
-        <module name="UncommentedMain"/>
         <!-- See http://checkstyle.sourceforge.net/config_misc.html#UpperEll -->
         <module name="UpperEll"/>
         <!-- See http://checkstyle.sourceforge.net/config_misc.html#ArrayTypeStyle -->

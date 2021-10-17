@@ -10,6 +10,7 @@ import java.util.Arrays;
  * @author m0nster.mind
  * @see dev.samstevens.totp.recovery.RecoveryCodeGenerator
  */
+@SuppressWarnings("checkstyle:MissingJavadocMethod")
 public class RecoveryCodeGenerator {
 
     // Recovery code must reach a minimum entropy to be secured
@@ -43,7 +44,7 @@ public class RecoveryCodeGenerator {
     }
 
     private String generateCode() {
-        final StringBuilder code = new StringBuilder(CODE_LENGTH + (CODE_LENGTH/GROUPS_NBR) - 1);
+        final StringBuilder code = new StringBuilder(CODE_LENGTH + (CODE_LENGTH / GROUPS_NBR) - 1);
 
         SecureRandom random = RandomProvider.secureRandom().get();
         for (int i = 0; i < CODE_LENGTH; i++) {
@@ -51,7 +52,7 @@ public class RecoveryCodeGenerator {
             code.append(CHARACTERS[random.nextInt(CHARACTERS.length)]);
 
             // Split code into groups for increased readability
-            if ((i+1) % GROUPS_NBR == 0 && (i+1) != CODE_LENGTH) {
+            if ((i + 1) % GROUPS_NBR == 0 && (i + 1) != CODE_LENGTH) {
                 code.append("-");
             }
         }
