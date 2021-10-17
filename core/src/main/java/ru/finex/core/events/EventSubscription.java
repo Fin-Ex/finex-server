@@ -7,10 +7,13 @@ import java.util.function.Predicate;
 /**
  * @author m0nster.mind
  */
+@SuppressWarnings({"checkstyle:JavadocType", "checkstyle:MissingJavadocMethod"})
 public interface EventSubscription<T> {
 
     EventSubscription<T> filter(Predicate<T> predicate);
-    <Output> EventSubscription<Output> map(Function<T, Output> function);
+
+    <O> EventSubscription<O> map(Function<T, O> function);
+
     EventSubscription<T> forEach(Consumer<T> consumer);
 
     /**
@@ -20,7 +23,11 @@ public interface EventSubscription<T> {
      *     .filter(e -> e instanceof Type)
      *     .map(e -> (Type)e)
      * </pre></code>
+     *
+     * @param type type
+     * @param <O> output
+     * @return casted subscription
      */
-    <Output> EventSubscription<Output> cast(Class<Output> type);
+    <O> EventSubscription<O> cast(Class<O> type);
 
 }

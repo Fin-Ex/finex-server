@@ -6,18 +6,18 @@ import ru.finex.core.events.EventPipe;
 import java.util.function.Function;
 
 /**
- *
+ * @param <I> input
+ * @param <O> output
  * @author m0nster.mind
- * @date 23.03.2018
  */
 @RequiredArgsConstructor
-public class PipeMap<Input, Output> implements EventPipe<Input, Output> {
+public class PipeMap<I, O> implements EventPipe<I, O> {
 
-	private final Function<Input, Output> function;
+    private final Function<I, O> function;
 
-	@Override
-	public Output process(Input object) {
-		return function.apply(object);
-	}
+    @Override
+    public O process(I object) {
+        return function.apply(object);
+    }
 
 }

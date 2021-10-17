@@ -9,7 +9,16 @@ import java.util.List;
  */
 public interface ClientService {
 
+    /**
+     * Добавить новую сетевую сессию.
+     * @param client клиент
+     */
     void addSession(Client client);
+
+    /**
+     * Удалить сетевую сессию.
+     * @param client клиент
+     */
     void removeSession(Client client);
 
     /**

@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 /**
  * @author m0nster.mind
  */
+@SuppressWarnings({"checkstyle:JavadocType", "checkstyle:MissingJavadocMethod"})
 public interface ClusterSubscription<T> {
 
     default void processEvents(Consumer<T> consumer) {

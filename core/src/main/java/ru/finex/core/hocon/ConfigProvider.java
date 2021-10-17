@@ -33,10 +33,11 @@ public class ConfigProvider implements Provider<Config> {
         return config == null ? ConfigFactory.empty() : config;
     }
 
+    @SuppressWarnings("checkstyle:ReturnCount")
     private Config tryLoadFromFilesystem(String configName) {
         try {
             File file = new File("resources", configName);
-            if(!file.exists()) {
+            if (!file.exists()) {
                 return null;
             }
             return ConfigFactory.parseFile(file);

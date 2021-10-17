@@ -18,6 +18,7 @@ import java.util.function.Predicate;
  * {@link java.util.ArrayDeque} с фиксированным размером.
  * @author m0nster.mind
  */
+@SuppressWarnings("checkstyle:all")
 public class FixedArrayDeque<E> extends AbstractCollection<E> implements Deque<E>, Cloneable {
 
     /*

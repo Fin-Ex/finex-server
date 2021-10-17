@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
  * @author m0nster.mind
  */
 @UtilityClass
+@SuppressWarnings({"checkstyle:JavadocType", "checkstyle:MissingJavadocMethod"})
 public class InjectorUtils {
 
     public static List<Module> collectModules(Class<? extends Annotation> annType) {

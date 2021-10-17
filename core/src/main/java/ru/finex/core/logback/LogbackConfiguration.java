@@ -9,6 +9,10 @@ public class LogbackConfiguration {
 
     private final DefaultLogbackConfiguration configuration = new DefaultLogbackConfiguration();
 
+    /**
+     * Configure logback.
+     * Search a logback.xml configuration, if not found configures by default configuration.
+     */
     public void configureLogback() {
         ClassLoader classLoader = getClass().getClassLoader();
         URL resourceUrl = classLoader.getResource("logback.xml");

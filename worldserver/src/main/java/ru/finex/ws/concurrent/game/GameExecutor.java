@@ -1,6 +1,10 @@
 package ru.finex.ws.concurrent.game;
 
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.RunnableScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * @author m0nster.mind
@@ -29,13 +33,13 @@ public class GameExecutor extends ScheduledThreadPoolExecutor {
         thread.setClient(task.getClient());
         thread.setGameObject(task.getGameObject());
     }
-    
+
     @Override
     protected <V> RunnableScheduledFuture<V> decorateTask(Runnable runnable, RunnableScheduledFuture<V> task) {
         GameTask gameTask = (GameTask) runnable;
         return new GameScheduledFutureTask<>(task, gameTask.getClient(), gameTask.getGameObject());
     }
-    
+
     @Override
     protected <V> RunnableScheduledFuture<V> decorateTask(Callable<V> callable, RunnableScheduledFuture<V> task) {
         GameTask gameTask = (GameTask) callable;

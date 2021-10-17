@@ -1,12 +1,13 @@
 package ru.finex.core.events;
 
 /**
- *
+ * @param <I> input
+ * @param <O> output
  * @author m0nster.mind
- * @date 23.03.2018
  */
-public interface EventPipe<Input, Output> {
+@SuppressWarnings("checkstyle:MissingJavadocMethod")
+public interface EventPipe<I, O> {
 
-	Output process(Input object);
+    O process(I object);
 
 }

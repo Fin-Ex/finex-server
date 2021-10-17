@@ -10,6 +10,7 @@ import java.util.List;
  * @author m0nster.mind
  */
 @Slf4j
+@SuppressWarnings("checkstyle:MissingJavadocMethod")
 public class TickStageStorage {
 
     private final List<TickInvokeDecorator> stage = new ArrayList<>();

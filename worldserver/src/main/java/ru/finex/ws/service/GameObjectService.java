@@ -9,12 +9,14 @@ import ru.finex.ws.service.impl.GameObjectServiceImpl;
 /**
  * @author m0nster.mind
  */
+@SuppressWarnings("checkstyle:MissingJavadocMethod")
 @ImplementedBy(GameObjectServiceImpl.class)
 public interface GameObjectService {
 
     ClusterEventBus<GameObjectEvent> getEventBus();
 
     GameObject createGameObject(String template, int persistenceId);
+
     void destroyObject(GameObject gameObject);
 
     GameObject getGameObject(int runtimeId);

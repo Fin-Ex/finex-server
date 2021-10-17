@@ -8,13 +8,12 @@ import ru.finex.ws.repository.impl.GameObjectComponentPrototypeRepositoryImpl;
 import java.util.List;
 
 /**
- *
- * @project finex-server
- * @author finfan: 13.09.2021
+ * @author finfan
  */
 @ImplementedBy(GameObjectComponentPrototypeRepositoryImpl.class)
 public interface GameObjectComponentPrototypeRepository extends CrudRepository<GameObjectComponentPrototype, Integer> {
 
-	List<GameObjectComponentPrototype> findByGameObjectTemplateName(String gameObjectTemplateName);
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
+    List<GameObjectComponentPrototype> findByGameObjectTemplateName(String gameObjectTemplateName);
 
 }

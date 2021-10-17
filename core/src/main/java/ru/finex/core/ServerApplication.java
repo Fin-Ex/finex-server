@@ -26,6 +26,7 @@ import java.util.Map;
 @Evolution("core")
 public class ServerApplication {
 
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public static void start(String modulePackage, String[] args) {
         saveArguments(args);
 

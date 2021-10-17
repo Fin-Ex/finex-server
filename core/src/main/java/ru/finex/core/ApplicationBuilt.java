@@ -5,6 +5,9 @@ package ru.finex.core;
  */
 public interface ApplicationBuilt {
 
+    /**
+     * Вызывается, когда приложение построено/инициализировано.
+     */
     void onApplicationBuilt();
 
 }

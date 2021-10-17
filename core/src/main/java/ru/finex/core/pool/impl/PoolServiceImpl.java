@@ -5,9 +5,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.PooledObjectFactory;
 import ru.finex.core.GlobalContext;
-import ru.finex.core.pool.PooledObject;
 import ru.finex.core.pool.PoolConfiguration;
 import ru.finex.core.pool.PoolService;
+import ru.finex.core.pool.PooledObject;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -31,6 +31,11 @@ public class PoolServiceImpl implements PoolService {
 
         GlobalContext.reflections.getTypesAnnotatedWith(PooledObject.class)
             .forEach(this::createDynamicPool);
+    }
+
+    @Override
+    public void registerPool(Class<?> type, ObjectPool<?> pool) {
+        pools.put(type, pool);
     }
 
     private void registerPool(Object poolConfiguration) {
@@ -86,6 +91,7 @@ public class PoolServiceImpl implements PoolService {
         return (Class<?>) returnType.getActualTypeArguments()[0];
     }
 
+    @Override
     public <T> T getObject(Class<T> type) {
         ObjectPool<T> pool = pools.get(type);
         Objects.requireNonNull(pool, () -> String.format("Pool with '%s' type not found!", type.getCanonicalName()));
@@ -97,6 +103,7 @@ public class PoolServiceImpl implements PoolService {
         }
     }
 
+    @Override
     public void returnObject(Object object) {
         ObjectPool pool = pools.get(object.getClass());
         Objects.requireNonNull(pool, () -> String.format("Pool with '%s' type not found!", object.getClass().getCanonicalName()));
@@ -106,11 +113,6 @@ public class PoolServiceImpl implements PoolService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public void registerPool(Class<?> type, ObjectPool<?> pool) {
-        pools.put(type, pool);
     }
 
 }

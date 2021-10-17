@@ -11,6 +11,7 @@ import javax.inject.Singleton;
 /**
  * @author m0nster.mind
  */
+@SuppressWarnings("checkstyle:MagicNumber")
 @Singleton
 public class UpdateCommandServiceImpl extends AbstractCommandService<AbstractGameObjectCommand>
     implements UpdateCommandService {

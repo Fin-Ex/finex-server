@@ -27,6 +27,7 @@ public class MigrationParser {
     private static final Pattern PROCEDURE = Pattern.compile(";;");
     private static final Pattern END_QUERY = Pattern.compile(";");
 
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public ListMultimap<String, MigrationData> parseAll() {
         return GlobalContext.reflections.getResources(FILE_PATTERN)
             .stream()

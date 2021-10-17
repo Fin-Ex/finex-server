@@ -7,6 +7,10 @@ import org.redisson.api.RedissonClient;
  */
 public interface ClusterService {
 
+    /**
+     * Redisson client.
+     * @return {@link RedissonClient}
+     */
     RedissonClient getClient();
 
 }

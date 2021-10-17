@@ -9,7 +9,8 @@ import ru.finex.core.model.GameObject;
  */
 public abstract class AbstractGameObjectCommand implements Command {
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private GameObject gameObject;
 
 }

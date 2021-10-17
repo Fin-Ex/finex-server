@@ -3,9 +3,9 @@ package ru.finex.core.persistence.impl;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import ru.finex.core.GlobalContext;
 import ru.finex.core.model.entity.Entity;
+import ru.finex.core.persistence.ObjectPersistenceService;
 import ru.finex.core.persistence.PersistenceField;
 import ru.finex.core.persistence.PersistenceObject;
-import ru.finex.core.persistence.ObjectPersistenceService;
 import ru.finex.core.persistence.PersistenceService;
 
 import java.lang.reflect.Field;
@@ -23,12 +23,6 @@ public class ObjectPersistenceServiceImpl implements ObjectPersistenceService {
             .forEach(e -> persist(object, e, e.getAnnotation(PersistenceField.class).value()));
     }
 
-    @Override
-    public void restore(PersistenceObject object) {
-        FieldUtils.getFieldsListWithAnnotation(object.getClass(), PersistenceField.class)
-            .forEach(e -> restore(object, e, e.getAnnotation(PersistenceField.class).value()));
-    }
-
     private void persist(PersistenceObject object, Field field, Class<? extends PersistenceService> persistenceServiceType) {
         PersistenceService persistenceService = GlobalContext.injector.getInstance(persistenceServiceType);
         try {
@@ -39,6 +33,12 @@ public class ObjectPersistenceServiceImpl implements ObjectPersistenceService {
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void restore(PersistenceObject object) {
+        FieldUtils.getFieldsListWithAnnotation(object.getClass(), PersistenceField.class)
+            .forEach(e -> restore(object, e, e.getAnnotation(PersistenceField.class).value()));
     }
 
     private void restore(PersistenceObject object, Field field, Class<? extends PersistenceService> persistenceServiceType) {

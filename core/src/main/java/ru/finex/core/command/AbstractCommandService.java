@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Queue;
 
 /**
+ * @param <T> generic command
  * @author m0nster.mind
  */
 @Slf4j
@@ -76,7 +77,9 @@ public abstract class AbstractCommandService<T extends Command> implements Comma
     }
 
     protected abstract Queue<T> createPreQueue();
+
     protected abstract Queue<T> createQueue();
+
     protected abstract Queue<T> createPostQueue();
 
     protected abstract int getLimit();

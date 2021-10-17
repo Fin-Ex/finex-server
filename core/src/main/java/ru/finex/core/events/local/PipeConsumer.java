@@ -6,19 +6,18 @@ import ru.finex.core.events.EventPipe;
 import java.util.function.Consumer;
 
 /**
- *
+ * @param <I> input
  * @author m0nster.mind
- * @date 23.03.2018
  */
 @RequiredArgsConstructor
-public class PipeConsumer<Input> implements EventPipe<Input, Input> {
+public class PipeConsumer<I> implements EventPipe<I, I> {
 
-	private final Consumer<Input> consumer;
+    private final Consumer<I> consumer;
 
-	@Override
-	public Input process(Input object) {
-		consumer.accept(object);
-		return object;
-	}
+    @Override
+    public I process(I object) {
+        consumer.accept(object);
+        return object;
+    }
 
 }

@@ -19,27 +19,8 @@ import javax.inject.Singleton;
  * @author m0nster.mind
  */
 @Singleton
+@SuppressWarnings("checkstyle:MissingJavadocMethod")
 public class MigrationTree {
-
-    @RequiredArgsConstructor
-    private static class Node {
-        private final String value;
-        private int[] dependencies = new int[0];
-        private int[] xref = new int[0];
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Node node = (Node) o;
-            return value.equals(node.value);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(value);
-        }
-    }
 
     private final Node[] nodes;
     private final int[] roots;
@@ -132,5 +113,24 @@ public class MigrationTree {
         }
     }
 
+    @RequiredArgsConstructor
+    private static class Node {
+        private final String value;
+        private int[] dependencies = new int[0];
+        private int[] xref = new int[0];
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Node node = (Node) o;
+            return value.equals(node.value);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(value);
+        }
+    }
 
 }

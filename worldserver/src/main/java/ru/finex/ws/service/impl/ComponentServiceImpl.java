@@ -89,6 +89,7 @@ public class ComponentServiceImpl implements ComponentService {
         //poolService.returnObject(event);
     }
 
+    @SuppressWarnings("checkstyle:ReturnCount")
     @Override
     public boolean removeComponent(Component component) {
         GameObject gameObject = component.getGameObject();
@@ -118,6 +119,7 @@ public class ComponentServiceImpl implements ComponentService {
         return true;
     }
 
+    @SuppressWarnings("checkstyle:ReturnCount")
     @Override
     public boolean removeComponent(GameObject gameObject, Class<? extends Component> componentType) {
         int runtimeId = gameObject.getRuntimeId();

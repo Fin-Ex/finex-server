@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 /**
  * @author m0nster.mind
  */
+@SuppressWarnings({"checkstyle:JavadocType", "checkstyle:MissingJavadocMethod"})
 public class ClusterSubscriptionImpl<T> implements ClusterSubscription<T>, MessageListener<T> {
 
     private final Queue<T> queue = new ConcurrentLinkedQueue<>();

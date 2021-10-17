@@ -7,6 +7,7 @@ import java.io.Serializable;
  *
  * @author m0nster.mind
  */
+@SuppressWarnings("checkstyle:JavadocType")
 public interface Entity<ID extends Serializable> {
 
     /**

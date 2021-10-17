@@ -10,7 +10,8 @@ import ru.finex.core.model.GameObject;
  */
 public abstract class AbstractComponent implements Component {
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private GameObject gameObject;
 
 }

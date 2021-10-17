@@ -37,6 +37,11 @@ public class ClassUtils {
         return clazz.getCanonicalName() + "::" + field.getName();
     }
 
+    /**
+     * Создает инстанс класса.
+     * @param clazz класс
+     * @return инстанс или null если произошла ошибка
+     */
     public static Object createInstance(Class<?> clazz) {
         try {
             return clazz.getConstructor().newInstance();
@@ -45,7 +50,14 @@ public class ClassUtils {
         }
     }
 
-    public static Object createInstance(Class<?> clazz, Object... params) throws RuntimeException {
+    /**
+     * Создает инстанс класса.
+     * @param clazz класс
+     * @param params переменные передаваемые в конструктор
+     * @return инстанс класса
+     * @throws RuntimeException если произошла ошибка
+     */
+    public static Object createInstance(Class<?> clazz, Object... params) {
         if (Modifier.isAbstract(clazz.getModifiers()) || Modifier.isInterface(clazz.getModifiers())) {
             throw new RuntimeException("Class " + clazz.getCanonicalName() + " is interface or abstract!");
         }
@@ -113,6 +125,12 @@ public class ClassUtils {
         throw new RuntimeException(sb.toString());
     }
 
+    /**
+     * Определяет является ли класс враппером указанного примитива.
+     * @param clazz класс
+     * @param primitiveClass примитивный класс
+     * @return true является, в остальных случаях false
+     */
     public static boolean isPrimitiveWrap(Class<?> clazz, Class<?> primitiveClass) {
         try {
             Field field = clazz.getDeclaredField("TYPE");
@@ -124,33 +142,31 @@ public class ClassUtils {
         }
     }
 
-    /** primitives, primitives arrays, enums. exclude string arrays */
+    /**
+     * Primitives, primitives arrays, enums. exclude string arrays.
+     * @param val val
+     * @param type type
+     * @return object
+     */
+    @SuppressWarnings("checkstyle:ReturnCount")
     public static Object transformStringToType(String val, Class<?> type) {
         if (type.isAssignableFrom(String.class)) {
             return val;
-        } else if (type.isAssignableFrom(Byte.TYPE) || type.isAssignableFrom(Byte.class)
-            || type.isAssignableFrom(byte.class)) {
+        } else if (type.isAssignableFrom(Byte.TYPE) || type.isAssignableFrom(Byte.class) || type.isAssignableFrom(byte.class)) {
             return Byte.parseByte(val);
-        } else if (type.isAssignableFrom(Character.TYPE) || type.isAssignableFrom(Character.class)
-            || type.isAssignableFrom(char.class)) {
+        } else if (type.isAssignableFrom(Character.TYPE) || type.isAssignableFrom(Character.class) || type.isAssignableFrom(char.class)) {
             return val.toCharArray()[0];
-        } else if (type.isAssignableFrom(Short.TYPE) || type.isAssignableFrom(Short.class)
-            || type.isAssignableFrom(short.class)) {
+        } else if (type.isAssignableFrom(Short.TYPE) || type.isAssignableFrom(Short.class) || type.isAssignableFrom(short.class)) {
             return Short.parseShort(val);
-        } else if (type.isAssignableFrom(Integer.TYPE) || type.isAssignableFrom(Integer.class)
-            || type.isAssignableFrom(int.class)) {
+        } else if (type.isAssignableFrom(Integer.TYPE) || type.isAssignableFrom(Integer.class) || type.isAssignableFrom(int.class)) {
             return Integer.parseInt(val);
-        } else if (type.isAssignableFrom(Long.TYPE) || type.isAssignableFrom(Long.class)
-            || type.isAssignableFrom(long.class)) {
+        } else if (type.isAssignableFrom(Long.TYPE) || type.isAssignableFrom(Long.class) || type.isAssignableFrom(long.class)) {
             return Long.parseLong(val);
-        } else if (type.isAssignableFrom(Float.TYPE) || type.isAssignableFrom(Float.class)
-            || type.isAssignableFrom(float.class)) {
+        } else if (type.isAssignableFrom(Float.TYPE) || type.isAssignableFrom(Float.class) || type.isAssignableFrom(float.class)) {
             return Float.parseFloat(val);
-        } else if (type.isAssignableFrom(Double.TYPE) || type.isAssignableFrom(Double.class)
-            || type.isAssignableFrom(double.class)) {
+        } else if (type.isAssignableFrom(Double.TYPE) || type.isAssignableFrom(Double.class) || type.isAssignableFrom(double.class)) {
             return Double.parseDouble(val);
-        } else if (type.isAssignableFrom(Boolean.TYPE) || type.isAssignableFrom(Boolean.class)
-            || type.isAssignableFrom(boolean.class)) {
+        } else if (type.isAssignableFrom(Boolean.TYPE) || type.isAssignableFrom(Boolean.class) || type.isAssignableFrom(boolean.class)) {
             return Boolean.parseBoolean(val);
         } else if (type.isAssignableFrom(Byte[].class) || type.isAssignableFrom(byte[].class)) {
             String[] values = val.split("\\s|,|;");
@@ -210,8 +226,9 @@ public class ClassUtils {
                 }
             }
             throw new RuntimeException("Enum constant not found");
-        } else
+        } else {
             throw new RuntimeException("Unknown default type");
+        }
     }
 
 }

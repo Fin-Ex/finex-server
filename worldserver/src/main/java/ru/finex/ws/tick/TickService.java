@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 /**
  * @author m0nster.mind
  */
+@SuppressWarnings("checkstyle:MissingJavadocMethod")
 @ImplementedBy(TickServiceImpl.class)
 public interface TickService {
 
@@ -16,6 +17,7 @@ public interface TickService {
     void tick();
 
     float getDeltaTime();
+
     long getDeltaTimeMillis();
 
 }

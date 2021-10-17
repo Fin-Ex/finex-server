@@ -15,6 +15,7 @@ import javax.inject.Provider;
  * @author m0nster.mind
  */
 @RequiredArgsConstructor
+@SuppressWarnings("checkstyle:JavadocType")
 public class ComponentInjector<T> implements MembersInjector<T> {
 
     private final Field field;

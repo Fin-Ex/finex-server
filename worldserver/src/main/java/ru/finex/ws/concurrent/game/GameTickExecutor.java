@@ -24,7 +24,7 @@ public class GameTickExecutor {
     }
 
     private void tickLoop() {
-        for (;;) {
+        for (; ; ) {
             tickService.tick();
 
             long deltaTimeMillis = tickService.getDeltaTimeMillis();

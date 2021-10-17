@@ -10,6 +10,7 @@ import java.lang.reflect.Constructor;
 /**
  * @author m0nster.mind
  */
+@SuppressWarnings("checkstyle:JavadocType")
 @RequiredArgsConstructor
 public class SimplePooledObjectFactory<E> implements PooledObjectFactory<E> {
 
