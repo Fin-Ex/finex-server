@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
     public void disableTOTP(String login) throws UserNotFoundException, TOTPException {
         UserEntity user = userRepository.findByLogin(login);
         if (user == null) {
-            throw new UserNotFoundException("User not found by login: " + login);
+            throw new UserNotFoundException(String.format("User not found by login: %s", login));
         }
 
         if (user.getSecret() == null) {
@@ -131,4 +131,23 @@ public class UserServiceImpl implements UserService {
         totpService.deleteRecoveryCodes(user.getPersistenceId());
     }
 
+    @Override
+    public boolean isTOTPEnabled(String login) {
+        return userRepository.isSecretNotNull(login);
+    }
+
+    @Transactional
+    @Override
+    public boolean checkTOTPCode(String login, String totpCode) throws UserNotFoundException, TOTPException {
+        UserEntity user = userRepository.findByLogin(login);
+        if (user == null) {
+            throw new UserNotFoundException(String.format("User not found by login: %s", login));
+        }
+
+        if (user.getSecret() == null) {
+            throw new TOTPException(String.format("User '%s' doesnt have a secret!", login));
+        }
+
+        return totpService.verifyCode(totpCode, user.getSecret());
+    }
 }

@@ -24,4 +24,11 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
      */
     void clearSecret(Long id);
 
+    /**
+     * Check users secret to null.
+     * @param login users login
+     * @return true if users secret not null, otherwise false
+     */
+    boolean isSecretNotNull(String login);
+
 }

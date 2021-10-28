@@ -61,4 +61,27 @@ public class UserRepositoryImpl extends AbstractCrudRepository<UserEntity, Long>
         }
     }
 
+    @Override
+    public boolean isSecretNotNull(String login) {
+        String query = """
+            select u.secret != null
+            from UserEntity u
+            where u.login = :login
+        """;
+
+        TransactionalContext ctx = TransactionalContext.get();
+        Session session = ctx.session();
+        try {
+            Boolean result = session.createQuery(query, Boolean.class)
+                .setParameter("login", login)
+                .getSingleResult();
+            ctx.commit(session);
+            return result;
+        } catch (NoResultException e) {
+            return false;
+        } catch (Exception e) {
+            ctx.rollback(session);
+            throw new RuntimeException(e);
+        }
+    }
 }

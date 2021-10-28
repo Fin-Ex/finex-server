@@ -67,11 +67,28 @@ public interface UserService {
     String enableTOTP(String login) throws UserNotFoundException, TOTPException;
 
     /**
-     * Try to disable TOTP for speficied user.
+     * Try to disable TOTP for specified user.
      * @param login users login
      * @throws UserNotFoundException if user not found by login
-     * @throws TOTPException TOTP is not enable for specified user
+     * @throws TOTPException TOTP is not enabled for specified user
      */
     void disableTOTP(String login) throws UserNotFoundException, TOTPException;
+
+    /**
+     * Check user TOTP status.
+     * @param login users login
+     * @return true if TOTP for specified user is enabled, otherwise false
+     */
+    boolean isTOTPEnabled(String login);
+
+    /**
+     * Check user 2FA TOTP code.
+     * @param login users login
+     * @param totpCode TOTP code
+     * @return true if TOTP code is valid, otherwise false
+     * @throws UserNotFoundException user with specified login not found
+     * @throws TOTPException TOTP is not enabled for specified user
+     */
+    boolean checkTOTPCode(String login, String totpCode) throws UserNotFoundException, TOTPException;
 
 }
