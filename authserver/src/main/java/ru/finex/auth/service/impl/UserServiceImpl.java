@@ -136,7 +136,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.isSecretNotNull(login);
     }
 
-    @Transactional
+    @Transactional(dontRollbackOn = { UserNotFoundException.class, TOTPException.class })
     @Override
     public boolean checkTOTPCode(String login, String totpCode) throws UserNotFoundException, TOTPException {
         UserEntity user = userRepository.findByLogin(login);
