@@ -2,7 +2,7 @@ package ru.finex.ws.inject.module.loader;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.matcher.Matchers;
-import ru.finex.core.ServerContext;
+import ru.finex.core.GlobalContext;
 import ru.finex.core.component.ComponentService;
 import ru.finex.core.inject.LoaderModule;
 import ru.finex.core.inject.module.ClusterModule;
@@ -22,7 +22,7 @@ public class WorldServerModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(ServerContext.class).to(WorldServerApplication.class);
+        bind(GlobalContext.class).to(WorldServerApplication.class);
         install(new DbModule());
         install(new HoconModule());
         install(new ClusterModule());
