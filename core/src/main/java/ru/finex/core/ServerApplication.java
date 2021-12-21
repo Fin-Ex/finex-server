@@ -9,7 +9,6 @@ import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import ru.finex.core.db.migration.Evolution;
-import ru.finex.core.inject.InjectedModule;
 import ru.finex.core.inject.LoaderModule;
 import ru.finex.core.logback.LogbackConfiguration;
 import ru.finex.core.utils.InjectorUtils;
@@ -42,17 +41,14 @@ public class ServerApplication {
         List<Module> modules = new ArrayList<>();
         modules.addAll(InjectorUtils.collectModules(ServerApplication.class.getPackageName(), LoaderModule.class));
         modules.addAll(InjectorUtils.collectModules(modulePackage, LoaderModule.class));
+
         Injector globalInjector = Guice.createInjector(Stage.PRODUCTION, modules);
         GlobalContext.injector = globalInjector;
-
-        ServerContext serverContext = globalInjector.getInstance(ServerContext.class);
-        Injector serverInjector = InjectorUtils.createChildInjector(modulePackage, InjectedModule.class, globalInjector);
-        serverContext.setInjector(serverInjector);
 
         GlobalContext.reflections.getSubTypesOf(ApplicationBuilt.class)
             .stream()
             .filter(e -> !Modifier.isAbstract(e.getModifiers()) && !Modifier.isInterface(e.getModifiers()))
-            .map(serverInjector::getInstance)
+            .map(globalInjector::getInstance)
             .forEach(ApplicationBuilt::onApplicationBuilt);
     }
 
