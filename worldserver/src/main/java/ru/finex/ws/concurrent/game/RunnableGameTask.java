@@ -3,7 +3,7 @@ package ru.finex.ws.concurrent.game;
 import lombok.Getter;
 import ru.finex.core.concurrent.RunnableServerTask;
 import ru.finex.core.model.GameObject;
-import ru.finex.ws.model.Client;
+import ru.finex.ws.model.ClientSession;
 
 /**
  * Игровая задача.
@@ -13,7 +13,7 @@ import ru.finex.ws.model.Client;
 public class RunnableGameTask extends RunnableServerTask implements GameTask {
 
     @Getter
-    private final Client client;
+    private final ClientSession client;
 
     @Getter
     private final GameObject gameObject;
@@ -23,7 +23,7 @@ public class RunnableGameTask extends RunnableServerTask implements GameTask {
      * @param runnable задача
      * @param client клиент, который выполняет данную задачу
      */
-    public RunnableGameTask(Runnable runnable, Client client) {
+    public RunnableGameTask(Runnable runnable, ClientSession client) {
         this(runnable, client, null);
     }
 
@@ -33,7 +33,7 @@ public class RunnableGameTask extends RunnableServerTask implements GameTask {
      * @param client клиент, который выполняет данную задачу
      * @param gameObject игрок, который выполняет данную задачу (can be null)
      */
-    public RunnableGameTask(Runnable runnable, Client client, GameObject gameObject) {
+    public RunnableGameTask(Runnable runnable, ClientSession client, GameObject gameObject) {
         super(runnable);
         this.client = client;
         if (gameObject == null) {

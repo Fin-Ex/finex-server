@@ -10,116 +10,45 @@
 
 	<name>FinEx Server</name>
 
+	<modules>
+		<module>server-build</module>
+	</modules>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 		<delombok.source>${project.build.directory}/delombok-sources</delombok.source>
+
+		<finex-authserver.version>1.0.0-SNAPSHOT</finex-authserver.version>
+		<finex-core.version>1.0.0-SNAPSHOT</finex-core.version>
+		<finex-worldserver.version>1.0.0-SNAPSHOT</finex-worldserver.version>
+		<finex-netty-network.version>1.0.0-SNAPSHOT</finex-netty-network.version>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>central</id>
-			<url>https://repo1.maven.org/maven2</url>
-		</repository>
-		<repository>
-			<id>github</id>
-			<url>https://maven.pkg.github.com/zcxv/*</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	<distributionManagement>
-		<repository>
-			<id>github</id>
-			<url>https://maven.pkg.github.com/zcxv/finex-server</url>
-		</repository>
-	</distributionManagement>
-
-	<modules>
-		<module>core</module>
-		<module>worldserver</module>
-        <module>authserver</module>
-    </modules>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>3.1.2</version>
-				<dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>9.0</version>
-                    </dependency>
-                </dependencies>
-				<configuration>
-					<configLocation>checkstyle.xml</configLocation>
-					<encoding>${project.build.sourceEncoding}</encoding>
-					<consoleOutput>true</consoleOutput>
-					<failsOnError>true</failsOnError>
-					<failOnViolation>true</failOnViolation>
-					<linkXRef>true</linkXRef>
-				</configuration>
-				<executions>
-					<execution>
-						<id>validate</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
-				<configuration>
-					<debug>true</debug>
-					<debuglevel>lines,vars,source</debuglevel>
-					<parameters>true</parameters>
-					<source>${maven.compiler.source}</source>
-					<target>${maven.compiler.target}</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.projectlombok</groupId>
-				<artifactId>lombok-maven-plugin</artifactId>
-				<version>1.18.20.0</version>
-				<configuration>
-					<sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
-					<outputDirectory>${delombok.source}</outputDirectory>
-					<addOutputDirectory>false</addOutputDirectory>
-					<encoding>UTF-8</encoding>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>delombok</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>3.2.1</version>
-				<executions>
-					<execution>
-						<id>source-package</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>ru.finex</groupId>
+				<artifactId>finex-server-core</artifactId>
+				<version>${finex-core.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ru.finex</groupId>
+				<artifactId>finex-server-authserver</artifactId>
+				<version>${finex-authserver.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ru.finex</groupId>
+				<artifactId>finex-server-world</artifactId>
+				<version>${finex-worldserver.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ru.finex</groupId>
+				<artifactId>finex-netty-network</artifactId>
+				<version>${finex-netty-network.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 </project>

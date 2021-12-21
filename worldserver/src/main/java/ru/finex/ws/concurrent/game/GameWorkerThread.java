@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import ru.finex.core.model.GameObject;
-import ru.finex.ws.model.Client;
+import ru.finex.ws.model.ClientSession;
 
 /**
  * @author m0nster.mind
@@ -13,7 +13,7 @@ public class GameWorkerThread extends Thread {
 
     @Getter
     @Setter(AccessLevel.PROTECTED)
-    private Client client;
+    private ClientSession client;
 
     @Getter
     @Setter(AccessLevel.PROTECTED)

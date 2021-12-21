@@ -8,6 +8,7 @@ import ru.finex.core.inject.LoaderModule;
 import ru.finex.core.inject.module.ClusterModule;
 import ru.finex.core.inject.module.DbModule;
 import ru.finex.core.inject.module.HoconModule;
+import ru.finex.core.inject.module.NetworkModule;
 import ru.finex.core.inject.module.PersistenceModule;
 import ru.finex.core.inject.module.PoolModule;
 import ru.finex.ws.WorldServerApplication;
@@ -28,6 +29,7 @@ public class WorldServerModule extends AbstractModule {
         install(new ClusterModule());
         install(new PersistenceModule());
         install(new PoolModule());
+        install(new NetworkModule());
         bind(ComponentService.class).to(ComponentServiceImpl.class);
         bindListener(Matchers.any(), new RegisterTickListener());
     }

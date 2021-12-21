@@ -10,9 +10,9 @@
         <relativePath>../server-build</relativePath>
     </parent>
 
-    <artifactId>finex-server-world</artifactId>
-    <version>${finex-worldserver.version}</version>
-    <name>FinEx Server World</name>
+    <artifactId>finex-netty-network</artifactId>
+    <version>${finex-netty-network.version}</version>
+    <name>Finex Server Netty Module</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,20 +22,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>ru.finex</groupId>
-            <artifactId>finex-server-core</artifactId>
-            <version>${finex-core.version}</version>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
         </dependency>
     </dependencies>
 

@@ -2,7 +2,7 @@ package ru.finex.ws.concurrent.game;
 
 import lombok.Getter;
 import ru.finex.core.model.GameObject;
-import ru.finex.ws.model.Client;
+import ru.finex.ws.model.ClientSession;
 
 import java.util.concurrent.Delayed;
 import java.util.concurrent.ExecutionException;
@@ -19,12 +19,12 @@ public class GameScheduledFutureTask<V> implements RunnableScheduledFuture<V> {
     private final RunnableScheduledFuture<V> runnableScheduledFuture;
 
     @Getter
-    private final Client client;
+    private final ClientSession client;
 
     @Getter
     private final GameObject gameObject;
 
-    public GameScheduledFutureTask(RunnableScheduledFuture<V> runnableScheduledFuture, Client client, GameObject gameObject) {
+    public GameScheduledFutureTask(RunnableScheduledFuture<V> runnableScheduledFuture, ClientSession client, GameObject gameObject) {
         this.runnableScheduledFuture = runnableScheduledFuture;
         this.client = client;
         this.gameObject = gameObject;

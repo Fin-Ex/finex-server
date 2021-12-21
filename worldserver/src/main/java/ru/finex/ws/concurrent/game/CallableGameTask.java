@@ -3,7 +3,7 @@ package ru.finex.ws.concurrent.game;
 import lombok.Getter;
 import ru.finex.core.concurrent.CallableServerTask;
 import ru.finex.core.model.GameObject;
-import ru.finex.ws.model.Client;
+import ru.finex.ws.model.ClientSession;
 
 import java.util.concurrent.Callable;
 
@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
 public class CallableGameTask<T> extends CallableServerTask<T> implements GameTask {
 
     @Getter
-    private final Client client;
+    private final ClientSession client;
 
     @Getter
     private final GameObject gameObject;
@@ -27,7 +27,7 @@ public class CallableGameTask<T> extends CallableServerTask<T> implements GameTa
      * @param callable задача
      * @param client клиент, который выполняет данную задачу
      */
-    public CallableGameTask(Callable<T> callable, Client client) {
+    public CallableGameTask(Callable<T> callable, ClientSession client) {
         this(callable, client, null);
     }
 
@@ -38,7 +38,7 @@ public class CallableGameTask<T> extends CallableServerTask<T> implements GameTa
      * @param client клиент, который выполняет данную задачу
      * @param gameObject игрок, который выполняет данную задачу (can be null)
      */
-    public CallableGameTask(Callable<T> callable, Client client, GameObject gameObject) {
+    public CallableGameTask(Callable<T> callable, ClientSession client, GameObject gameObject) {
         super(callable);
         this.client = client;
         if (gameObject == null) {

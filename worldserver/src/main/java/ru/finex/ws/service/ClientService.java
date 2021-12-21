@@ -1,6 +1,6 @@
 package ru.finex.ws.service;
 
-import ru.finex.ws.model.Client;
+import ru.finex.ws.model.ClientSession;
 
 import java.util.List;
 
@@ -13,18 +13,18 @@ public interface ClientService {
      * Добавить новую сетевую сессию.
      * @param client клиент
      */
-    void addSession(Client client);
+    void addSession(ClientSession client);
 
     /**
      * Удалить сетевую сессию.
      * @param client клиент
      */
-    void removeSession(Client client);
+    void removeSession(ClientSession client);
 
     /**
      * Возвращает копию списка подключенных клиентов.
      * @return список подключенных клиентов
      */
-    List<Client> getSessions();
+    List<ClientSession> getSessions();
 
 }

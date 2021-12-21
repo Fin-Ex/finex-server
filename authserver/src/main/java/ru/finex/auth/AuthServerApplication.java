@@ -8,9 +8,10 @@ import ru.finex.core.ApplicationBuilt;
 import ru.finex.core.ServerApplication;
 import ru.finex.core.ServerContext;
 import ru.finex.core.db.migration.Evolution;
-import ru.finex.nif.SelectorThread;
+import ru.finex.network.netty.service.NettyNetworkService;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 /**
@@ -26,7 +27,8 @@ public class AuthServerApplication implements ServerContext, ApplicationBuilt {
     private Injector injector;
 
     @Inject
-    private SelectorThread selectorThread;
+    @Named("ClientNetwork")
+    private NettyNetworkService clientNetworkService;
 
     /**
      * Entry point.
@@ -43,7 +45,7 @@ public class AuthServerApplication implements ServerContext, ApplicationBuilt {
 
     @Override
     public void onApplicationBuilt() {
-        selectorThread.start();
+        clientNetworkService.bind();
     }
 
 }
