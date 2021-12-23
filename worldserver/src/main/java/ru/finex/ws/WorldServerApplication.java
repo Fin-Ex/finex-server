@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import ru.finex.core.ApplicationBuilt;
 import ru.finex.core.ServerApplication;
-import ru.finex.core.db.migration.Evolution;
+import ru.finex.evolution.Evolution;
 import ru.finex.network.netty.service.NettyNetworkService;
 
 import javax.inject.Inject;

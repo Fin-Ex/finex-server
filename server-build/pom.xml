@@ -25,6 +25,8 @@
         <maven.compiler.target>17</maven.compiler.target>
         <delombok.source>${project.build.directory}/delombok-sources</delombok.source>
 
+        <finex-evolution.version>1.0</finex-evolution.version>
+
         <junit.version>4.13.1</junit.version>
         <junit-jupiter.version>5.6.3</junit-jupiter.version>
         <mockito.version>3.3.3</mockito.version>
@@ -52,12 +54,8 @@
 
     <repositories>
         <repository>
-            <id>central</id>
-            <url>https://repo1.maven.org/maven2</url>
-        </repository>
-        <repository>
             <id>github</id>
-            <url>https://maven.pkg.github.com/zcxv/*</url>
+            <url>https://maven.pkg.github.com/Fin-Ex/*</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -67,7 +65,7 @@
     <distributionManagement>
         <repository>
             <id>github</id>
-            <url>https://maven.pkg.github.com/zcxv/finex-server</url>
+            <url>https://maven.pkg.github.com/Fin-Ex/finex-server</url>
         </repository>
     </distributionManagement>
 
@@ -249,6 +247,37 @@
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
                 <version>${freemaker.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ru.finex</groupId>
+                <artifactId>finex-evolution</artifactId>
+                <version>${finex-evolution.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.google.code.gson</groupId>
+                        <artifactId>gson</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.google.guava</groupId>
+                        <artifactId>guava</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-io</groupId>
+                        <artifactId>commons-io</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>commons-lang3</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.reflections</groupId>
+                        <artifactId>reflections</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>

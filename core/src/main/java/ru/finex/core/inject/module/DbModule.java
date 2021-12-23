@@ -11,9 +11,9 @@ import ru.finex.core.db.impl.HibernateConfigProvider;
 import ru.finex.core.db.impl.HibernateSessionProvider;
 import ru.finex.core.db.impl.ServiceRegistryProvider;
 import ru.finex.core.db.impl.TransactionalMethodInterceptor;
-import ru.finex.core.db.migration.MigrationService;
 import ru.finex.core.db.migration.impl.DataSourceProvider;
-import ru.finex.core.db.migration.impl.MigrationServiceImpl;
+import ru.finex.evolution.MigrationService;
+import ru.finex.evolution.impl.MigrationServiceImpl;
 
 import java.net.URL;
 import javax.sql.DataSource;

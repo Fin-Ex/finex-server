@@ -109,6 +109,10 @@
 
         <dependency>
             <groupId>ru.finex</groupId>
+            <artifactId>finex-evolution</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ru.finex</groupId>
             <artifactId>finex-netty-network</artifactId>
         </dependency>
     </dependencies>

@@ -6,8 +6,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import ru.finex.core.ApplicationBuilt;
 import ru.finex.core.ServerApplication;
-import ru.finex.core.ServerContext;
-import ru.finex.core.db.migration.Evolution;
+import ru.finex.evolution.Evolution;
 import ru.finex.network.netty.service.NettyNetworkService;
 
 import javax.inject.Inject;
@@ -20,7 +19,7 @@ import javax.inject.Singleton;
 @Slf4j
 @Singleton
 @Evolution("auth")
-public class AuthServerApplication implements ServerContext, ApplicationBuilt {
+public class AuthServerApplication implements ApplicationBuilt {
 
     @Getter
     @Setter
