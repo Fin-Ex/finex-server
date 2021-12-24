@@ -1,9 +1,9 @@
 package ru.finex.ws.command.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.finex.core.command.AbstractCommandService;
+import ru.finex.core.command.AbstractCommandQueue;
 import ru.finex.core.command.AbstractGameObjectCommand;
-import ru.finex.ws.command.InputCommandService;
+import ru.finex.ws.command.InputCommandQueue;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -15,8 +15,8 @@ import javax.inject.Singleton;
  */
 @Slf4j
 @Singleton
-public class InputCommandServiceImpl extends AbstractCommandService<AbstractGameObjectCommand>
-    implements InputCommandService {
+public class InputCommandQueueImpl extends AbstractCommandQueue<AbstractGameObjectCommand>
+    implements InputCommandQueue {
 
     private static final int DEFAULT_LIMIT = 512;
 

@@ -1,8 +1,8 @@
 package ru.finex.ws.command.impl;
 
-import ru.finex.core.command.AbstractCommandService;
+import ru.finex.core.command.AbstractCommandQueue;
 import ru.finex.core.command.AbstractGameObjectCommand;
-import ru.finex.ws.command.PhysicsCommandService;
+import ru.finex.ws.command.PhysicsCommandQueue;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -12,8 +12,8 @@ import javax.inject.Singleton;
  * @author m0nster.mind
  */
 @Singleton
-public class PhysicsCommandServiceImpl extends AbstractCommandService<AbstractGameObjectCommand>
-    implements PhysicsCommandService {
+public class PhysicsCommandQueueImpl extends AbstractCommandQueue<AbstractGameObjectCommand>
+    implements PhysicsCommandQueue {
 
     @Override
     protected Queue<AbstractGameObjectCommand> createPreQueue() {

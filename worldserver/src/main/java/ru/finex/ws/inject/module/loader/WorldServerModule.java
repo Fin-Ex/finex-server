@@ -11,7 +11,9 @@ import ru.finex.core.inject.module.NetworkModule;
 import ru.finex.core.inject.module.PersistenceModule;
 import ru.finex.core.inject.module.PoolModule;
 import ru.finex.ws.service.impl.ComponentServiceImpl;
+import ru.finex.ws.tick.TickService;
 import ru.finex.ws.tick.impl.RegisterTickListener;
+import ru.finex.ws.tick.impl.TickServiceImpl;
 
 /**
  * @author m0nster.mind
@@ -28,6 +30,7 @@ public class WorldServerModule extends AbstractModule {
         install(new PoolModule());
         install(new NetworkModule());
         bind(ComponentService.class).to(ComponentServiceImpl.class);
+        bind(TickService.class).to(TickServiceImpl.class);
         bindListener(Matchers.any(), new RegisterTickListener());
     }
 

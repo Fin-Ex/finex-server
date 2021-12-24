@@ -8,9 +8,9 @@ import net.bytebuddy.implementation.FieldAccessor;
 import net.bytebuddy.implementation.Implementation.Simple;
 import net.bytebuddy.implementation.MethodCall;
 import net.bytebuddy.implementation.bytecode.member.MethodReturn;
-import ru.finex.ws.command.InputCommandService;
-import ru.finex.ws.command.PhysicsCommandService;
-import ru.finex.ws.command.UpdateCommandService;
+import ru.finex.ws.command.InputCommandQueue;
+import ru.finex.ws.command.PhysicsCommandQueue;
+import ru.finex.ws.command.UpdateCommandQueue;
 import ru.finex.ws.tick.TickInvokeDecorator;
 import ru.finex.ws.tick.TickService;
 import ru.finex.ws.tick.TickStage;
@@ -28,9 +28,9 @@ public class TickServiceImpl implements TickService {
 
     private final TickStageStorage[] tickStorages;
 
-    private final InputCommandService inputCommandService;
-    private final PhysicsCommandService physicsCommandService;
-    private final UpdateCommandService updateCommandService;
+    private final InputCommandQueue inputCommandService;
+    private final PhysicsCommandQueue physicsCommandService;
+    private final UpdateCommandQueue updateCommandService;
 
     @Getter
     private float deltaTime;
@@ -38,8 +38,8 @@ public class TickServiceImpl implements TickService {
     private long deltaTimeMillis;
 
     @Inject
-    public TickServiceImpl(InputCommandService inputCommandService, PhysicsCommandService physicsCommandService,
-        UpdateCommandService updateCommandService) {
+    public TickServiceImpl(InputCommandQueue inputCommandService, PhysicsCommandQueue physicsCommandService,
+        UpdateCommandQueue updateCommandService) {
         this.inputCommandService = inputCommandService;
         this.physicsCommandService = physicsCommandService;
         this.updateCommandService = updateCommandService;
@@ -106,20 +106,20 @@ public class TickServiceImpl implements TickService {
 
     private void inputTick() {
         inputCommandService.executeCommands();
-        tickStorage(TickStage.INPUT_STAGES);
+        executeTickStages(TickStage.INPUT_STAGES);
     }
 
     private void physicsTick() {
         physicsCommandService.executeCommands();
-        tickStorage(TickStage.PHYSICS_STAGES);
+        executeTickStages(TickStage.PHYSICS_STAGES);
     }
 
     private void updateTick() {
         updateCommandService.executeCommands();
-        tickStorage(TickStage.UPDATE_STAGES);
+        executeTickStages(TickStage.UPDATE_STAGES);
     }
 
-    private void tickStorage(TickStage[] stages) {
+    private void executeTickStages(TickStage[] stages) {
         for (int i = 0; i < stages.length; i++) {
             TickStage stage = stages[i];
             TickStageStorage tickStorage = tickStorages[stage.ordinal()];

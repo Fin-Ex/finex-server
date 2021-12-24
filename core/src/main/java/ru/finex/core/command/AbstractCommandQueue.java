@@ -9,7 +9,7 @@ import java.util.Queue;
  * @author m0nster.mind
  */
 @Slf4j
-public abstract class AbstractCommandService<T extends Command> implements CommandService<T> {
+public abstract class AbstractCommandQueue<T extends Command> implements CommandQueue<T> {
 
     private final Queue<T> preCommands = createPreQueue();
     private final Queue<T> commands = createQueue();

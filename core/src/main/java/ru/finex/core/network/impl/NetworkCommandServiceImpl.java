@@ -41,7 +41,7 @@ public class NetworkCommandServiceImpl implements NetworkCommandService {
 
         List<Pair<AbstractNetworkCommand, NetworkCommandContext>> commands = new ArrayList<>(commandTypes.length);
 
-        // enter to scope for create correct command
+        // enter to scope to create correct command
         commandScope.saveContext(ctx);
         for (int i = 0; i < commandTypes.length; i++) {
             Class<?> commandType = commandTypes[i];

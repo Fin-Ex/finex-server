@@ -1,8 +1,8 @@
 package ru.finex.ws.command.impl;
 
-import ru.finex.core.command.AbstractCommandService;
+import ru.finex.core.command.AbstractCommandQueue;
 import ru.finex.core.command.AbstractGameObjectCommand;
-import ru.finex.ws.command.UpdateCommandService;
+import ru.finex.ws.command.UpdateCommandQueue;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -13,8 +13,8 @@ import javax.inject.Singleton;
  */
 @SuppressWarnings("checkstyle:MagicNumber")
 @Singleton
-public class UpdateCommandServiceImpl extends AbstractCommandService<AbstractGameObjectCommand>
-    implements UpdateCommandService {
+public class UpdateCommandQueueImpl extends AbstractCommandQueue<AbstractGameObjectCommand>
+    implements UpdateCommandQueue {
 
     @Override
     protected Queue<AbstractGameObjectCommand> createPreQueue() {

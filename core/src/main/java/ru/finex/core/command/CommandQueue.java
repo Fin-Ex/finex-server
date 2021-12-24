@@ -4,7 +4,7 @@ package ru.finex.core.command;
  * @author m0nster.mind
  */
 @SuppressWarnings({"checkstyle:JavadocType", "checkstyle:MissingJavadocMethod"})
-public interface CommandService<T extends Command> {
+public interface CommandQueue<T extends Command> {
 
     void executeCommands();
 
