@@ -8,10 +8,10 @@ import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
-import ru.finex.core.db.migration.Evolution;
 import ru.finex.core.inject.LoaderModule;
 import ru.finex.core.logback.LogbackConfiguration;
 import ru.finex.core.utils.InjectorUtils;
+import ru.finex.evolution.Evolution;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
