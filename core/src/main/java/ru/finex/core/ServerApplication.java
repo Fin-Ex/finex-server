@@ -4,6 +4,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Stage;
+import com.mycila.guice.ext.closeable.CloseableModule;
+import com.mycila.guice.ext.jsr250.Jsr250Module;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
@@ -39,11 +41,16 @@ public class ServerApplication {
         );
 
         List<Module> modules = new ArrayList<>();
+        modules.add(new CloseableModule());
+        modules.add(new Jsr250Module());
         modules.addAll(InjectorUtils.collectModules(ServerApplication.class.getPackageName(), LoaderModule.class));
         modules.addAll(InjectorUtils.collectModules(modulePackage, LoaderModule.class));
 
         Injector globalInjector = Guice.createInjector(Stage.PRODUCTION, modules);
         GlobalContext.injector = globalInjector;
+
+        SigtermListener sigtermListener = globalInjector.getInstance(SigtermListener.class);
+        Runtime.getRuntime().addShutdownHook(new Thread(sigtermListener));
 
         GlobalContext.reflections.getSubTypesOf(ApplicationBuilt.class)
             .stream()
