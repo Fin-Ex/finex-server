@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import ru.finex.core.ApplicationBuilt;
 import ru.finex.core.ServerApplication;
+import ru.finex.core.management.HawtioService;
 import ru.finex.evolution.Evolution;
 import ru.finex.network.netty.service.NettyNetworkService;
 
@@ -29,6 +30,9 @@ public class AuthServerApplication implements ApplicationBuilt {
     @Named("ClientNetwork")
     private NettyNetworkService clientNetworkService;
 
+    @Inject
+    private HawtioService hawtioService;
+
     /**
      * Entry point.
      * @param args arguments
@@ -44,6 +48,7 @@ public class AuthServerApplication implements ApplicationBuilt {
 
     @Override
     public void onApplicationBuilt() {
+        hawtioService.deployHawtio();
         clientNetworkService.bind();
     }
 

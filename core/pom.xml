@@ -115,5 +115,10 @@
             <groupId>ru.finex</groupId>
             <artifactId>finex-netty-network</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>io.hawt</groupId>
+            <artifactId>hawtio-embedded</artifactId>
+        </dependency>
     </dependencies>
 </project>
