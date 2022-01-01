@@ -29,6 +29,7 @@ public class WorldServerModule extends AbstractModule {
         install(new PersistenceModule());
         install(new PoolModule());
         install(new NetworkModule());
+        install(new CommandModule());
         bind(ComponentService.class).to(ComponentServiceImpl.class);
         bind(TickService.class).to(TickServiceImpl.class);
         bindListener(Matchers.any(), new RegisterTickListener());

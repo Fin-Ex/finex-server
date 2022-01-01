@@ -1,9 +1,11 @@
-package ru.finex.core.network;
+package ru.finex.core.command.network;
 
 import com.google.inject.Key;
 import com.google.inject.Provider;
 import com.google.inject.Scope;
 import com.google.inject.Scopes;
+import ru.finex.core.command.CommandScope;
+import ru.finex.core.network.PacketMetadata;
 import ru.finex.network.netty.model.ClientSession;
 import ru.finex.network.netty.model.NetworkDto;
 import ru.finex.network.netty.serial.PacketDeserializer;
@@ -14,23 +16,17 @@ import java.lang.reflect.Type;
 /**
  * @author m0nster.mind
  */
-public class NetworkCommandScope implements Scope {
+public class NetworkCommandScope implements Scope, CommandScope<NetworkCommandContext> {
 
     private static final ThreadLocal<NetworkCommandContext> CTX = new ThreadLocal<>();
 
-    /**
-     * Save network command context to create a command or run command.
-     * @param context context
-     */
-    public void saveContext(NetworkCommandContext context) {
+    @Override
+    public void enterScope(NetworkCommandContext context) {
         CTX.set(context);
     }
 
-    /**
-     * Remove network command context.
-     * Invoke it only if command already created or command executed.
-     */
-    public void removeContext() {
+    @Override
+    public void exitScope() {
         CTX.remove();
     }
 

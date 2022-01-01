@@ -8,7 +8,7 @@ import net.bytebuddy.implementation.FieldAccessor;
 import net.bytebuddy.implementation.Implementation.Simple;
 import net.bytebuddy.implementation.MethodCall;
 import net.bytebuddy.implementation.bytecode.member.MethodReturn;
-import ru.finex.ws.command.InputCommandQueue;
+import ru.finex.core.command.NetworkCommandQueue;
 import ru.finex.ws.command.PhysicsCommandQueue;
 import ru.finex.ws.command.UpdateCommandQueue;
 import ru.finex.ws.tick.TickInvokeDecorator;
@@ -28,7 +28,7 @@ public class TickServiceImpl implements TickService {
 
     private final TickStageStorage[] tickStorages;
 
-    private final InputCommandQueue inputCommandService;
+    private final NetworkCommandQueue inputCommandService;
     private final PhysicsCommandQueue physicsCommandService;
     private final UpdateCommandQueue updateCommandService;
 
@@ -38,7 +38,7 @@ public class TickServiceImpl implements TickService {
     private long deltaTimeMillis;
 
     @Inject
-    public TickServiceImpl(InputCommandQueue inputCommandService, PhysicsCommandQueue physicsCommandService,
+    public TickServiceImpl(NetworkCommandQueue inputCommandService, PhysicsCommandQueue physicsCommandService,
         UpdateCommandQueue updateCommandService) {
         this.inputCommandService = inputCommandService;
         this.physicsCommandService = physicsCommandService;

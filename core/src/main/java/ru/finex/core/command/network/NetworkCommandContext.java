@@ -1,7 +1,9 @@
-package ru.finex.core.network;
+package ru.finex.core.command.network;
 
 import lombok.Builder;
 import lombok.Data;
+import ru.finex.core.command.CommandContext;
+import ru.finex.core.network.PacketMetadata;
 import ru.finex.network.netty.model.ClientSession;
 import ru.finex.network.netty.model.NetworkDto;
 import ru.finex.network.netty.serial.PacketDeserializer;
@@ -15,7 +17,7 @@ import java.util.Map;
  */
 @Data
 @Builder
-public class NetworkCommandContext {
+public class NetworkCommandContext implements CommandContext {
 
     private final Map<Object, Object> variables = new HashMap<>();
     private PacketMetadata<?> metadata;

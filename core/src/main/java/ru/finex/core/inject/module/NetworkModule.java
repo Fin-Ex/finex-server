@@ -1,7 +1,9 @@
 package ru.finex.core.inject.module;
 
 import com.google.inject.AbstractModule;
-import ru.finex.core.network.NetworkCommandScope;
+import ru.finex.core.command.NetworkCommandQueue;
+import ru.finex.core.command.network.NetworkCommandQueueImpl;
+import ru.finex.core.command.network.NetworkCommandScope;
 import ru.finex.core.network.NetworkCommandScoped;
 import ru.finex.core.network.NetworkCommandService;
 import ru.finex.core.network.PacketService;
@@ -22,6 +24,8 @@ public class NetworkModule extends AbstractModule {
         var commandScope = new NetworkCommandScope();
         bindScope(NetworkCommandScoped.class, commandScope);
         bind(NetworkCommandScope.class).toInstance(commandScope);
+
+        bind(NetworkCommandQueue.class).to(NetworkCommandQueueImpl.class);
     }
 
 }

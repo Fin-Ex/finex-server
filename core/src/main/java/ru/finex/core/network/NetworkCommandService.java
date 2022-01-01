@@ -1,9 +1,11 @@
 package ru.finex.core.network;
 
-import io.netty.buffer.ByteBuf;
 import org.apache.commons.lang3.tuple.Pair;
 import ru.finex.core.command.AbstractNetworkCommand;
+import ru.finex.core.command.network.NetworkCommandContext;
 import ru.finex.network.netty.model.ClientSession;
+import ru.finex.network.netty.model.NetworkDto;
+import ru.finex.network.netty.serial.PacketDeserializer;
 
 import java.util.List;
 
@@ -14,20 +16,23 @@ public interface NetworkCommandService {
 
     /**
      * Создает список команд связанных с входящим пакетом.
-     * @param opcodes опкоды пакета
-     * @param buffer данные пакета
-     * @param session сетевая сессия с игровым клиентом
+     * Внимание: сессия в контексте не устанавливается!
+     * @param metadata мета-данные пакета
+     * @param dto данные пакета
+     * @param session сессия клиента
      * @return список команд для выполнения с контекстом
      */
-    List<Pair<AbstractNetworkCommand, NetworkCommandContext>> createCommands(int[] opcodes, ByteBuf buffer, ClientSession session);
+    List<Pair<AbstractNetworkCommand, NetworkCommandContext>> createCommands(PacketMetadata<PacketDeserializer<?>> metadata, NetworkDto dto,
+        ClientSession session);
 
     /**
      * Создает контекст для команд исходя из полученного пакета.
-     * @param opcodes опкоды пакета
-     * @param buffer данные пакета
-     * @param session сетевая сессия с игровым клиентом
+     * Внимание: сессия в контексте не устанавливается!
+     * @param metadata мета-данные пакета
+     * @param dto данные пакета
+     * @param session сессия клиента
      * @return контекст для команд
      */
-    NetworkCommandContext createCommandContext(int[] opcodes, ByteBuf buffer, ClientSession session);
+    NetworkCommandContext createCommandContext(PacketMetadata<PacketDeserializer<?>> metadata, NetworkDto dto, ClientSession session);
 
 }

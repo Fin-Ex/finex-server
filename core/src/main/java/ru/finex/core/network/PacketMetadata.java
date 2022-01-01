@@ -5,6 +5,7 @@ import lombok.Data;
 import ru.finex.network.netty.model.NetworkDto;
 
 /**
+ * @param <T> serializer/deserializer type
  * @author m0nster.mind
  */
 @Data

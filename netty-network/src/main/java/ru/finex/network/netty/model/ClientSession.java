@@ -24,6 +24,18 @@ public interface ClientSession {
     boolean isDetached();
 
     /**
+     * Send packet to channel.
+     * @param dto packet to send
+     */
+    void sendPacket(NetworkDto dto);
+
+    /**
+     * Send packet and close channel.
+     * @param dto packet to send
+     */
+    void close(NetworkDto dto);
+
+    /**
      * Close client connection.
      * Ignores client traffic and packets.
      */

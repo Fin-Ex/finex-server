@@ -1,9 +1,8 @@
 package ru.finex.ws.command;
 
-import com.google.inject.ImplementedBy;
 import ru.finex.core.command.AbstractGameObjectCommand;
 import ru.finex.core.command.CommandQueue;
-import ru.finex.ws.command.impl.PhysicsCommandQueueImpl;
+import ru.finex.ws.command.impl.physics.PhysicsCommandContext;
 
 /**
  * Executes a once-commands at
@@ -14,6 +13,5 @@ import ru.finex.ws.command.impl.PhysicsCommandQueueImpl;
  *
  * @author m0nster.mind
  */
-@ImplementedBy(PhysicsCommandQueueImpl.class)
-public interface PhysicsCommandQueue extends CommandQueue<AbstractGameObjectCommand> {
+public interface PhysicsCommandQueue extends CommandQueue<AbstractGameObjectCommand, PhysicsCommandContext> {
 }

@@ -1,9 +1,8 @@
 package ru.finex.ws.command;
 
-import com.google.inject.ImplementedBy;
 import ru.finex.core.command.AbstractGameObjectCommand;
 import ru.finex.core.command.CommandQueue;
-import ru.finex.ws.command.impl.UpdateCommandQueueImpl;
+import ru.finex.ws.command.impl.update.UpdateCommandContext;
 
 /**
  * Executes a once-commands at
@@ -14,6 +13,5 @@ import ru.finex.ws.command.impl.UpdateCommandQueueImpl;
  *
  * @author m0nster.mind
  */
-@ImplementedBy(UpdateCommandQueueImpl.class)
-public interface UpdateCommandQueue extends CommandQueue<AbstractGameObjectCommand> {
+public interface UpdateCommandQueue extends CommandQueue<AbstractGameObjectCommand, UpdateCommandContext> {
 }

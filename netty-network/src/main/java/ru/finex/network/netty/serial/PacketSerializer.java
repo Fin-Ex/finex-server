@@ -14,8 +14,8 @@ public interface PacketSerializer<T extends NetworkDto> {
     /**
      * Serialize object into network packet payload.
      * @param dto data in object representation
-     * @return packet payload
+     * @param buffer buffer
      */
-    ByteBuf serialize(T dto);
+    void serialize(T dto, ByteBuf buffer);
 
 }
