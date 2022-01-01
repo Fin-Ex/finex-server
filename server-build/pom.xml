@@ -52,6 +52,7 @@
         <freemaker.version>2.3.31</freemaker.version>
         <hawtio.version>2.14.3</hawtio.version>
         <mycila-guice-jsr250.version>5.0</mycila-guice-jsr250.version>
+        <mycila-jmx.version>1.1.ga</mycila-jmx.version>
     </properties>
 
     <repositories>
@@ -308,6 +309,21 @@
                     <exclusion>
                         <groupId>org.slf4j</groupId>
                         <artifactId>slf4j-simple</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.mycila</groupId>
+                <artifactId>mycila-jmx</artifactId>
+                <version>1.1.ga</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.google.guava</groupId>
+                        <artifactId>guava</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.sonatype.sisu</groupId>
+                        <artifactId>sisu-guice</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>

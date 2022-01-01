@@ -124,5 +124,9 @@
             <groupId>io.hawt</groupId>
             <artifactId>hawtio-embedded</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.mycila</groupId>
+            <artifactId>mycila-jmx</artifactId>
+        </dependency>
     </dependencies>
 </project>

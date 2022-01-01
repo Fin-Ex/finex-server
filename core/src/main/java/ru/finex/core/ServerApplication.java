@@ -6,6 +6,7 @@ import com.google.inject.Module;
 import com.google.inject.Stage;
 import com.mycila.guice.ext.closeable.CloseableModule;
 import com.mycila.guice.ext.jsr250.Jsr250Module;
+import com.mycila.jmx.JmxModule;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
@@ -43,6 +44,7 @@ public class ServerApplication {
         List<Module> modules = new ArrayList<>();
         modules.add(new CloseableModule());
         modules.add(new Jsr250Module());
+        modules.add(new JmxModule());
         modules.addAll(InjectorUtils.collectModules(ServerApplication.class.getPackageName(), LoaderModule.class));
         modules.addAll(InjectorUtils.collectModules(modulePackage, LoaderModule.class));
 
