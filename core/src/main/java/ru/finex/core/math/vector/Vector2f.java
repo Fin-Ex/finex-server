@@ -96,6 +96,7 @@ public class Vector2f implements MathVector, Cloneable {
     /**
      * Save 64bit (two floats) from float vector as x & y components.
      * @param floatVector float vector
+     * @return this
      */
     public Vector2f set(FloatVector floatVector) {
         floatVector.intoArray(components, 0);

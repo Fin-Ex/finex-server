@@ -121,6 +121,7 @@ public final class Vector3f implements MathVector, Cloneable {
     /**
      * Save 128bit (three floats) from float vector as x, y, z components.
      * @param floatVector float vector
+     * @return this
      */
     public Vector3f set(FloatVector floatVector) {
         floatVector.intoArray(components, 0);
@@ -461,20 +462,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @return the dot product.
      */
     public float dot(Vector3f vector) {
-        return dot(floatVector(), vector.floatVector(), operation);
-    }
-
-    private static float dot(FloatVector v1, FloatVector v2, float[] components) {
-        /*
-        __m128 v1 = _mm_loadu_ps(...);
-        __m128 v2 = _mm_loadu_ps(...);
-        __m128 mult = _mm_mul_ps(v1, v2);
-        __m128 tmp = _mm_hadd_ps(mult, mult); <--- m0nster.mind: vector api doesnt have hadd ops right now :(
-        __m128 sum2 = _mm_hadd_ps(tmp, tmp);
-         */
-
-        v1.mul(v2).intoArray(components, 0);
-        return components[0] + components[1] + components[2];
+        return FloatVectorMath.dot128(floatVector(), vector.floatVector());
     }
 
     /**

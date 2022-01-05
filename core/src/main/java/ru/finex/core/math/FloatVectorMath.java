@@ -49,4 +49,23 @@ public class FloatVectorMath {
         return temp.lane(0) - temp.lane(1);
     }
 
+    /**
+     * Calculate dot product between v1 and v2 float vectors (128bit).
+     * @param v1 first vector
+     * @param v2 second vector
+     * @return dot product
+     */
+    public static float dot128(FloatVector v1, FloatVector v2) {
+        /*
+        __m128 v1 = _mm_loadu_ps(...);
+        __m128 v2 = _mm_loadu_ps(...);
+        __m128 mult = _mm_mul_ps(v1, v2);
+        __m128 tmp = _mm_hadd_ps(mult, mult); <--- m0nster.mind: vector api doesnt have hadd ops right now :(
+        __m128 sum2 = _mm_hadd_ps(tmp, tmp);
+         */
+
+        var tmp = v1.mul(v2);
+        return tmp.lane(0) + tmp.lane(1) + tmp.lane(2);
+    }
+
 }
