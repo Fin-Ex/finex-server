@@ -1,9 +1,9 @@
-package ru.finex.core.math;
+package ru.finex.core.math.vector;
 
 import jdk.incubator.vector.FloatVector;
 import jdk.incubator.vector.VectorShuffle;
 import jdk.incubator.vector.VectorSpecies;
-import ru.finex.core.math.vector.MathVector;
+import ru.finex.core.math.ExtMath;
 
 import static java.lang.Float.floatToIntBits;
 import static java.lang.Float.isFinite;

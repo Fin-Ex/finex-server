@@ -1,9 +1,9 @@
-package ru.finex.core.math;
+package ru.finex.core.math.vector;
 
 import jdk.incubator.vector.FloatVector;
 import jdk.incubator.vector.VectorShuffle;
 import jdk.incubator.vector.VectorSpecies;
-import ru.finex.core.math.vector.MathVector;
+import ru.finex.core.math.ExtMath;
 
 import java.util.Arrays;
 
@@ -110,6 +110,15 @@ public final class Vector3f implements MathVector, Cloneable {
     }
 
     /**
+     * Return float vector with specified species.
+     * @param species line width
+     * @return float vector
+     */
+    public FloatVector floatVector(VectorSpecies<Float> species) {
+        return FloatVector.fromArray(species, components, 0);
+    }
+
+    /**
      * Save 128bit (three floats) from float vector as x, y, z components.
      * @param floatVector float vector
      */
@@ -211,8 +220,7 @@ public final class Vector3f implements MathVector, Cloneable {
     }
 
     private static void add(FloatVector v1, FloatVector v2, float[] components) {
-        v1.add(v2)
-            .intoArray(components, 0);
+        v1.add(v2).intoArray(components, 0);
     }
 
     /**
@@ -251,8 +259,7 @@ public final class Vector3f implements MathVector, Cloneable {
     }
 
     private static void subtract(FloatVector v1, FloatVector v2, float[] components) {
-        v1.sub(v2)
-            .intoArray(components, 0);
+        v1.sub(v2).intoArray(components, 0);
     }
 
     /**
@@ -314,9 +321,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @return this vector.
      */
     public Vector3f divideLocal(float scalar) {
-        floatVector().div(scalar)
-            .intoArray(components, 0);
-
+        floatVector().div(scalar).intoArray(components, 0);
         return this;
     }
 
@@ -356,8 +361,7 @@ public final class Vector3f implements MathVector, Cloneable {
     }
 
     private static void divide(FloatVector v1, FloatVector v2, float[] components) {
-        v1.div(v2)
-            .intoArray(components, 0);
+        v1.div(v2).intoArray(components, 0);
     }
 
     /**
@@ -419,6 +423,29 @@ public final class Vector3f implements MathVector, Cloneable {
     }
 
     /**
+     * Calculate dot to the vector.
+     *
+     * @param vector the vector.
+     * @return the dot product.
+     */
+    public float dot(Vector3f vector) {
+        return dot(floatVector(), vector.floatVector(), operation);
+    }
+
+    private static float dot(FloatVector v1, FloatVector v2, float[] components) {
+        /*
+        __m128 v1 = _mm_loadu_ps(...);
+        __m128 v2 = _mm_loadu_ps(...);
+        __m128 mult = _mm_mul_ps(v1, v2);
+        __m128 tmp = _mm_hadd_ps(mult, mult); <--- m0nster.mind: vector api doesnt have hadd ops right now :(
+        __m128 sum2 = _mm_hadd_ps(tmp, tmp);
+         */
+
+        v1.mul(v2).intoArray(components, 0);
+        return components[0] + components[1] + components[2];
+    }
+
+    /**
      * Calculate distance to the vector.
      *
      * @param vector the vector.
@@ -459,51 +486,25 @@ public final class Vector3f implements MathVector, Cloneable {
     }
 
     /**
-     * Calculate dot to the vector.
+     * Invert this vector to get a negative vector.
      *
-     * @param vector the vector.
-     * @return the dot product.
+     * @return this vector.
      */
-    public float dot(Vector3f vector) {
-        return dot(floatVector(), vector.floatVector(), operation);
-    }
-
-    private static float dot(FloatVector v1, FloatVector v2, float[] components) {
-        /*
-        __m128 v1 = _mm_loadu_ps(...);
-        __m128 v2 = _mm_loadu_ps(...);
-        __m128 mult = _mm_mul_ps(v1, v2);
-        __m128 tmp = _mm_hadd_ps(mult, mult); <--- m0nster.mind: vector api doesnt have hadd ops right now :(
-        __m128 sum2 = _mm_hadd_ps(tmp, tmp);
-         */
-
-        v1.mul(v2).intoArray(components, 0);
-        return components[0] + components[1] + components[2];
+    public Vector3f negateLocal() {
+        return negate(this);
     }
 
     /**
-     * Create a new vector as negative version of this vector.
+     * Invert this vector and store to result vector.
      *
-     * @param result changed vector
-     * @return result vector.
+     * @param result result vector
+     * @return result changed vector.
      */
     public Vector3f negate(Vector3f result) {
         floatVector().neg()
             .intoArray(result.components, 0);
 
         return result;
-    }
-
-    /**
-     * Invert this vector to get a negative vector.
-     *
-     * @return this vector.
-     */
-    public Vector3f negateLocal() {
-        floatVector().neg()
-            .intoArray(components, 0);
-
-        return this;
     }
 
     /**
@@ -637,8 +638,8 @@ public final class Vector3f implements MathVector, Cloneable {
 
     @Override
     public int hashCode() {
-        var prime = 31;
-        var result = 1;
+        int prime = 31;
+        int result = 1;
         result = prime * result + Float.floatToIntBits(components[0]);
         result = prime * result + Float.floatToIntBits(components[1]);
         result = prime * result + Float.floatToIntBits(components[2]);
@@ -683,6 +684,7 @@ public final class Vector3f implements MathVector, Cloneable {
      */
     public boolean equals(Vector3f vector, float epsilon) {
         return floatVector().sub(vector.floatVector())
+            .abs()
             .lt(epsilon)
             .allTrue();
     }
