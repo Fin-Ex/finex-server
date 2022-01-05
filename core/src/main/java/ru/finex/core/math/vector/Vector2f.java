@@ -1,9 +1,9 @@
 package ru.finex.core.math.vector;
 
 import jdk.incubator.vector.FloatVector;
-import jdk.incubator.vector.VectorShuffle;
 import jdk.incubator.vector.VectorSpecies;
 import ru.finex.core.math.ExtMath;
+import ru.finex.core.math.FloatVectorMath;
 
 import static java.lang.Float.floatToIntBits;
 import static java.lang.Float.isFinite;
@@ -33,7 +33,7 @@ public class Vector2f implements MathVector, Cloneable {
     public static final Vector2f NEGATIVE_INFINITY =
         new Vector2f(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
 
-    private static final VectorSpecies<Float> SPECIES = FloatVector.SPECIES_64;
+    public static final VectorSpecies<Float> SPECIES = FloatVector.SPECIES_64;
 
     private final float[] components = new float[2];
     private final float[] operation = new float[2];
@@ -97,8 +97,9 @@ public class Vector2f implements MathVector, Cloneable {
      * Save 64bit (two floats) from float vector as x & y components.
      * @param floatVector float vector
      */
-    public void set(FloatVector floatVector) {
+    public Vector2f set(FloatVector floatVector) {
         floatVector.intoArray(components, 0);
+        return this;
     }
 
     /**
@@ -328,7 +329,7 @@ public class Vector2f implements MathVector, Cloneable {
      * @return cross product.
      */
     public float cross(float x, float y) {
-        return cross(floatVector(), fillOperation(x, y), operation);
+        return FloatVectorMath.cross64(floatVector(), fillOperation(x, y));
     }
 
     /**
@@ -338,23 +339,12 @@ public class Vector2f implements MathVector, Cloneable {
      * @return cross product.
      */
     public float cross(Vector2f vector) {
-        var vectorLine = vector.floatVector();
-        floatVector().mul(
-            vectorLine.rearrange(VectorShuffle.fromValues(SPECIES, 1, 0))
-        ).intoArray(operation, 0);
-
-        return operation[0] - operation[1];
-    }
-
-    private static float cross(FloatVector v1, FloatVector v2, float[] components) {
-        v1.mul(v2.rearrange(VectorShuffle.fromValues(SPECIES, 1, 0)))
-            .intoArray(components, 0);
-
-        return components[0] - components[1];
+        return FloatVectorMath.cross64(floatVector(), vector.floatVector());
     }
 
     /**
      * Calculate perpendicular vector of this and store to this vector.
+     *
      * @return this vector.
      */
     public Vector2f perpendicularLocal() {
@@ -363,6 +353,7 @@ public class Vector2f implements MathVector, Cloneable {
 
     /**
      * Calculate perpendicular vector of this and store to result vector.
+     *
      * @param result the result vector.
      * @return result vector.
      */

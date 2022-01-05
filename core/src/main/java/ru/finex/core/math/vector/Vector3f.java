@@ -1,9 +1,9 @@
 package ru.finex.core.math.vector;
 
 import jdk.incubator.vector.FloatVector;
-import jdk.incubator.vector.VectorShuffle;
 import jdk.incubator.vector.VectorSpecies;
 import ru.finex.core.math.ExtMath;
+import ru.finex.core.math.FloatVectorMath;
 
 import java.util.Arrays;
 
@@ -37,7 +37,7 @@ public final class Vector3f implements MathVector, Cloneable {
     public static final Vector3f NEGATIVE_INFINITY = new Vector3f(Float.NEGATIVE_INFINITY,
         Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
 
-    private static final VectorSpecies<Float> SPECIES = FloatVector.SPECIES_128;
+    public static final VectorSpecies<Float> SPECIES = FloatVector.SPECIES_128;
 
     private final float[] components = new float[4];
     private final float[] operation = new float[4];
@@ -122,8 +122,9 @@ public final class Vector3f implements MathVector, Cloneable {
      * Save 128bit (three floats) from float vector as x, y, z components.
      * @param floatVector float vector
      */
-    public void set(FloatVector floatVector) {
+    public Vector3f set(FloatVector floatVector) {
         floatVector.intoArray(components, 0);
+        return this;
     }
 
     /**
@@ -219,6 +220,16 @@ public final class Vector3f implements MathVector, Cloneable {
         return result;
     }
 
+    /**
+     * Adds the vector from this vector.
+     *
+     * @param vector the vector.
+     * @return float vector (128bit)
+     */
+    public FloatVector add(Vector3f vector) {
+        return floatVector().add(vector.floatVector());
+    }
+
     private static void add(FloatVector v1, FloatVector v2, float[] components) {
         v1.add(v2).intoArray(components, 0);
     }
@@ -256,6 +267,16 @@ public final class Vector3f implements MathVector, Cloneable {
     public Vector3f subtract(Vector3f vector, Vector3f result) {
         subtract(floatVector(), vector.floatVector(), result.components);
         return result;
+    }
+
+    /**
+     * Subtract the vector from this vector.
+     *
+     * @param vector the vector.
+     * @return float vector (128bit)
+     */
+    public FloatVector subtract(Vector3f vector) {
+        return floatVector().sub(vector.floatVector());
     }
 
     private static void subtract(FloatVector v1, FloatVector v2, float[] components) {
@@ -310,6 +331,16 @@ public final class Vector3f implements MathVector, Cloneable {
         return this;
     }
 
+    /**
+     * Multiply this vector by the vector.
+     *
+     * @param vector the vector.
+     * @return float vector (128bit)
+     */
+    public FloatVector mult(Vector3f vector) {
+        return floatVector().mul(vector.floatVector());
+    }
+
     private static void mult(FloatVector v1, FloatVector v2, float[] components) {
         v1.mul(v2).intoArray(components, 0);
     }
@@ -360,6 +391,16 @@ public final class Vector3f implements MathVector, Cloneable {
         return this;
     }
 
+    /**
+     * Divide this vector by the vector.
+     *
+     * @param vector the divider vector.
+     * @return float vector (128bit).
+     */
+    public FloatVector divide(Vector3f vector) {
+        return floatVector().div(vector.floatVector());
+    }
+
     private static void divide(FloatVector v1, FloatVector v2, float[] components) {
         v1.div(v2).intoArray(components, 0);
     }
@@ -399,27 +440,18 @@ public final class Vector3f implements MathVector, Cloneable {
         return result;
     }
 
+    /**
+     * Calculate a cross vector between this vector and the vector.
+     *
+     * @param vector the vector
+     * @return float vector (128bit)
+     */
+    public FloatVector cross(Vector3f vector) {
+        return FloatVectorMath.cross128(floatVector(), vector.floatVector());
+    }
+
     private static void cross(FloatVector v1, FloatVector v2, float[] components) {
-        /*
-            __m128 xzy = _mm_shuffle_ps(v1, v1, _MM_SHUFFLE(0, 2, 1, 3));
-            __m128 yxz = _mm_shuffle_ps(v1, v1, _MM_SHUFFLE(1, 0, 2, 3));
-            __m128 otherXzy = _mm_shuffle_ps(v2, v2, _MM_SHUFFLE(0, 2, 1, 3));
-            __m128 otherYxz = _mm_shuffle_ps(v2, v2, _MM_SHUFFLE(1, 0, 2, 3));
-            return _mm_sub_ps(
-                _mm_mul_ps(xzy, otherYxz),
-                _mm_mul_ps(yxz, otherXzy)
-            );
-         */
-
-        var xzy = (FloatVector) v1.rearrange(VectorShuffle.fromValues(SPECIES, 0, 2, 1, 3));
-        var yxz = (FloatVector) v1.rearrange(VectorShuffle.fromValues(SPECIES, 1, 0, 2, 3));
-
-        var otherXzy = (FloatVector) v2.rearrange(VectorShuffle.fromValues(SPECIES, 0, 2, 1, 3));
-        var otherYxz = (FloatVector) v2.rearrange(VectorShuffle.fromValues(SPECIES, 1, 0, 2, 3));
-
-        xzy.mul(otherYxz)
-            .sub(yxz.mul(otherXzy))
-            .intoArray(components, 0);
+        FloatVectorMath.cross128(v1, v2).intoArray(components, 0);
     }
 
     /**
