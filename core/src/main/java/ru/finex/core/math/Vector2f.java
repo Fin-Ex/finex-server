@@ -1,7 +1,9 @@
 package ru.finex.core.math;
 
 import jdk.incubator.vector.FloatVector;
+import jdk.incubator.vector.VectorShuffle;
 import jdk.incubator.vector.VectorSpecies;
+import ru.finex.core.math.vector.MathVector;
 
 import static java.lang.Float.floatToIntBits;
 import static java.lang.Float.isFinite;
@@ -12,18 +14,18 @@ import static java.lang.Float.isFinite;
  * @author JavaSaBr
  * @author m0nster.mind
  */
-public class Vector2f implements Cloneable {
+public class Vector2f implements MathVector, Cloneable {
 
     public static final Vector2f ZERO = new Vector2f(0, 0);
     public static final Vector2f NAN = new Vector2f(Float.NaN, Float.NaN);
 
     public static final Vector2f UNIT_X = new Vector2f(1, 0);
     public static final Vector2f UNIT_Y = new Vector2f(0, 1);
-    public static final Vector2f UNIT_XYZ = new Vector2f(1, 1);
+    public static final Vector2f UNIT_XY = new Vector2f(1, 1);
 
     public static final Vector2f UNIT_X_NEGATIVE = new Vector2f(-1, 0);
     public static final Vector2f UNIT_Y_NEGATIVE = new Vector2f(0, -1);
-    public static final Vector2f UNIT_XYZ_NEGATIVE = new Vector2f(-1, -1);
+    public static final Vector2f UNIT_XY_NEGATIVE = new Vector2f(-1, -1);
 
     public static final Vector2f POSITIVE_INFINITY =
         new Vector2f(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
@@ -53,15 +55,7 @@ public class Vector2f implements Cloneable {
     }
 
     public Vector2f(Vector2f another) {
-        this(another.getX(), another.getY());
-    }
-
-    public float getX() {
-        return components[0];
-    }
-
-    public float getY() {
-        return components[1];
+        this(another.components);
     }
 
     /**
@@ -74,12 +68,29 @@ public class Vector2f implements Cloneable {
         return vector != null && isFinite(vector.getX()) && isFinite(vector.getY());
     }
 
+    public float getX() {
+        return components[0];
+    }
+
+    public float getY() {
+        return components[1];
+    }
+
     /**
      * Return float vector with 64 bit species.
      * @return float vector of x & y components
      */
     public FloatVector floatVector() {
         return FloatVector.fromArray(SPECIES, components, 0);
+    }
+
+    /**
+     * Return float vector with specified species.
+     * @param species line width
+     * @return float vector
+     */
+    public FloatVector floatVector(VectorSpecies<Float> species) {
+        return FloatVector.fromArray(species, components, 0);
     }
 
     /**
@@ -91,17 +102,59 @@ public class Vector2f implements Cloneable {
     }
 
     /**
+     * Set components from the vector to this vector.
+     *
+     * @param vector the vector.
+     * @return this vector.
+     */
+    public Vector2f set(Vector2f vector) {
+        return set(vector.getX(), vector.getY());
+    }
+
+    /**
+     * Set the components to this vector.
+     *
+     * @param x x component.
+     * @param y y component.
+     * @return this vector.
+     */
+    public Vector2f set(float x, float y) {
+        components[0] = x;
+        components[1] = y;
+        return this;
+    }
+
+    /**
+     * Set the X component.
+     *
+     * @param x the X component.
+     * @return this vector.
+     */
+    public Vector2f setX(float x) {
+        components[0] = x;
+        return this;
+    }
+
+    /**
+     * Set the Y component.
+     *
+     * @param y the Y component.
+     * @return this vector.
+     */
+    public Vector2f setY(float y) {
+        components[1] = y;
+        return this;
+    }
+
+    /**
      * Add coordinates to this vector.
      *
-     * @param addX x axis value.
-     * @param addY y axis value.
+     * @param x x axis value.
+     * @param y y axis value.
      * @return this vector
      */
-    public Vector2f addLocal(float addX, float addY) {
-        floatVector()
-            .add(fillOperation(addX, addY))
-            .intoArray(components, 0);
-
+    public Vector2f addLocal(float x, float y) {
+        add(floatVector(), fillOperation(x, y), components);
         return this;
     }
 
@@ -112,11 +165,223 @@ public class Vector2f implements Cloneable {
      * @return this vector.
      */
     public Vector2f addLocal(Vector2f vector) {
-        floatVector()
-            .add(FloatVector.fromArray(SPECIES, vector.components, 0))
+        return add(vector, this);
+    }
+
+    /**
+     * Adds the vector from this vector and store the result to the result vector.
+     *
+     * @param vector the vector.
+     * @param result the result.
+     * @return the result vector.
+     */
+    public Vector2f add(Vector2f vector, Vector2f result) {
+        add(floatVector(), vector.floatVector(), result.components);
+        return result;
+    }
+
+    private static void add(FloatVector v1, FloatVector v2, float[] components) {
+        v1.add(v2).intoArray(components, 0);
+    }
+
+    /**
+     * Subtract the components from this vector.
+     *
+     * @param x the sub x.
+     * @param y the sub y.
+     * @return this changed vector.
+     */
+    public Vector2f subtractLocal(float x, float y) {
+        subtract(floatVector(), fillOperation(x, y), components);
+        return this;
+    }
+
+    /**
+     * Subtract the vector from this vector.
+     *
+     * @param vector the vector.
+     * @return this changed vector.
+     */
+    public Vector2f subtractLocal(Vector2f vector) {
+        return subtract(vector, this);
+    }
+
+    /**
+     * Subtract this vector by the vector and store it to the result vector.
+     *
+     * @param vector the vector.
+     * @param result the result.
+     * @return the result vector.
+     */
+    public Vector2f subtract(Vector2f vector, Vector2f result) {
+        subtract(floatVector(), vector.floatVector(), result.components);
+        return result;
+    }
+
+    private static void subtract(FloatVector v1, FloatVector v2, float[] components) {
+        v1.sub(v2).intoArray(components, 0);
+    }
+
+    /**
+     * Multiply this vector by the scalar.
+     *
+     * @param scalar the scalar.
+     * @return this vector.
+     */
+    public Vector2f multLocal(float scalar) {
+        floatVector().mul(scalar).intoArray(components, 0);
+        return this;
+    }
+
+    /**
+     * Multiply this vector by the scalar values.
+     *
+     * @param x the x scalar.
+     * @param y the y scalar.
+     * @return this vector.
+     */
+    public Vector2f multLocal(float x, float y) {
+        mult(floatVector(), fillOperation(x, y), components);
+        return this;
+    }
+
+    /**
+     * Multiply this vector by the vector.
+     *
+     * @param vector the vector.
+     * @return this vector.
+     */
+    public Vector2f multLocal(Vector2f vector) {
+        return mult(vector, this);
+    }
+
+    /**
+     * Multiply this vector by the vector and store result to result vector.
+     *
+     * @param vector the vector.
+     * @param result the result vector
+     * @return result vector.
+     */
+    public Vector2f mult(Vector2f vector, Vector2f result) {
+        mult(floatVector(), vector.floatVector(), result.components);
+        return this;
+    }
+
+    private static void mult(FloatVector v1, FloatVector v2, float[] components) {
+        v1.mul(v2).intoArray(components, 0);
+    }
+
+    /**
+     * Divide this vector by the scalar.
+     *
+     * @param scalar the divider scalar.
+     * @return this changed vector.
+     */
+    public Vector2f divideLocal(float scalar) {
+        floatVector().div(scalar).intoArray(components, 0);
+        return this;
+    }
+
+    /**
+     * Divide this vector by the components.
+     *
+     * @param x the divider x.
+     * @param y the divider y.
+     * @return this changed vector.
+     */
+    public Vector2f divideLocal(float x, float y) {
+        divide(floatVector(), fillOperation(x, y), components);
+        return this;
+    }
+
+    /**
+     * Divide this vector by the vector.
+     *
+     * @param vector the divider vector.
+     * @return this changed vector.
+     */
+    public Vector2f divideLocal(Vector2f vector) {
+        return divide(vector, this);
+    }
+
+    /**
+     * Divide this vector by the vector and store result to result vector.
+     *
+     * @param vector the divider vector.
+     * @param result result vector
+     * @return result vector.
+     */
+    public Vector2f divide(Vector2f vector, Vector2f result) {
+        divide(floatVector(), vector.floatVector(), result.components);
+        return this;
+    }
+
+    private static void divide(FloatVector v1, FloatVector v2, float[] components) {
+        v1.div(v2).intoArray(components, 0);
+    }
+
+    /**
+     * Calculate a cross product (z-axis is zero) between this vector and the coordinates.
+     *
+     * @param x the other x.
+     * @param y the other y.
+     * @return cross product.
+     */
+    public float cross(float x, float y) {
+        return cross(floatVector(), fillOperation(x, y), operation);
+    }
+
+    /**
+     * Calculate a cross product (z-axis is zero) between this vector and the vector.
+     *
+     * @param vector the vector.
+     * @return cross product.
+     */
+    public float cross(Vector2f vector) {
+        var vectorLine = vector.floatVector();
+        floatVector().mul(
+            vectorLine.rearrange(VectorShuffle.fromValues(SPECIES, 1, 0))
+        ).intoArray(operation, 0);
+
+        return operation[0] - operation[1];
+    }
+
+    private static float cross(FloatVector v1, FloatVector v2, float[] components) {
+        v1.mul(v2.rearrange(VectorShuffle.fromValues(SPECIES, 1, 0)))
             .intoArray(components, 0);
 
-        return this;
+        return components[0] - components[1];
+    }
+
+    /**
+     * Calculate perpendicular vector of this and store to this vector.
+     * @return this vector.
+     */
+    public Vector2f perpendicularLocal() {
+        return perpendicular(this);
+    }
+
+    /**
+     * Calculate perpendicular vector of this and store to result vector.
+     * @param result the result vector.
+     * @return result vector.
+     */
+    public Vector2f perpendicular(Vector2f result) {
+        result.set(getY(), -getX());
+        return result;
+    }
+
+    /**
+     * Calculate dot to the vector.
+     *
+     * @param vector the vector.
+     * @return the dot product.
+     */
+    public float dot(Vector2f vector) {
+        floatVector().mul(vector.floatVector())
+            .intoArray(operation, 0);
+
+        return operation[0] + operation[1];
     }
 
     /**
@@ -157,105 +422,12 @@ public class Vector2f implements Cloneable {
     }
 
     /**
-     * Calculate dot to the vector.
-     *
-     * @param vector the vector.
-     * @return the dot product.
-     */
-    public float dot(Vector2f vector) {
-        floatVector()
-            .mul(vector.floatVector())
-            .intoArray(operation, 0);
-
-        return operation[0] + operation[1];
-    }
-
-    /**
-     * Set the X component.
-     *
-     * @param x the X component.
-     * @return this vector.
-     */
-    public Vector2f setX(float x) {
-        components[0] = x;
-        return this;
-    }
-
-    /**
-     * Set the Y component.
-     *
-     * @param y the Y component.
-     * @return this vector.
-     */
-    public Vector2f setY(float y) {
-        components[1] = y;
-        return this;
-    }
-
-    @Override
-    public int hashCode() {
-        var prime = 31;
-        var result = 1;
-        result = prime * result + Float.floatToIntBits(components[0]);
-        result = prime * result + Float.floatToIntBits(components[1]);
-        return result;
-    }
-
-    /**
      * Return true if all components are zero.
      *
      * @return true if all components are zero.
      */
     public boolean isZero() {
-        return ExtMath.isZero(x) && ExtMath.isZero(y);
-    }
-
-    /**
-     * Multiply this vector by the scalar.
-     *
-     * @param scalar the scalar.
-     * @return this vector.
-     */
-    public Vector2f multLocal(float scalar) {
-        return multLocal(scalar, scalar);
-    }
-
-    /**
-     * Multiply this vector by the scalar values.
-     *
-     * @param x the x scalar.
-     * @param y the y scalar.
-     * @return this vector.
-     */
-    public Vector2f multLocal(float x, float y) {
-        floatVector()
-            .mul(fillOperation(x, y))
-            .intoArray(components, 0);
-
-        return this;
-    }
-
-    /**
-     * Multiply this vector by the vector.
-     *
-     * @param vector the vector.
-     * @return this vector.
-     */
-    public Vector2f multLocal(Vector2f vector) {
-        floatVector()
-            .mul(FloatVector.fromArray(SPECIES, vector.components, 0))
-            .intoArray(components, 0);
-
-        return this;
-    }
-
-    /**
-     * Create a new vector as negative version of this vector.
-     *
-     * @return the new negative vector.
-     */
-    public Vector2f negate() {
-        return new Vector2f(-getX(), -getY());
+        return ExtMath.isZero(getX()) && ExtMath.isZero(getY());
     }
 
     /**
@@ -264,27 +436,20 @@ public class Vector2f implements Cloneable {
      * @return this vector.
      */
     public Vector2f negateLocal() {
-        floatVector()
-            .neg()
-            .intoArray(components, 0);
-
-        return this;
+        return negate(this);
     }
 
     /**
-     * Create a normalized vector from this vector.
+     * Invert this vector and store to result vector.
      *
-     * @return the new normalized vector.
+     * @param result the result vector.
+     * @return result changed vector.
      */
-    public Vector2f normalize() {
-        float length = x * x + y * y;
+    public Vector2f negate(Vector2f result) {
+        floatVector().neg()
+            .intoArray(result.components, 0);
 
-        if (length != 1F && length != 0F) {
-            length = 1.0F / ExtMath.sqrt(length);
-            return new Vector2f(x * length, y * length);
-        }
-
-        return new Vector2f(x, y);
+        return result;
     }
 
     /**
@@ -293,86 +458,26 @@ public class Vector2f implements Cloneable {
      * @return this vector.
      */
     public Vector2f normalizeLocal() {
-        var sqr = floatVector().mul(floatVector());
-        sqr.intoArray(operation, 0);
+        return normalize(this);
+    }
 
-        float length = operation[0] + operation[1];
+    /**
+     * Normalize this vector and store to result vector.
+     *
+     * @param result the result vector.
+     * @return the new normalized vector.
+     */
+    public Vector2f normalize(Vector2f result) {
+        float length = sqrLength();
 
-        if (length != 1f && length != 0f) {
-            length = 1.0f / ExtMath.sqrt(length);
-
-            floatVector().mul(length)
-                .intoArray(components, 0);
+        if (length != 1F && length != 0F) {
+            length = 1.0F / ExtMath.sqrt(length);
+            result.set(getX() * length, getY() * length);
+        } else {
+            result.set(this);
         }
 
-        return this;
-    }
-
-    /**
-     * Set components from the vector to this vector.
-     *
-     * @param vector the vector.
-     * @return this vector.
-     */
-    public Vector2f set(Vector2f vector) {
-        return set(vector.getX(), vector.getY());
-    }
-
-    /**
-     * Set the components to this vector.
-     *
-     * @param x x component.
-     * @param y y component.
-     * @return this vector.
-     */
-    public Vector2f set(float x, float y) {
-        components[0] = x;
-        components[1] = y;
-        return this;
-    }
-
-    /**
-     * Subtract this vector by the vector and store it to the result vector.
-     *
-     * @param vector the vector.
-     * @param result the result.
-     * @return the result vector.
-     */
-    public Vector2f subtract(Vector2f vector, Vector2f result) {
-        floatVector()
-            .sub(vector.floatVector())
-            .intoArray(result.components, 0);
-
         return result;
-    }
-
-    /**
-     * Subtract the components from this vector.
-     *
-     * @param subX the sub x.
-     * @param subY the sub y.
-     * @return this changed vector.
-     */
-    public Vector2f subtractLocal(float subX, float subY) {
-        floatVector()
-            .sub(fillOperation(subX, subY))
-            .intoArray(components, 0);
-
-        return this;
-    }
-
-    /**
-     * Subtract the vector from this vector.
-     *
-     * @param vector the vector.
-     * @return this changed vector.
-     */
-    public Vector2f subtractLocal(Vector2f vector) {
-        floatVector()
-            .sub(vector.floatVector())
-            .intoArray(components, 0);
-
-        return this;
     }
 
     /**
@@ -381,7 +486,7 @@ public class Vector2f implements Cloneable {
      * @return the vector's length.
      */
     public float length() {
-        return ExtMath.sqrt(x * x + y * y);
+        return ExtMath.sqrt(sqrLength());
     }
 
     /**
@@ -390,47 +495,49 @@ public class Vector2f implements Cloneable {
      * @return the vector's squared length.
      */
     public float sqrLength() {
-        return x * x + y * y;
+        return components[0] * components[0] +
+            components[1] * components[1];
     }
 
     /**
-     * Divide this vector by the components.
+     * Move this vector to a new point by specified direction.
      *
-     * @param x the divider x.
-     * @param y the divider y.
-     * @return this changed vector.
+     * @param direction move direction.
+     * @param distance  move distance.
+     * @return this vector.
      */
-    public Vector2f divideLocal(float x, float y) {
-        floatVector()
-            .div(fillOperation(x, y))
+    public Vector2f moveToDirection(Vector2f direction, float distance) {
+        direction.floatVector()
+            .fma(fillOperation(distance, distance), floatVector())
             .intoArray(components, 0);
 
         return this;
     }
 
     /**
-     * Divide this vector by the vector.
+     * Move this vector to destination vector.
+     * If distance argument is greater or equal to real distance between this vector and
+     * destination vector then coordinates will be set to equal destination.
      *
-     * @param vector the divider vector.
-     * @return this changed vector.
+     * @param destination destination vector
+     * @param distance    move distance
+     * @return this vector with new position
      */
-    public Vector2f divideLocal(Vector2f vector) {
-        floatVector()
-            .div(vector.floatVector())
-            .intoArray(components, 0);
+    public Vector2f moveToPoint(Vector2f destination, float distance) {
+        var direction = destination.floatVector()
+            .sub(floatVector());
 
-        return this;
-    }
+        direction.mul(direction)
+            .intoArray(operation, 0);
 
-    /**
-     * Divide this vector by the scalar.
-     *
-     * @param scalar the divider scalar.
-     * @return this changed vector.
-     */
-    public Vector2f divideLocal(float scalar) {
-        floatVector()
-            .div(scalar)
+        float length = (float) Math.sqrt(operation[0] + operation[1]); // XXX double?
+        if (length <= distance || length < ExtMath.EPSILON) {
+            set(destination);
+            return this;
+        }
+
+        direction.div(length) // normalize vector
+            .fma(fillOperation(length, length), floatVector()) // Vn * Dn + Pn
             .intoArray(components, 0);
 
         return this;
@@ -444,16 +551,16 @@ public class Vector2f implements Cloneable {
      * @param t the time
      * @return this vector.
      */
+    @SuppressWarnings("checkstyle:ParameterAssignment")
     public Vector2f lerp(Vector2f min, Vector2f max, float t) {
         t = ExtMath.clamp(t);
 
-        var maxVector = max.floatVector();
-        var minVector = min.floatVector();
+        var minLines = min.floatVector();
+        var delta = max.floatVector()
+            .sub(minLines);
 
-        minVector.add(
-            maxVector.sub(minVector)
-                .mul(t)
-        ).intoArray(components, 0);
+        minLines.fma(fillOperation(t, t), delta)
+            .intoArray(components, 0);
 
         return this;
     }
@@ -474,23 +581,21 @@ public class Vector2f implements Cloneable {
     }
 
     @Override
+    public int hashCode() {
+        int prime = 31;
+        int result = 1;
+        result = prime * result + Float.floatToIntBits(components[0]);
+        result = prime * result + Float.floatToIntBits(components[1]);
+        return result;
+    }
+
+    @Override
     public Vector2f clone() {
         try {
             return (Vector2f) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * Check vectors to equals with epsilon.
-     *
-     * @param vector vector
-     * @param epsilon epsilon
-     * @return true if vectors equals
-     */
-    public boolean equals(Vector3f vector, float epsilon) {
-        return Math.abs(x - vector.getX()) < epsilon && Math.abs(y - vector.getY()) < epsilon;
     }
 
     @Override
@@ -504,14 +609,25 @@ public class Vector2f implements Cloneable {
         }
 
         var other = (Vector2f) obj;
-
         if (floatToIntBits(getX()) != floatToIntBits(other.getX())) {
-            return false;
-        } else if (floatToIntBits(getY()) != floatToIntBits(other.getY())) {
             return false;
         }
 
-        return true;
+        return floatToIntBits(getY()) == floatToIntBits(other.getY());
+    }
+
+    /**
+     * Check vectors to equals with epsilon.
+     *
+     * @param vector vector
+     * @param epsilon epsilon
+     * @return true if vectors equals
+     */
+    public boolean equals(Vector3f vector, float epsilon) {
+        return floatVector().sub(vector.floatVector(SPECIES))
+            .abs()
+            .lt(epsilon)
+            .allTrue();
     }
 
     /**
@@ -522,8 +638,10 @@ public class Vector2f implements Cloneable {
      * @return true if these vectors are equal with the epsilon.
      */
     public boolean equals(Vector2f vector, float epsilon) {
-        return Math.abs(getX() - vector.getX()) < epsilon &&
-            Math.abs(getY() - vector.getY()) < epsilon;
+        return floatVector().sub(vector.floatVector())
+            .abs()
+            .lt(epsilon)
+            .allTrue();
     }
 
     @Override
