@@ -12,6 +12,7 @@ public class FloatVectorMath {
 
     /**
      * Calculate cross product between v1 and v2 float vectors (128bit).
+     * This method rearrange v1 and v2 values!
      * @param v1 first vector
      * @param v2 second vector
      * @return result vector
@@ -28,18 +29,19 @@ public class FloatVectorMath {
             );
          */
 
-        var xzy = (FloatVector) v1.rearrange(VectorShuffle.fromValues(FloatVector.SPECIES_128, 0, 2, 1, 3));
-        var yxz = (FloatVector) v1.rearrange(VectorShuffle.fromValues(FloatVector.SPECIES_128, 1, 0, 2, 3));
+        var xzyYxz = v1.rearrange(VectorShuffle.fromValues(FloatVector.SPECIES_128, 0, 2, 1, 3))
+            .mul(v2.rearrange(VectorShuffle.fromValues(FloatVector.SPECIES_128, 1, 0, 2, 3)));
 
-        var otherXzy = (FloatVector) v2.rearrange(VectorShuffle.fromValues(FloatVector.SPECIES_128, 0, 2, 1, 3));
-        var otherYxz = (FloatVector) v2.rearrange(VectorShuffle.fromValues(FloatVector.SPECIES_128, 1, 0, 2, 3));
+        // rearrange values from previous step
+        var yxzXzy = v1.rearrange(VectorShuffle.fromValues(FloatVector.SPECIES_128, 2, 0, 1, 3))
+            .mul(v2.rearrange(VectorShuffle.fromValues(FloatVector.SPECIES_128, 1, 2, 0, 3)));
 
-        return xzy.mul(otherYxz)
-            .sub(yxz.mul(otherXzy));
+        return xzyYxz.sub(yxzXzy);
     }
 
     /**
      * Calculate cross product between v1 and v2 float vectors (64bit).
+     * This method rearrange v2 values!
      * @param v1 first vector
      * @param v2 second vector
      * @return result (one-dimensional point)
