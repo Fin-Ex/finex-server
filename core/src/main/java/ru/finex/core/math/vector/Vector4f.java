@@ -11,57 +11,60 @@ import static java.lang.Float.floatToIntBits;
 import static java.lang.Float.isFinite;
 
 /**
- * The implementation of vector with 3 float values.
+ * The implementation of vector with 4 float values.
  *
- * @author JavaSaBr
  * @author m0nster.mind
  */
-public final class Vector3f implements MathVector, Cloneable {
+public class Vector4f implements MathVector, Cloneable {
 
-    public static final Vector3f ZERO = new Vector3f(0, 0, 0);
-    public static final Vector3f NAN = new Vector3f(Float.NaN, Float.NaN, Float.NaN);
+    public static final Vector4f ZERO = new Vector4f(0, 0, 0, 0);
+    public static final Vector4f NAN = new Vector4f(Float.NaN, Float.NaN, Float.NaN, Float.NaN);
 
-    public static final Vector3f UNIT_X = new Vector3f(1, 0, 0);
-    public static final Vector3f UNIT_Y = new Vector3f(0, 1, 0);
-    public static final Vector3f UNIT_Z = new Vector3f(0, 0, 1);
-    public static final Vector3f UNIT_XYZ = new Vector3f(1, 1, 1);
+    public static final Vector4f UNIT_X = new Vector4f(1, 0, 0, 0);
+    public static final Vector4f UNIT_Y = new Vector4f(0, 1, 0, 0);
+    public static final Vector4f UNIT_Z = new Vector4f(0, 0, 1, 0);
+    public static final Vector4f UNIT_W = new Vector4f(0, 0, 0, 1);
+    public static final Vector4f UNIT_XYZ = new Vector4f(1, 1, 1, 0);
+    public static final Vector4f UNIT_XYZW = new Vector4f(1, 1, 1, 1);
 
-    public static final Vector3f UNIT_X_NEGATIVE = new Vector3f(-1, 0, 0);
-    public static final Vector3f UNIT_Y_NEGATIVE = new Vector3f(0, -1, 0);
-    public static final Vector3f UNIT_Z_NEGATIVE = new Vector3f(0, 0, -1);
-    public static final Vector3f UNIT_XYZ_NEGATIVE = new Vector3f(-1, -1, -1);
+    public static final Vector4f UNIT_X_NEGATIVE = new Vector4f(-1, 0, 0, 0);
+    public static final Vector4f UNIT_Y_NEGATIVE = new Vector4f(0, -1, 0, 0);
+    public static final Vector4f UNIT_Z_NEGATIVE = new Vector4f(0, 0, -1, 0);
+    public static final Vector4f UNIT_W_NEGATIVE = new Vector4f(0, 0, 0, -1);
+    public static final Vector4f UNIT_XYZW_NEGATIVE = new Vector4f(-1, -1, -1, -1);
 
-    public static final Vector3f POSITIVE_INFINITY = new Vector3f(Float.POSITIVE_INFINITY,
-        Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
+    public static final Vector4f POSITIVE_INFINITY = new Vector4f(Float.POSITIVE_INFINITY,
+        Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY);
 
-    public static final Vector3f NEGATIVE_INFINITY = new Vector3f(Float.NEGATIVE_INFINITY,
-        Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
+    public static final Vector4f NEGATIVE_INFINITY = new Vector4f(Float.NEGATIVE_INFINITY,
+        Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
 
     public static final VectorSpecies<Float> SPECIES = FloatVector.SPECIES_128;
 
-    private final float[] components = new float[4];
-    private final float[] operation = new float[4];
+    protected final float[] components = new float[4];
+    protected final float[] operation = new float[4];
 
-    public Vector3f() {
+    public Vector4f() {
         super();
     }
 
-    public Vector3f(float value) {
+    public Vector4f(float value) {
         Arrays.fill(components, 0, 3, value);
     }
 
-    public Vector3f(float x, float y, float z) {
+    public Vector4f(float x, float y, float z, float w) {
         components[0] = x;
         components[1] = y;
         components[2] = z;
+        components[3] = w;
     }
 
-    public Vector3f(float[] components) {
-        this(components[0], components[1], components[2]);
+    public Vector4f(float[] components) {
+        this(components[0], components[1], components[2], components[3]);
     }
 
-    public Vector3f(Vector3f another) {
-        this(another.getX(), another.getY(), another.getZ());
+    public Vector4f(Vector4f another) {
+        this(another.components);
     }
 
     /**
@@ -70,11 +73,12 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param vector the vector.
      * @return true if the vector is not null and valid.
      */
-    public static boolean isValid(Vector3f vector) {
+    public static boolean isValid(Vector4f vector) {
         return vector != null &&
             isFinite(vector.getX()) &&
             isFinite(vector.getY()) &&
-            isFinite(vector.getZ());
+            isFinite(vector.getZ()) &&
+            isFinite(vector.getW());
     }
 
     /**
@@ -102,8 +106,16 @@ public final class Vector3f implements MathVector, Cloneable {
     }
 
     /**
+     * Get W component.
+     * @return w
+     */
+    public float getW() {
+        return components[3];
+    }
+
+    /**
      * Return float vector with 128 bit species.
-     * @return float vector of x, y, z components
+     * @return float vector of x, y, z, w components
      */
     public FloatVector floatVector() {
         return FloatVector.fromArray(SPECIES, components, 0);
@@ -123,7 +135,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param floatVector float vector
      * @return this
      */
-    public Vector3f set(FloatVector floatVector) {
+    public Vector4f set(FloatVector floatVector) {
         floatVector.intoArray(components, 0);
         return this;
     }
@@ -134,19 +146,8 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param vector the vector.
      * @return this vector.
      */
-    public Vector3f set(Vector3f vector) {
-        return set(vector.getX(), vector.getY(), vector.getZ());
-    }
-
-    /**
-     * Set components from four dimension vector to this vector.
-     * W component of four-dimension vector has been dropped.
-     *
-     * @param vector four dimension vector
-     * @return this vector
-     */
-    public Vector3f set(Vector4f vector) {
-        return set(vector.getX(), vector.getY(), vector.getZ());
+    public Vector4f set(Vector4f vector) {
+        return set(vector.getX(), vector.getY(), vector.getZ(), vector.getW());
     }
 
     /**
@@ -155,12 +156,14 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param x x component.
      * @param y y component.
      * @param z z component.
+     * @param w w component
      * @return this vector.
      */
-    public Vector3f set(float x, float y, float z) {
+    public Vector4f set(float x, float y, float z, float w) {
         components[0] = x;
         components[1] = y;
         components[2] = z;
+        components[3] = w;
         return this;
     }
 
@@ -170,7 +173,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param x the X component.
      * @return this vector.
      */
-    public Vector3f setX(float x) {
+    public Vector4f setX(float x) {
         components[0] = x;
         return this;
     }
@@ -181,7 +184,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param y the Y component.
      * @return this vector.
      */
-    public Vector3f setY(float y) {
+    public Vector4f setY(float y) {
         components[1] = y;
         return this;
     }
@@ -192,8 +195,19 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param z the Z component.
      * @return this vector.
      */
-    public Vector3f setZ(float z) {
+    public Vector4f setZ(float z) {
         components[2] = z;
+        return this;
+    }
+
+    /**
+     * Set the W component.
+     *
+     * @param w the W component.
+     * @return this vector.
+     */
+    public Vector4f setW(float w) {
+        components[3] = w;
         return this;
     }
 
@@ -203,10 +217,11 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param x x axis value.
      * @param y y axis value.
      * @param z z axis value.
+     * @param w w axis value.
      * @return this vector.
      */
-    public Vector3f addLocal(float x, float y, float z) {
-        add(floatVector(), fillOperation(x, y, z), components);
+    public Vector4f addLocal(float x, float y, float z, float w) {
+        add(floatVector(), fillOperation(x, y, z, w), components);
         return this;
     }
 
@@ -216,7 +231,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param vector the vector.
      * @return this vector.
      */
-    public Vector3f addLocal(Vector3f vector) {
+    public Vector4f addLocal(Vector4f vector) {
         return add(vector, this);
     }
 
@@ -227,7 +242,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param result the result.
      * @return the result vector.
      */
-    public Vector3f add(Vector3f vector, Vector3f result) {
+    public Vector4f add(Vector4f vector, Vector4f result) {
         add(floatVector(), vector.floatVector(), result.components);
         return result;
     }
@@ -238,7 +253,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param vector the vector.
      * @return float vector (128bit)
      */
-    public FloatVector add(Vector3f vector) {
+    public FloatVector add(Vector4f vector) {
         return floatVector().add(vector.floatVector());
     }
 
@@ -252,10 +267,11 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param x the sub x.
      * @param y the sub y.
      * @param z the sub z.
+     * @param w the sub w
      * @return this vector.
      */
-    public Vector3f subtractLocal(float x, float y, float z) {
-        subtract(floatVector(), fillOperation(x, y, z), components);
+    public Vector4f subtractLocal(float x, float y, float z, float w) {
+        subtract(floatVector(), fillOperation(x, y, z, w), components);
         return this;
     }
 
@@ -265,7 +281,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param vector the vector.
      * @return this vector.
      */
-    public Vector3f subtractLocal(Vector3f vector) {
+    public Vector4f subtractLocal(Vector4f vector) {
         return subtract(vector, this);
     }
 
@@ -276,7 +292,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param result the result.
      * @return the result vector.
      */
-    public Vector3f subtract(Vector3f vector, Vector3f result) {
+    public Vector4f subtract(Vector4f vector, Vector4f result) {
         subtract(floatVector(), vector.floatVector(), result.components);
         return result;
     }
@@ -287,7 +303,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param vector the vector.
      * @return float vector (128bit)
      */
-    public FloatVector subtract(Vector3f vector) {
+    public FloatVector subtract(Vector4f vector) {
         return floatVector().sub(vector.floatVector());
     }
 
@@ -301,7 +317,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param scalar the scalar.
      * @return this vector.
      */
-    public Vector3f multLocal(float scalar) {
+    public Vector4f multLocal(float scalar) {
         floatVector().mul(scalar)
             .intoArray(components, 0);
 
@@ -314,10 +330,11 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param x the x scalar.
      * @param y the y scalar.
      * @param z the z scalar.
+     * @param w the w scalar
      * @return this vector.
      */
-    public Vector3f multLocal(float x, float y, float z) {
-        mult(floatVector(), fillOperation(x, y, z), components);
+    public Vector4f multLocal(float x, float y, float z, float w) {
+        mult(floatVector(), fillOperation(x, y, z, w), components);
         return this;
     }
 
@@ -327,7 +344,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param vector the vector.
      * @return this vector.
      */
-    public Vector3f multLocal(Vector3f vector) {
+    public Vector4f multLocal(Vector4f vector) {
         return mult(vector, this);
     }
 
@@ -338,7 +355,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param result the result vector
      * @return result vector.
      */
-    public Vector3f mult(Vector3f vector, Vector3f result) {
+    public Vector4f mult(Vector4f vector, Vector4f result) {
         mult(floatVector(), vector.floatVector(), result.components);
         return this;
     }
@@ -349,7 +366,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param vector the vector.
      * @return float vector (128bit)
      */
-    public FloatVector mult(Vector3f vector) {
+    public FloatVector mult(Vector4f vector) {
         return floatVector().mul(vector.floatVector());
     }
 
@@ -363,7 +380,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param scalar the divider scalar.
      * @return this vector.
      */
-    public Vector3f divideLocal(float scalar) {
+    public Vector4f divideLocal(float scalar) {
         floatVector().div(scalar).intoArray(components, 0);
         return this;
     }
@@ -374,10 +391,11 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param x the divider x.
      * @param y the divider y.
      * @param z the divider z.
+     * @param w the divider w.
      * @return this vector.
      */
-    public Vector3f divideLocal(float x, float y, float z) {
-        divide(floatVector(), fillOperation(x, y, z), components);
+    public Vector4f divideLocal(float x, float y, float z, float w) {
+        divide(floatVector(), fillOperation(x, y, z, w), components);
         return this;
     }
 
@@ -387,7 +405,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param vector the divider vector.
      * @return this vector.
      */
-    public Vector3f divideLocal(Vector3f vector) {
+    public Vector4f divideLocal(Vector4f vector) {
         return divide(vector, this);
     }
 
@@ -398,7 +416,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param result result vector
      * @return result vector.
      */
-    public Vector3f divide(Vector3f vector, Vector3f result) {
+    public Vector4f divide(Vector4f vector, Vector4f result) {
         divide(floatVector(), vector.floatVector(), result.components);
         return this;
     }
@@ -409,7 +427,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param vector the divider vector.
      * @return float vector (128bit).
      */
-    public FloatVector divide(Vector3f vector) {
+    public FloatVector divide(Vector4f vector) {
         return floatVector().div(vector.floatVector());
     }
 
@@ -418,62 +436,13 @@ public final class Vector3f implements MathVector, Cloneable {
     }
 
     /**
-     * Calculate a cross vector between this vector and the coordinates and store the result to this vector.
-     *
-     * @param x the other x.
-     * @param y the other y.
-     * @param z the other z.
-     * @return this vector.
-     */
-    public Vector3f crossLocal(float x, float y, float z) {
-        cross(floatVector(), fillOperation(x, y, z), components);
-        return this;
-    }
-
-    /**
-     * Calculate a cross vector between this vector and the vector.
-     *
-     * @param vector the vector.
-     * @return this vector.
-     */
-    public Vector3f crossLocal(Vector3f vector) {
-        return cross(vector, this);
-    }
-
-    /**
-     * Calculate a cross vector between this vector and the coordinates and store the result to result vector.
-     *
-     * @param vector the vector.
-     * @param result the result vector
-     * @return result changed vector.
-     */
-    public Vector3f cross(Vector3f vector, Vector3f result) {
-        cross(floatVector(), vector.floatVector(), result.components);
-        return result;
-    }
-
-    /**
-     * Calculate a cross vector between this vector and the vector.
-     *
-     * @param vector the vector
-     * @return float vector (128bit)
-     */
-    public FloatVector cross(Vector3f vector) {
-        return FloatVectorMath.cross128(floatVector(), vector.floatVector());
-    }
-
-    private static void cross(FloatVector v1, FloatVector v2, float[] components) {
-        FloatVectorMath.cross128(v1, v2).intoArray(components, 0);
-    }
-
-    /**
      * Calculate dot to the vector.
      *
      * @param vector the vector.
      * @return the dot product.
      */
-    public float dot(Vector3f vector) {
-        return FloatVectorMath.dot128(floatVector(), vector.floatVector());
+    public float dot(Vector4f vector) {
+        return FloatVectorMath.dot128fd(floatVector(), vector.floatVector());
     }
 
     /**
@@ -482,7 +451,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param vector the vector.
      * @return the distance.
      */
-    public float distance(Vector3f vector) {
+    public float distance(Vector4f vector) {
         return ExtMath.sqrt(distanceSquared(vector));
     }
 
@@ -492,10 +461,11 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param x the target x.
      * @param y the target y.
      * @param z the target z.
+     * @param w the target w.
      * @return the squared distance.
      */
-    public float distanceSquared(float x, float y, float z) {
-        return distanceSquared(floatVector(), fillOperation(x, y, z), operation);
+    public float distanceSquared(float x, float y, float z, float w) {
+        return distanceSquared(floatVector(), fillOperation(x, y, z, w), operation);
     }
 
     /**
@@ -504,7 +474,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param vector the vector.
      * @return the squared distance.
      */
-    public float distanceSquared(Vector3f vector) {
+    public float distanceSquared(Vector4f vector) {
         return distanceSquared(floatVector(), vector.floatVector(), operation);
     }
 
@@ -513,7 +483,7 @@ public final class Vector3f implements MathVector, Cloneable {
         delta.mul(delta)
             .intoArray(components, 0);
 
-        return components[0] + components[1] + components[2];
+        return components[0] + components[1] + components[2] + components[3];
     }
 
     /**
@@ -521,7 +491,7 @@ public final class Vector3f implements MathVector, Cloneable {
      *
      * @return this vector.
      */
-    public Vector3f negateLocal() {
+    public Vector4f negateLocal() {
         return negate(this);
     }
 
@@ -531,7 +501,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param result result vector
      * @return result changed vector.
      */
-    public Vector3f negate(Vector3f result) {
+    public Vector4f negate(Vector4f result) {
         floatVector().neg()
             .intoArray(result.components, 0);
 
@@ -543,7 +513,7 @@ public final class Vector3f implements MathVector, Cloneable {
      *
      * @return this vector.
      */
-    public Vector3f normalizeLocal() {
+    public Vector4f normalizeLocal() {
         return normalize(this);
     }
 
@@ -553,12 +523,12 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param result the result vector
      * @return result changed vector
      */
-    public Vector3f normalize(Vector3f result) {
+    public Vector4f normalize(Vector4f result) {
         float length = sqrLength();
 
         if (length != 1F && length != 0F) {
             length = 1.0F / ExtMath.sqrt(length);
-            result.set(getX() * length, getY() * length, getZ() * length);
+            result.set(getX() * length, getY() * length, getZ() * length, getW() * length);
         } else {
             result.set(this);
         }
@@ -583,7 +553,8 @@ public final class Vector3f implements MathVector, Cloneable {
     public float sqrLength() {
         return components[0] * components[0] +
             components[1] * components[1] +
-            components[2] * components[2];
+            components[2] * components[2] +
+            components[3] * components[3];
     }
 
     /**
@@ -593,9 +564,9 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param distance  move distance.
      * @return this vector.
      */
-    public Vector3f moveToDirection(Vector3f direction, float distance) {
+    public Vector4f moveToDirection(Vector4f direction, float distance) {
         direction.floatVector()
-            .fma(fillOperation(distance, distance, distance), floatVector())
+            .fma(fillOperation(distance, distance, distance, distance), floatVector())
             .intoArray(components, 0);
 
         return this;
@@ -610,21 +581,21 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param distance    move distance
      * @return this vector with new position
      */
-    public Vector3f moveToPoint(Vector3f destination, float distance) {
+    public Vector4f moveToPoint(Vector4f destination, float distance) {
         var direction = destination.floatVector()
             .sub(floatVector());
 
         direction.mul(direction)
             .intoArray(operation, 0);
 
-        float length = (float) Math.sqrt(operation[0] + operation[1] + operation[2]); // XXX double?
+        float length = (float) Math.sqrt(operation[0] + operation[1] + operation[2] + operation[3]); // XXX double?
         if (length <= distance || length < ExtMath.EPSILON) {
             set(destination);
             return this;
         }
 
         direction.div(length) // normalize vector
-            .fma(fillOperation(length, length, length), floatVector()) // Vn * Dn + Pn
+            .fma(fillOperation(length, length, length, length), floatVector()) // Vn * Dn + Pn
             .intoArray(components, 0);
 
         return this;
@@ -639,14 +610,14 @@ public final class Vector3f implements MathVector, Cloneable {
      * @return this vector.
      */
     @SuppressWarnings("checkstyle:ParameterAssignment")
-    public Vector3f lerp(Vector3f min, Vector3f max, float t) {
+    public Vector4f lerp(Vector4f min, Vector4f max, float t) {
         t = ExtMath.clamp(t);
 
         var minLines = min.floatVector();
         var delta = max.floatVector()
             .sub(minLines);
 
-        minLines.fma(fillOperation(t, t, t), delta)
+        minLines.fma(fillOperation(t, t, t, t), delta)
             .intoArray(components, 0);
 
         return this;
@@ -658,7 +629,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param other other vector
      * @return angle in radians
      */
-    public float angle(Vector3f other) {
+    public float angle(Vector4f other) {
         float length = ExtMath.sqrt(sqrLength() * other.sqrLength());
         if (length < ExtMath.EPSILON) {
             return 0;
@@ -674,13 +645,14 @@ public final class Vector3f implements MathVector, Cloneable {
         result = prime * result + Float.floatToIntBits(components[0]);
         result = prime * result + Float.floatToIntBits(components[1]);
         result = prime * result + Float.floatToIntBits(components[2]);
+        result = prime * result + Float.floatToIntBits(components[3]);
         return result;
     }
 
     @Override
-    public Vector3f clone() {
+    public Vector4f clone() {
         try {
-            return (Vector3f) super.clone();
+            return (Vector4f) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
@@ -696,7 +668,7 @@ public final class Vector3f implements MathVector, Cloneable {
             return false;
         }
 
-        var other = (Vector3f) obj;
+        var other = (Vector4f) obj;
         if (floatToIntBits(getX()) != floatToIntBits(other.getX())) {
             return false;
         } else if (floatToIntBits(getY()) != floatToIntBits(other.getY())) {
@@ -713,7 +685,7 @@ public final class Vector3f implements MathVector, Cloneable {
      * @param epsilon the epsilon.
      * @return true if these vectors are equal with the epsilon.
      */
-    public boolean equals(Vector3f vector, float epsilon) {
+    public boolean equals(Vector4f vector, float epsilon) {
         return floatVector().sub(vector.floatVector())
             .abs()
             .lt(epsilon)
@@ -737,10 +709,11 @@ public final class Vector3f implements MathVector, Cloneable {
         return "Vector3f(x: " + getX() + ", y: " + getY() + ", z: " + getZ() + ')';
     }
 
-    private FloatVector fillOperation(float x, float y, float z) {
+    private FloatVector fillOperation(float x, float y, float z, float w) {
         operation[0] = x;
         operation[1] = y;
         operation[2] = z;
+        operation[3] = w;
         return FloatVector.fromArray(SPECIES, operation, 0);
     }
 }
