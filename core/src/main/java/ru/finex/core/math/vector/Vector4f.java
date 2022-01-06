@@ -436,6 +436,40 @@ public class Vector4f implements MathVector, Cloneable {
     }
 
     /**
+     * Calculate a cross vector between this vector and the vector.
+     *
+     * @param vector the vector.
+     * @return this vector.
+     */
+    public Vector4f crossLocal(Vector4f vector) {
+        return cross(vector, this);
+    }
+
+    /**
+     * Calculate a cross vector between this vector and the coordinates and store the result to result vector.
+     *
+     * @param vector the vector.
+     * @param result the result vector
+     * @return result changed vector.
+     */
+    public Vector4f cross(Vector4f vector, Vector4f result) {
+        FloatVectorMath.cross128fd(floatVector(), vector.floatVector())
+            .intoArray(result.components, 0);
+
+        return result;
+    }
+
+    /**
+     * Calculate a cross vector between this vector and the vector.
+     *
+     * @param vector the vector
+     * @return float vector (128bit)
+     */
+    public FloatVector cross(Vector4f vector) {
+        return FloatVectorMath.cross128fd(floatVector(), vector.floatVector());
+    }
+
+    /**
      * Calculate dot to the vector.
      *
      * @param vector the vector.
@@ -709,7 +743,7 @@ public class Vector4f implements MathVector, Cloneable {
         return "Vector3f(x: " + getX() + ", y: " + getY() + ", z: " + getZ() + ')';
     }
 
-    private FloatVector fillOperation(float x, float y, float z, float w) {
+    protected FloatVector fillOperation(float x, float y, float z, float w) {
         operation[0] = x;
         operation[1] = y;
         operation[2] = z;
