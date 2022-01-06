@@ -3,6 +3,7 @@ package ru.finex.core.math.vector.alloc;
 import lombok.experimental.UtilityClass;
 import ru.finex.core.math.vector.Vector2f;
 import ru.finex.core.math.vector.Vector3f;
+import ru.finex.core.math.vector.Vector4f;
 import ru.finex.core.math.vector.VectorAllocator;
 
 /**
@@ -17,6 +18,10 @@ public class VectorAllocators {
 
     private static final ThreadLocal<CachedAllocator<Vector3f>> CA_V3 = ThreadLocal.withInitial(() ->
         new CachedAllocator<>(defaultVector3f())
+    );
+
+    private static final ThreadLocal<CachedAllocator<Vector4f>> CA_V4 = ThreadLocal.withInitial(() ->
+        new CachedAllocator<>(defaultVector4f())
     );
 
     /**
@@ -46,6 +51,19 @@ public class VectorAllocators {
     }
 
     /**
+     * Allocates a new vector.
+     * @return vector allocator
+     */
+    public static VectorAllocator<Vector4f> defaultVector4f() {
+        return new DefaultVectorAllocator<>() {
+            @Override
+            public Vector4f alloc() {
+                return new Vector4f();
+            }
+        };
+    }
+
+    /**
      * Thread local cached allocator of {@link Vector2f}.
      * @return vector
      */
@@ -62,6 +80,14 @@ public class VectorAllocators {
     }
 
     /**
+     * Thread local cached allocator of {@link Vector4f}.
+     * @return vector
+     */
+    public static CachedAllocator<Vector4f> cachedLocalAllocatorVector4f() {
+        return CA_V4.get();
+    }
+
+    /**
      * Cached allocator of {@link Vector2f}.
      * @return vector
      */
@@ -75,6 +101,14 @@ public class VectorAllocators {
      */
     public static CachedAllocator<Vector3f> cachedAllocatorVector3f() {
         return new CachedAllocator<>(defaultVector3f());
+    }
+
+    /**
+     * Cached allocator of {@link Vector4f}.
+     * @return vector
+     */
+    public static CachedAllocator<Vector4f> cachedAllocatorVector4f() {
+        return new CachedAllocator<>(defaultVector4f());
     }
 
 }
