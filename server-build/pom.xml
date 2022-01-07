@@ -27,8 +27,8 @@
 
         <finex-evolution.version>1.0</finex-evolution.version>
 
-        <junit.version>4.13.1</junit.version>
-        <junit-jupiter.version>5.6.3</junit-jupiter.version>
+        <junit.version>5.8.2</junit.version>
+        <junit-jupiter.version>5.8.2</junit-jupiter.version>
         <mockito.version>3.3.3</mockito.version>
         <slf4j-api.version>1.7.30</slf4j-api.version>
         <logback.version>1.2.3</logback.version>
@@ -75,8 +75,8 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
                 <version>${junit.version}</version>
             </dependency>
             <dependency>
@@ -372,6 +372,12 @@
                         <parameters>true</parameters>
                         <source>${maven.compiler.source}</source>
                         <target>${maven.compiler.target}</target>
+                        <compilerArgs>
+                            <arg>--add-modules</arg>
+                            <arg>jdk.incubator.vector</arg>
+                            <arg>--add-modules</arg>
+                            <arg>jdk.incubator.foreign</arg>
+                        </compilerArgs>
                     </configuration>
                 </plugin>
                 <plugin>
