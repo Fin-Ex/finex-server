@@ -5,6 +5,8 @@ import jdk.incubator.vector.VectorSpecies;
 import ru.finex.core.math.ExtMath;
 import ru.finex.core.math.FloatVectorMath;
 
+import java.util.Arrays;
+
 import static java.lang.Float.floatToIntBits;
 import static java.lang.Float.isFinite;
 
@@ -74,6 +76,25 @@ public class Vector2f implements MathVector, Cloneable {
 
     public float getY() {
         return components[1];
+    }
+
+    /**
+     * Get array representation of this vector.
+     * Any changes in array reflected to this vector.
+     *
+     * @return vector components
+     */
+    public float[] getComponents() {
+        return components;
+    }
+
+    /**
+     * Get array representation of this vector.
+     *
+     * @return vector components
+     */
+    public float[] getComponentsCopy() {
+        return Arrays.copyOf(components, 2);
     }
 
     /**
@@ -359,8 +380,7 @@ public class Vector2f implements MathVector, Cloneable {
      * @return result vector.
      */
     public Vector2f perpendicular(Vector2f result) {
-        result.set(getY(), -getX());
-        return result;
+        return result.set(getY(), -getX());
     }
 
     /**

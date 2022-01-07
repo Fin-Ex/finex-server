@@ -31,6 +31,18 @@ public class ExtMath {
     public static final double EPSILON = 1.40129846432482E-45;
 
     /**
+     * Constant by which to multiply an angular value in degrees to obtain an
+     * angular value in radians.
+     */
+    public static final float DEG_TO_RAD = 0.01745329f;
+
+    /**
+     * Constant by which to multiply an angular value in radians to obtain an
+     * angular value in degrees.
+     */
+    public static final float RAD_TO_DEG = 57.29577951f;
+
+    /**
      * Return the arc cosine of a value.<br/> Special cases: <ul><li>If value is smaller than -1, then the result is PI.
      * <li>If the argument is greater than 1, then the result is 0.</ul>
      *
@@ -358,6 +370,26 @@ public class ExtMath {
         } else {
             return first.equals(second, epsilon);
         }
+    }
+
+    /**
+     * Converts an angle measured in degrees to an approximately equivalent angle measured in radians.
+     *
+     * @param degree angle in degrees
+     * @return  the measurement of the angle in radians
+     */
+    public static float toRad(float degree) {
+        return degree * DEG_TO_RAD;
+    }
+
+    /**
+     * Converts an angle measured in radians to an approximately equivalent angle measured in degrees.
+     *
+     * @param rad angle in radians
+     * @return the measurement of the angle in degrees
+     */
+    public static float toDeg(float rad) {
+        return rad * RAD_TO_DEG;
     }
 
 }

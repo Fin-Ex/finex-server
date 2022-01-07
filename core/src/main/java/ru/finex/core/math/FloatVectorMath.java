@@ -15,31 +15,23 @@ public class FloatVectorMath {
 
     /**
      * Calculate cross product between v1 and v2 float vectors (128bit).
-     * This method rearrange v1 and v2 values!
      * @param v1 first vector
      * @param v2 second vector
      * @return result vector
      */
     public static FloatVector cross128(FloatVector v1, FloatVector v2) {
-        /*
-            __m128 xzy = _mm_shuffle_ps(v1, v1, _MM_SHUFFLE(0, 2, 1, 3));
-            __m128 yxz = _mm_shuffle_ps(v1, v1, _MM_SHUFFLE(1, 0, 2, 3));
-            __m128 otherXzy = _mm_shuffle_ps(v2, v2, _MM_SHUFFLE(0, 2, 1, 3));
-            __m128 otherYxz = _mm_shuffle_ps(v2, v2, _MM_SHUFFLE(1, 0, 2, 3));
-            return _mm_sub_ps(
-                _mm_mul_ps(xzy, otherYxz),
-                _mm_mul_ps(yxz, otherXzy)
+        // x = y1*z2 - z1*y2
+        // y = z1*x2 - x1*z2
+        // z = x1*y2 - y1*x1
+
+        float[] first = v1.toArray(); // FIXME m0nster.mind: array allocation
+        float[] second = v2.toArray(); // FIXME m0nster.mind: array allocation
+
+        return rearrange128(first, shuffle128(1, 2, 0, 3))
+            .mul(rearrange128(second, shuffle128(2, 0, 1, 3)))
+            .sub(rearrange128(first, shuffle128(2, 0, 1, 3))
+                .mul(rearrange128(second, shuffle128(1, 2, 0, 3)))
             );
-         */
-
-        var xzyYxz = v1.rearrange(VectorShuffle.fromValues(FloatVector.SPECIES_128, 0, 2, 1, 3))
-            .mul(v2.rearrange(VectorShuffle.fromValues(FloatVector.SPECIES_128, 1, 0, 2, 3)));
-
-        // rearrange values from previous step
-        var yxzXzy = v1.rearrange(VectorShuffle.fromValues(FloatVector.SPECIES_128, 2, 0, 1, 3))
-            .mul(v2.rearrange(VectorShuffle.fromValues(FloatVector.SPECIES_128, 1, 2, 0, 3)));
-
-        return xzyYxz.sub(yxzXzy);
     }
 
     /**
@@ -70,10 +62,9 @@ public class FloatVectorMath {
             .lanewise(VectorOperators.NEG, mask128(false, false, false, true));
 
         var tmp4 = rearrange128(first, shuffle128(2, 0, 1, 2))
-            .mul(rearrange128(second, shuffle128(1, 2, 0, 2)))
-            .neg();
+            .mul(rearrange128(second, shuffle128(1, 2, 0, 2)));
 
-        return tmp1.add(tmp2).add(tmp3).add(tmp4);
+        return tmp1.add(tmp2).add(tmp3).sub(tmp4);
     }
 
     /**
@@ -84,7 +75,7 @@ public class FloatVectorMath {
      * @return result (one-dimensional point)
      */
     public static float cross64(FloatVector v1, FloatVector v2) {
-        var temp = v1.mul(v2.rearrange(VectorShuffle.fromValues(FloatVector.SPECIES_64, 1, 0)));
+        var temp = v1.mul(v2.rearrange(shuffle128(1, 0)));
         return temp.lane(0) - temp.lane(1);
     }
 
@@ -125,6 +116,25 @@ public class FloatVectorMath {
 
         var tmp = v1.mul(v2);
         return tmp.lane(0) + tmp.lane(1) + tmp.lane(2) + tmp.lane(3);
+    }
+
+    /**
+     * Normalize 3D vector (128bit) if needed.
+     *
+     * @param vector vector
+     * @return normalized vector
+     */
+    public static FloatVector normalize128(FloatVector vector) {
+        FloatVector result = vector;
+        var sq = vector.mul(vector);
+        float length = sq.lane(0) + sq.lane(1) + sq.lane(2);
+
+        if (length > 1.0f || length == 0f) {
+            length = 1.0F / ExtMath.sqrt(length);
+            result = vector.mul(length);
+        }
+
+        return result;
     }
 
     /**

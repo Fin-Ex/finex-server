@@ -114,6 +114,25 @@ public class Vector4f implements MathVector, Cloneable {
     }
 
     /**
+     * Get array representation of this vector.
+     * Any changes in array reflected to this vector.
+     *
+     * @return vector components
+     */
+    public float[] getComponents() {
+        return components;
+    }
+
+    /**
+     * Get array representation of this vector.
+     *
+     * @return vector components
+     */
+    public float[] getComponentsCopy() {
+        return Arrays.copyOf(components, 4);
+    }
+
+    /**
      * Return float vector with 128 bit species.
      * @return float vector of x, y, z, w components
      */
@@ -740,7 +759,7 @@ public class Vector4f implements MathVector, Cloneable {
 
     @Override
     public String toString() {
-        return "Vector3f(x: " + getX() + ", y: " + getY() + ", z: " + getZ() + ')';
+        return "Vector4f(x: " + getX() + ", y: " + getY() + ", z: " + getZ() + ", w: " + getW() + ")";
     }
 
     protected FloatVector fillOperation(float x, float y, float z, float w) {

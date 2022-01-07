@@ -1,12 +1,17 @@
 package ru.finex.core.math.vector;
 
 import jdk.incubator.vector.FloatVector;
+import jdk.incubator.vector.VectorOperators;
 import jdk.incubator.vector.VectorSpecies;
 import ru.finex.core.math.ExtMath;
 import ru.finex.core.math.FloatVectorMath;
+import ru.finex.core.math.Quaternion;
 
 import java.util.Arrays;
 
+import static ru.finex.core.math.FloatVectorMath.mask128;
+import static ru.finex.core.math.FloatVectorMath.rearrange128;
+import static ru.finex.core.math.FloatVectorMath.shuffle128;
 import static java.lang.Float.floatToIntBits;
 import static java.lang.Float.isFinite;
 
@@ -99,6 +104,25 @@ public final class Vector3f implements MathVector, Cloneable {
      */
     public float getZ() {
         return components[2];
+    }
+
+    /**
+     * Get array representation of this vector.
+     * Any changes in array reflected to this vector.
+     *
+     * @return vector components
+     */
+    public float[] getComponents() {
+        return components;
+    }
+
+    /**
+     * Get array representation of this vector.
+     *
+     * @return vector components
+     */
+    public float[] getComponentsCopy() {
+        return Arrays.copyOf(components, 4);
     }
 
     /**
@@ -467,6 +491,27 @@ public final class Vector3f implements MathVector, Cloneable {
     }
 
     /**
+     * Calculate perpendicular vector of this and store to this vector.
+     *
+     * @return this vector.
+     */
+    public Vector3f perpendicularLocal() {
+        return perpendicular(this);
+    }
+
+    /**
+     * Calculate perpendicular vector of this and store to result vector.
+     *
+     * @param result the result vector.
+     * @return result vector.
+     */
+    public Vector3f perpendicular(Vector3f result) {
+        return Math.abs(getX()) > Math.abs(getZ()) ?
+            result.set(-getY(), getX(), 0) :
+            result.set(0, -getZ(), getY());
+    }
+
+    /**
      * Calculate dot to the vector.
      *
      * @param vector the vector.
@@ -667,6 +712,65 @@ public final class Vector3f implements MathVector, Cloneable {
         return ExtMath.acos(ExtMath.clamp(dot(other) / length, -1f, 1f));
     }
 
+    /**
+     * Rotate this vector by quaternion and store result of rotation to this vector.
+     *
+     * @param quaternion quaternion
+     * @return this
+     */
+    public Vector3f rotateLocal(Quaternion quaternion) {
+        return rotate(quaternion, this);
+    }
+
+    /**
+     * Rotate this vector by quaternion and store result of rotation to result vector.
+     *
+     * @param quaternion quaternion
+     * @param result result vector
+     * @return result vector
+     */
+    public Vector3f rotate(Quaternion quaternion, Vector3f result) {
+        // x = (1 - (ry * dy + rz * dz)) * x + (rx * dy - rw * dz) * y + (rx * dz + rw * dy) * z
+        // y = (rx * dy + rw * dz) * x + (1 - (rx * dx + rz * dz)) * y + (ry * dz - rw * dx) * z
+        // z = (rx * dz - rw * dy) * x + (ry * dz + rw * dx) * y + (1 - (rx * dx + ry * dy)) * z
+
+        var d = quaternion.floatVector()
+            .mul(2.0f)
+            .toArray();
+
+        var tmp1 = fillOperation(quaternion.getY(), quaternion.getX(), quaternion.getX())
+            .mul(rearrange128(d, shuffle128(1, 1, 2, 3)))
+            .add(fillOperation(quaternion.getZ(), quaternion.getW(), quaternion.getW())
+                .mul(rearrange128(d, shuffle128(2, 2, 1, 3)))
+                .lanewise(VectorOperators.NEG, mask128(false, false, true, false))
+            ).lanewise(VectorOperators.NEG, mask128(true, false, false, false)) // inverse subtract operation (1 - a) to (-a + 1)
+            .add(UNIT_X.floatVector())
+            .mul(getX());
+
+        var tmp2 = fillOperation(quaternion.getX(), quaternion.getX(), quaternion.getY())
+            .mul(rearrange128(d, shuffle128(1, 0, 2, 3)))
+            .add(fillOperation(quaternion.getW(), quaternion.getZ(), quaternion.getW())
+                .mul(rearrange128(d, shuffle128(2, 2, 0, 3)))
+                .lanewise(VectorOperators.NEG, mask128(true, false, false, false))
+            ).lanewise(VectorOperators.NEG, mask128(false, true, false, false)) // inverse subtract operation (1 - a) to (-a + 1)
+            .add(UNIT_Y.floatVector())
+            .mul(getY());
+
+        var tmp3 = fillOperation(quaternion.getX(), quaternion.getY(), quaternion.getX())
+            .mul(rearrange128(d, shuffle128(2, 2, 0, 3)))
+            .add(fillOperation(quaternion.getW(), quaternion.getW(), quaternion.getY())
+                .mul(rearrange128(d, shuffle128(1, 0, 1, 3)))
+                .lanewise(VectorOperators.NEG, mask128(false, true, false, false))
+            ).lanewise(VectorOperators.NEG, mask128(false, false, true, false)) // inverse subtract operation (1 - a) to (-a + 1)
+            .add(UNIT_Z.floatVector())
+            .mul(getZ());
+
+        tmp1.add(tmp2).add(tmp3)
+            .intoArray(result.components, 0);
+
+        return result;
+    }
+
     @Override
     public int hashCode() {
         int prime = 31;
@@ -743,4 +847,5 @@ public final class Vector3f implements MathVector, Cloneable {
         operation[2] = z;
         return FloatVector.fromArray(SPECIES, operation, 0);
     }
+
 }
