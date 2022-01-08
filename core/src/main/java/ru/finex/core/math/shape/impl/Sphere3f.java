@@ -12,6 +12,7 @@ import ru.finex.core.math.vector.alloc.VectorAllocators;
 
 /**
  * @author mangol
+ * @since wgp
  */
 @ToString
 @EqualsAndHashCode
