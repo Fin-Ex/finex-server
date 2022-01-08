@@ -38,6 +38,14 @@ public class Quaternion extends Vector4f {
     }
 
     /**
+     * Quaternion without rotation ({@link #UNIT_W UNIT_W}).
+     * @return read-only quaternion
+     */
+    public static Quaternion identity() {
+        return UNIT_W;
+    }
+
+    /**
      * Set euler angles to this quaternion.
      *
      * @param x roll
@@ -214,6 +222,65 @@ public class Quaternion extends Vector4f {
         result.normalizeLocal();
         return result;
     }
+
+    /**
+     * Spherical linear-based interpolation (shortest path) between this quaternion and to quaternion,
+     *  stored to this quaternion.
+     * Requires normalize this quaternion!
+     *
+     * @param to from quaternion (normalized)
+     * @param t time, between 0 and 1
+     * @return this
+     */
+    public Quaternion slerp(Quaternion to, float t) {
+        return slerp(this, to, t);
+    }
+
+    /**
+     * Spherical linear-based interpolation (shortest path) between from quaternion and to quaternion,
+     *  stored to this quaternion.
+     *
+     * @param from from quaternion (normalized)
+     * @param to to quaternion (normalized)
+     * @param t time, between 0 and 1
+     * @return this
+     */
+    @SuppressWarnings("checkstyle:MagicNumber")
+    public Quaternion slerp(Quaternion from, Quaternion to, float t) {
+        if (t >= 1f) {
+            set(to);
+            return this;
+        }
+
+        // d = q1 * q2
+        // qa = d >= 0 ? q1 : -q1
+        // the = arccos(|d|)
+        // slerp = (sin((1 - t) * the) * qa + sin(t*the) * q2) / sin(the)
+
+        float d = from.distanceSquared(to);
+        float the = ExtMath.acos(d);
+        float invSinThe = 1f / ExtMath.sin(the);
+        float tmp1 = ExtMath.sin((1f - t) * the) * invSinThe;
+        float tmp2 = ExtMath.sin(t * the) * invSinThe;
+
+        var toLanes = to.floatVector();
+        if (d < 0f) {
+            toLanes = toLanes.neg();
+        }
+
+        from.floatVector()
+            .mul(tmp1)
+            .add(toLanes.mul(tmp2))
+            .intoArray(components, 0);
+
+        return this;
+    }
+
+    // TODO m0nster.mind: impl slerp with lerp fallback in small diff between both quaternions or inverted target quaternion:
+    //  d = q1 * q2
+    //  qa = d >= 0 ? q1 : -q1
+    //  if (|d| >= 1 - (e / 2)) => (1 - t)*qa + t*q2
+    //  else => the = arccos(|d|), (sin((1 - t) * the) * qa + sin(t*the) * q2) / sin(the)
 
     @Override
     public String toString() {
