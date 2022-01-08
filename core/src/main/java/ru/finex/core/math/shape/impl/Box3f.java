@@ -2,6 +2,7 @@ package ru.finex.core.math.shape.impl;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import ru.finex.core.math.ExtMath;
 import ru.finex.core.math.shape.Shape;
 import ru.finex.core.math.shape.Shape3;
 import ru.finex.core.math.vector.Vector3f;
@@ -167,20 +168,18 @@ public class Box3f implements Shape3, Cloneable {
             return intersectsAABB(xmin, xmax, box.xmin, box.xmax) &&
                 intersectsAABB(ymin, ymax, box.ymin, box.ymax) &&
                 intersectsAABB(zmin, zmax, box.zmin, box.zmax);
-        } /*else if (shape instanceof Circle2f) {
-            Circle2f circle2f = (Circle2f) shape;
-            return circle2f.intersects(this);
-        } else if (shape instanceof Sphere3f) {
-            Sphere3f sphere3f = (Sphere3f) shape;
-            Vector3f center = sphere3f.getCenter();
+        } else if (shape instanceof Circle2f circle) {
+            return circle.intersects(this);
+        } else if (shape instanceof Sphere3f sphere) {
+            Vector3f center = sphere.getCenter();
             float x = ExtMath.clamp(center.getX(), xmin, xmax);
             float y = ExtMath.clamp(center.getY(), ymin, ymax);
             float z = ExtMath.clamp(center.getZ(), zmin, zmax);
             x -= center.getX();
             y -= center.getY();
             z -= center.getZ();
-            return (x * x + y * y + z * z) < (sphere3f.getRadius() * sphere3f.getRadius());
-        }*/
+            return x * x + y * y + z * z < sphere.getRadius() * sphere.getRadius();
+        }
         return false;
     }
 

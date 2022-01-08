@@ -278,6 +278,7 @@ public class Quaternion extends Vector4f {
 
     /**
      * Store quaternion direction to result vector.
+     *
      * @param result result vector
      * @return result
      */

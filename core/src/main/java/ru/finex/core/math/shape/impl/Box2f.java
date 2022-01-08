@@ -121,15 +121,13 @@ public class Box2f implements Shape2, Cloneable {
         } else if (shape instanceof Box3f box) {
             return intersectsAABB(xmin, xmax, box.xmin, box.xmax) &&
                 intersectsAABB(ymin, ymax, box.zmin, box.zmax);
-        } /*else if (shape instanceof Circle2f) {
-            Circle2f circle2f = (Circle2f) shape;
-            Vector2f center = circle2f.getCenter();
-            return intersects(center.getX(), center.getY(), circle2f.getRadius());
-        } else if (shape instanceof Sphere3f) {
-            Sphere3f sphere3f = (Sphere3f) shape;
-            Vector3f center = sphere3f.getCenter();
-            return intersects(center.getX(), center.getZ(), sphere3f.getRadius());
-        }*/
+        } else if (shape instanceof Circle2f circle) {
+            Vector2f center = circle.getCenter();
+            return intersects(center.getX(), center.getY(), circle.getRadius());
+        } else if (shape instanceof Sphere3f sphere) {
+            Vector3f center = sphere.getCenter();
+            return intersects(center.getX(), center.getZ(), sphere.getRadius());
+        }
         return false;
     }
 
