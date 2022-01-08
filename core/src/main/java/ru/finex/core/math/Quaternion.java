@@ -276,6 +276,16 @@ public class Quaternion extends Vector4f {
         return this;
     }
 
+    /**
+     * Store quaternion direction to result vector.
+     * @param result result vector
+     * @return result
+     */
+    public Vector3f getDirection(Vector3f result) {
+        return result.set(Vector3f.UNIT_X)
+            .rotateLocal(this);
+    }
+
     // TODO m0nster.mind: impl slerp with lerp fallback in small diff between both quaternions or inverted target quaternion:
     //  d = q1 * q2
     //  qa = d >= 0 ? q1 : -q1
