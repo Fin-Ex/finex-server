@@ -1,10 +1,11 @@
 package ru.finex.core.math;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import ru.finex.core.math.vector.Vector3f;
+
+import static ru.finex.core.math.vector.VectorUtils.assertEquals;
 
 /**
  * @author m0nster.mind
@@ -34,9 +35,7 @@ public class QuaternionTest {
         System.out.println(quaternion);
         System.out.println(forward);
         System.out.println(vector);
-        Assertions.assertEquals(forward.getX(), vector.getX(), 0.001f);
-        Assertions.assertEquals(forward.getY(), vector.getY(), 0.001f);
-        Assertions.assertEquals(forward.getZ(), vector.getZ(), 0.001f);
+        assertEquals(forward, vector, 0.001f);
     }
 
     @Test
@@ -46,9 +45,7 @@ public class QuaternionTest {
         forward.rotateLocal(quaternion).normalizeLocal();
 
         Vector3f expected = Vector3f.UNIT_X_NEGATIVE;
-        Assertions.assertEquals(expected.getX(), forward.getX(), 0.001f);
-        Assertions.assertEquals(expected.getY(), forward.getY(), 0.001f);
-        Assertions.assertEquals(expected.getZ(), forward.getZ(), 0.001f);
+        assertEquals(expected, forward, 0.001f);
     }
 
 }

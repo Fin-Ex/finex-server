@@ -1,11 +1,13 @@
 package ru.finex.core.math.vector;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import ru.finex.core.math.Quaternion;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ru.finex.core.math.vector.VectorUtils.assertEquals;
 
 /**
  * @author m0nster.mind
@@ -24,6 +26,14 @@ public class Vector3fTest {
     }
 
     @Test
+    public void dotTest() {
+        Vector3f first = new Vector3f(10f, 5f, 0f);
+        Vector3f second = new Vector3f(2f, 5f, 1f);
+
+        assertEquals(45f, first.dot(second), 0.001f);
+    }
+
+    @Test
     public void crossTest() {
         Vector3f x = new Vector3f(Vector3f.UNIT_X);
         Vector3f y = new Vector3f(Vector3f.UNIT_Y);
@@ -34,9 +44,7 @@ public class Vector3fTest {
         Vector3f z = Vector3f.UNIT_Z;
         System.out.println(z);
         System.out.println(xy);
-        Assertions.assertEquals(z.getX(), xy.getX(), 0.001f);
-        Assertions.assertEquals(z.getY(), xy.getY(), 0.001f);
-        Assertions.assertEquals(z.getZ(), xy.getZ(), 0.001f);
+        assertEquals(z, xy, 0.001f);
     }
 
     @MethodSource("getDirections")
@@ -48,9 +56,29 @@ public class Vector3fTest {
         System.out.println(quaternion);
         System.out.println(forward);
         System.out.println(direction);
-        Assertions.assertEquals(forward.getX(), direction.getX(), 0.001f);
-        Assertions.assertEquals(forward.getY(), direction.getY(), 0.001f);
-        Assertions.assertEquals(forward.getZ(), direction.getZ(), 0.001f);
+        assertEquals(forward, direction, 0.001f);
     }
+
+    @Test
+    public void normalizeTest() {
+        Vector3f vector = new Vector3f(10f, 5f, 0);
+        vector.normalizeLocal();
+
+        assertEquals(new Vector3f(0.894427f, 0.447214f, 0f), vector, 0.001f);
+    }
+
+    @Test
+    public void moveToDirectionTest() {
+        Vector3f vector = new Vector3f();
+        Vector3f direction = new Vector3f(0.5f, 0.5f, 0);
+
+        vector.moveToDirection(direction, 10f);
+        assertEquals(new Vector3f(5f, 5f, 0), vector, 0.001f);
+    }
+
+//    @Test
+//    public void moveToPointTest() {
+//
+//    }
 
 }
