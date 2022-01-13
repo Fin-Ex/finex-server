@@ -669,7 +669,7 @@ public final class Vector3f implements MathVector, Cloneable {
         }
 
         direction.div(length) // normalize vector
-            .fma(fillOperation(length, length, length), floatVector()) // Vn * Dn + Pn
+            .fma(fillOperation(distance, distance, distance), floatVector()) // Vn * Dn + Pn
             .intoArray(components, 0);
 
         return this;

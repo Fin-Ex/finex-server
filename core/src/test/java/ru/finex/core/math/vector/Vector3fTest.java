@@ -14,15 +14,24 @@ import static ru.finex.core.math.vector.VectorUtils.assertEquals;
  */
 public class Vector3fTest {
 
-    private static final Arguments[] DIRECTIONS = {
+    private static final Arguments[] ROT_DIRECTIONS = {
         Arguments.of(new Quaternion(0, 0, 0, 1f), Vector3f.UNIT_X),
         Arguments.of(new Quaternion(0, 0.7071f, 0, 0.7071f), Vector3f.UNIT_Z_NEGATIVE),
         Arguments.of(new Quaternion(0, 1f, 0, 0), Vector3f.UNIT_X_NEGATIVE),
         Arguments.of(new Quaternion(0, -0.7071f, 0, 0.7071f), Vector3f.UNIT_Z)
     };
 
-    public static Arguments[] getDirections() {
-        return DIRECTIONS;
+    private static final Arguments[] MTP_TARGETS = {
+        Arguments.of(new Vector3f(20f, 20f, 0), 10f, new Vector3f(7.071f, 7.071f, 0)),
+        Arguments.of(new Vector3f(5f, 5f, 0), 20f, new Vector3f(5f, 5f, 0)),
+    };
+
+    public static Arguments[] getRotateDirections() {
+        return ROT_DIRECTIONS;
+    }
+
+    public static Arguments[] getMtpTargets() {
+        return MTP_TARGETS;
     }
 
     @Test
@@ -47,7 +56,7 @@ public class Vector3fTest {
         assertEquals(z, xy, 0.001f);
     }
 
-    @MethodSource("getDirections")
+    @MethodSource("getRotateDirections")
     @ParameterizedTest
     public void rotateTest(Quaternion quaternion, Vector3f forward) {
         Vector3f direction = new Vector3f(Vector3f.UNIT_X);
@@ -76,9 +85,13 @@ public class Vector3fTest {
         assertEquals(new Vector3f(5f, 5f, 0), vector, 0.001f);
     }
 
-//    @Test
-//    public void moveToPointTest() {
-//
-//    }
+    @MethodSource("getMtpTargets")
+    @ParameterizedTest
+    public void moveToPointTest(Vector3f target, float distance, Vector3f result) {
+        Vector3f vector = new Vector3f();
+        vector.moveToPoint(target, distance);
+
+        assertEquals(result, vector, 0.001f);
+    }
 
 }
