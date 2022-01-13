@@ -75,7 +75,7 @@ public class FloatVectorMath {
      * @return result (one-dimensional point)
      */
     public static float cross64(FloatVector v1, FloatVector v2) {
-        var temp = v1.mul(v2.rearrange(shuffle128(1, 0)));
+        var temp = v1.mul(v2.rearrange(shuffle64(1, 0)));
         return temp.lane(0) - temp.lane(1);
     }
 
@@ -168,6 +168,16 @@ public class FloatVectorMath {
      */
     public static VectorShuffle<Float> shuffle128(int... indexes) {
         return VectorShuffle.fromValues(FloatVector.SPECIES_128, indexes);
+    }
+
+    /**
+     * Creates a shuffle for a 64bit species from a series of source indexes.
+     * @param indexes the source indexes which the shuffle will draw from
+     * @return a shuffle where each lane's source index is set to the given int value, partially wrapped if exceptional
+     * @see VectorShuffle#fromValues(VectorSpecies, int...)
+     */
+    public static VectorShuffle<Float> shuffle64(int... indexes) {
+        return VectorShuffle.fromValues(FloatVector.SPECIES_64, indexes);
     }
 
     /**
