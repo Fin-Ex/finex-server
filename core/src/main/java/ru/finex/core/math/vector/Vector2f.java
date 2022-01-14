@@ -571,7 +571,7 @@ public class Vector2f implements MathVector, Cloneable {
         var delta = max.floatVector()
             .sub(minLines);
 
-        minLines.fma(fillOperation(t, t), delta)
+        delta.fma(fillOperation(t, t), minLines)
             .intoArray(components, 0);
 
         return this;

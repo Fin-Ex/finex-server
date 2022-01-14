@@ -670,7 +670,7 @@ public class Vector4f implements MathVector, Cloneable {
         var delta = max.floatVector()
             .sub(minLines);
 
-        minLines.fma(fillOperation(t, t, t, t), delta)
+        delta.fma(fillOperation(t, t, t, t), minLines)
             .intoArray(components, 0);
 
         return this;

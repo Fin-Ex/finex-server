@@ -9,11 +9,11 @@ import ru.finex.core.math.Quaternion;
 
 import java.util.Arrays;
 
+import static java.lang.Float.floatToIntBits;
+import static java.lang.Float.isFinite;
 import static ru.finex.core.math.FloatVectorMath.mask128;
 import static ru.finex.core.math.FloatVectorMath.rearrange128;
 import static ru.finex.core.math.FloatVectorMath.shuffle128;
-import static java.lang.Float.floatToIntBits;
-import static java.lang.Float.isFinite;
 
 /**
  * The implementation of vector with 3 float values.
@@ -691,7 +691,7 @@ public final class Vector3f implements MathVector, Cloneable {
         var delta = max.floatVector()
             .sub(minLines);
 
-        minLines.fma(fillOperation(t, t, t), delta)
+        delta.fma(fillOperation(t, t, t), minLines)
             .intoArray(components, 0);
 
         return this;
