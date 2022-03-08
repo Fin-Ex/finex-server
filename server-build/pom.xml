@@ -29,7 +29,7 @@
 
         <junit.version>5.8.2</junit.version>
         <junit-jupiter.version>5.8.2</junit-jupiter.version>
-        <mockito.version>3.3.3</mockito.version>
+        <mockito.version>4.3.1</mockito.version>
         <slf4j-api.version>1.7.30</slf4j-api.version>
         <logback.version>1.2.3</logback.version>
         <lombok.version>1.18.20</lombok.version>
@@ -53,6 +53,7 @@
         <hawtio.version>2.14.3</hawtio.version>
         <mycila-guice-jsr250.version>5.0</mycila-guice-jsr250.version>
         <mycila-jmx.version>1.1.ga</mycila-jmx.version>
+        <juel.version>2.2.7</juel.version>
     </properties>
 
     <repositories>
@@ -327,6 +328,16 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <dependency>
+                <groupId>de.odysseus.juel</groupId>
+                <artifactId>juel-api</artifactId>
+                <version>${juel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.odysseus.juel</groupId>
+                <artifactId>juel-impl</artifactId>
+                <version>${juel.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -378,6 +389,13 @@
                             <arg>--add-modules</arg>
                             <arg>jdk.incubator.foreign</arg>
                         </compilerArgs>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>${lombok.version}</version>
+                            </path>
+                        </annotationProcessorPaths>
                     </configuration>
                 </plugin>
                 <plugin>
