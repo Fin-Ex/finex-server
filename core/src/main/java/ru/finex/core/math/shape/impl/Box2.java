@@ -118,7 +118,14 @@ public class Box2 {
             isInside(x, y, xmax, ymin, sqRadius) || isInside(x, y, xmax, ymax, sqRadius);
     }
 
-    boolean internalIntersects(int x, int y, long sqRadius) {
+    /**
+     * Test box to intersect circle.
+     * @param x x-axis coordinate circle center point
+     * @param y y-axis coordinate circle center point
+     * @param sqRadius squared radius
+     * @return true if box intersect circle, otherwise false
+     */
+    public boolean internalIntersects(int x, int y, long sqRadius) {
         return isInside(x, y, xmin, ymin, sqRadius) || isInside(x, y, xmin, ymax, sqRadius) ||
             isInside(x, y, xmax, ymin, sqRadius) || isInside(x, y, xmax, ymax, sqRadius);
     }

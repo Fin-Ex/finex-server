@@ -20,10 +20,16 @@ public class ArrayDequePool<E> implements ObjectPool<E> {
 
     private final Deque<E> values;
     private final PooledObjectFactory<E> factory;
+    private final boolean autoCreate;
 
     public ArrayDequePool(PooledObjectFactory<E> factory, int maxSize) {
+        this(factory, maxSize, false);
+    }
+
+    public ArrayDequePool(PooledObjectFactory<E> factory, int maxSize, boolean autoCreate) {
         this.values = maxSize < 1 ? new ArrayDeque<>() : new FixedArrayDeque<>(maxSize);
         this.factory = factory;
+        this.autoCreate = autoCreate;
     }
 
     @Override
@@ -35,7 +41,18 @@ public class ArrayDequePool<E> implements ObjectPool<E> {
 
     @Override
     public E borrowObject() throws Exception, NoSuchElementException, IllegalStateException {
-        return values.remove();
+        E object = values.poll();
+        if (object == null) {
+            if (!autoCreate) {
+                throw new NoSuchElementException();
+            }
+
+            PooledObject<E> pooledObject = factory.makeObject();
+            pooledObject.allocate();
+            object = pooledObject.getObject();
+        }
+
+        return object;
     }
 
     @Override

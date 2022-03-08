@@ -31,4 +31,23 @@ public interface PoolService {
      */
     void registerPool(Class<?> type, ObjectPool<?> pool);
 
+    /**
+     * Удалить регистрацию пула.
+     *
+     * @param type тип объекта хранимого в пуле
+     */
+    void unregisterPool(Class<?> type);
+
+    /**
+     * Создать динамический пул и зарегистрировать его.
+     * Если пул с данным типом объекта уже зарегистрирован, то новый пул заменит предыдущий.
+     *
+     * @param pooledObjectType тип объекта хранимого в пуле
+     * @param pooledObject конфигурация пула
+     * @param <T> генерик тип объекта хранимого в пуле
+     * @return пул
+     * @see #registerPool(Class, ObjectPool)
+     */
+    <T> ObjectPool<T> createDynamicPool(Class<T> pooledObjectType, PooledObject pooledObject);
+
 }
