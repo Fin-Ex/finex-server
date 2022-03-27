@@ -1,6 +1,7 @@
 package ru.finex.core;
 
 import lombok.Cleanup;
+import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -24,6 +25,7 @@ public class Banner {
         loadBanner().forEach(System.out::println);
     }
 
+    @SneakyThrows
     private static List<String> loadBanner() {
         @Cleanup InputStream is = Banner.class.getClassLoader().getResourceAsStream(BANNER_PATH);
         if (is == null) {
