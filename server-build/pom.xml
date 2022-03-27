@@ -397,7 +397,7 @@
                             <arg>jdk.incubator.vector</arg>
                             <arg>--add-modules</arg>
                             <arg>jdk.incubator.foreign</arg>
-                            <arg>-Xplugin:Manifold</arg>
+<!--                            <arg>-Xplugin:Manifold</arg>-->
                         </compilerArgs>
                         <annotationProcessorPaths>
                             <path>
@@ -405,11 +405,11 @@
                                 <artifactId>lombok</artifactId>
                                 <version>${lombok.version}</version>
                             </path>
-                            <path>
-                                <groupId>systems.manifold</groupId>
-                                <artifactId>manifold-preprocessor</artifactId>
-                                <version>${manifold.version}</version>
-                            </path>
+<!--                            <path>-->
+<!--                                <groupId>systems.manifold</groupId>-->
+<!--                                <artifactId>manifold-preprocessor</artifactId>-->
+<!--                                <version>${manifold.version}</version>-->
+<!--                            </path>-->
                         </annotationProcessorPaths>
                     </configuration>
                 </plugin>
