@@ -1,4 +1,4 @@
-package ru.finex.core.juel;
+package ru.finex.core.placeholder;
 
 /**
  * @author m0nster.mind

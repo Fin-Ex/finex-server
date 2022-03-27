@@ -9,6 +9,7 @@ import ru.finex.core.inject.module.DbModule;
 import ru.finex.core.inject.module.HoconModule;
 import ru.finex.core.inject.module.NetworkModule;
 import ru.finex.core.inject.module.PersistenceModule;
+import ru.finex.core.inject.module.PlaceholderJuelModule;
 import ru.finex.core.inject.module.PoolModule;
 import ru.finex.ws.service.impl.ComponentServiceImpl;
 import ru.finex.ws.tick.TickService;
@@ -30,6 +31,7 @@ public class WorldServerModule extends AbstractModule {
         install(new PoolModule());
         install(new NetworkModule());
         install(new CommandModule());
+        install(new PlaceholderJuelModule());
         bind(ComponentService.class).to(ComponentServiceImpl.class);
         bind(TickService.class).to(TickServiceImpl.class);
         bindListener(Matchers.any(), new RegisterTickListener());

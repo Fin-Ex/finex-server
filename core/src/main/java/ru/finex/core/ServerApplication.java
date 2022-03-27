@@ -39,7 +39,14 @@ public class ServerApplication {
         GlobalContext.rootPackage = modulePackage;
         GlobalContext.reflections = new Reflections(new ConfigurationBuilder()
             .setUrls(ClasspathHelper.forJavaClassPath())
-            .addScanners(Scanners.Resources)
+            .addScanners(
+                Scanners.SubTypes,
+                Scanners.TypesAnnotated,
+                Scanners.MethodsAnnotated,
+                Scanners.ConstructorsAnnotated,
+                Scanners.FieldsAnnotated,
+                Scanners.Resources
+            )
         );
 
         Banner.print();

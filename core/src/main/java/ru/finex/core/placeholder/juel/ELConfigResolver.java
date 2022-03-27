@@ -1,4 +1,4 @@
-package ru.finex.core.juel.impl;
+package ru.finex.core.placeholder.juel;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigValue;

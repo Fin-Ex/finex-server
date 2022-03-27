@@ -8,8 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.tuple.Pair;
-import ru.finex.core.command.AbstractCommandQueue;
 import ru.finex.core.command.AbstractNetworkCommand;
+import ru.finex.core.command.NetworkCommandQueue;
 import ru.finex.core.command.network.NetworkCommandContext;
 import ru.finex.network.netty.model.ClientSession;
 import ru.finex.network.netty.model.NetworkDto;
@@ -42,7 +42,7 @@ public abstract class AbstractClientSession
     @Getter(AccessLevel.PROTECTED)
     private NetworkCommandService networkCommandService;
 
-    protected abstract AbstractCommandQueue<AbstractNetworkCommand, NetworkCommandContext> getCommandQueue();
+    protected abstract NetworkCommandQueue getCommandQueue();
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -59,7 +59,7 @@ public abstract class AbstractClientSession
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Pair<PacketMetadata<PacketDeserializer<?>>, NetworkDto> msg) throws Exception {
-        AbstractCommandQueue<AbstractNetworkCommand, NetworkCommandContext> commandQueue = getCommandQueue();
+        NetworkCommandQueue commandQueue = getCommandQueue();
         List<Pair<AbstractNetworkCommand, NetworkCommandContext>> commands = networkCommandService.createCommands(msg.getKey(), msg.getValue(), this);
         for (int i = 0; i < commands.size(); i++) {
             Pair<AbstractNetworkCommand, NetworkCommandContext> pair = commands.get(i);

@@ -1,4 +1,4 @@
-package ru.finex.core.juel.impl;
+package ru.finex.core.placeholder.juel;
 
 import de.odysseus.el.ExpressionFactoryImpl;
 

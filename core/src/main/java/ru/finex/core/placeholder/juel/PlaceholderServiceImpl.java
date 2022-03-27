@@ -1,7 +1,7 @@
-package ru.finex.core.juel.impl;
+package ru.finex.core.placeholder.juel;
 
 import lombok.RequiredArgsConstructor;
-import ru.finex.core.juel.PlaceholderService;
+import ru.finex.core.placeholder.PlaceholderService;
 
 import javax.el.ELContext;
 import javax.el.ExpressionFactory;

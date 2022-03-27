@@ -5,7 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.PooledObjectFactory;
 import ru.finex.core.GlobalContext;
-import ru.finex.core.juel.PlaceholderService;
+import ru.finex.core.placeholder.PlaceholderService;
 import ru.finex.core.pool.PoolConfiguration;
 import ru.finex.core.pool.PoolService;
 import ru.finex.core.pool.PooledObject;
