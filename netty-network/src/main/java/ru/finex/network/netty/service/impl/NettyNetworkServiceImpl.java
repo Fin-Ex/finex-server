@@ -9,6 +9,7 @@ import ru.finex.network.netty.service.NettyNetworkService;
 
 import java.net.InetSocketAddress;
 import java.util.Objects;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 /**
@@ -53,6 +54,7 @@ public class NettyNetworkServiceImpl implements NettyNetworkService {
         channelFuture.channel().close();
     }
 
+    @PreDestroy
     @Override
     public void shutdownNow() throws InterruptedException {
         Objects.requireNonNull(channelFuture);
