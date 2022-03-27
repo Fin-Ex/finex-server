@@ -300,10 +300,6 @@
                         <groupId>org.slf4j</groupId>
                         <artifactId>slf4j-api</artifactId>
                     </exclusion>
-                    <exclusion>
-                        <groupId>org.reflections</groupId>
-                        <artifactId>reflections</artifactId>
-                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
