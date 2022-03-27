@@ -1,19 +1,21 @@
 package ru.finex.core.math.tree;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import org.apache.commons.pool2.ObjectPool;
+import ru.finex.core.math.shape.Shape;
 import ru.finex.core.math.shape.impl.Box2;
-import ru.finex.core.math.vector.Vector3f;
+import ru.finex.core.math.shape.impl.Circle2f;
+import ru.finex.core.math.vector.Vector2f;
 import ru.finex.core.pool.Cleanable;
 import ru.finex.core.pool.PoolService;
 import ru.finex.core.pool.PooledObject;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 /**
@@ -164,22 +166,39 @@ public class BVHTree {
     }
 
     /**
+     * Query to search all objects in specified shape.
+     *
+     * @param shape shape
+     * @return search result - object ID's
+     */
+    public IntList query(Shape shape) {
+        IntList result;
+        if (shape instanceof Circle2f circle) {
+            result = queryCircle(circle.getCenter(), circle.getRadius());
+        } else {
+            throw new IllegalArgumentException("Unknown shape type: " + shape.getClass().getCanonicalName());
+        }
+
+        return result;
+    }
+
+    /**
      * Query to search all objects in specified circle radius.
      *
      * @param point circle center
      * @param radius circle radius
      * @return search result - object ID's
      */
-    public List<Integer> queryCircle(Vector3f point, float radius) {
+    public IntList queryCircle(Vector2f point, float radius) {
         int x = (int) (point.getX() * precision);
-        int y = (int) (point.getZ() * precision);
+        int y = (int) (point.getY() * precision);
         int radi = (int) (radius * precision);
 
         return queryCircle(x, y, radi);
     }
 
-    private List<Integer> queryCircle(int x, int y, int radius) {
-        List<Integer> result = new ArrayList<>();
+    private IntList queryCircle(int x, int y, int radius) {
+        IntList results = new IntArrayList();
         long sqRadius = (long) radius * radius;
 
         Queue<Integer> awaitNodes = new LinkedList<>();
@@ -192,7 +211,7 @@ public class BVHTree {
             boolean isLeaf = node.left == -1 && node.right == -1;
 
             if (isHit && isLeaf) {
-                result.add(node.value);
+                results.add(node.value);
             }
 
             if (isHit) {
@@ -208,7 +227,7 @@ public class BVHTree {
             }
         }
 
-        return result;
+        return results;
     }
 
     @SuppressWarnings("checkstyle:VisibilityModifier")

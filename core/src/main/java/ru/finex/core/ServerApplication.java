@@ -11,6 +11,7 @@ import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
+import org.slf4j.LoggerFactory;
 import ru.finex.core.inject.LoaderModule;
 import ru.finex.core.logback.LogbackConfiguration;
 import ru.finex.core.utils.InjectorUtils;
@@ -40,6 +41,10 @@ public class ServerApplication {
             .setUrls(ClasspathHelper.forJavaClassPath())
             .addScanners(Scanners.Resources)
         );
+
+        Banner.print();
+        LoggerFactory.getLogger(ServerApplication.class)
+            .info("Core version: {}", Version.getImplVersion());
 
         List<Module> modules = new ArrayList<>();
         modules.add(new CloseableModule());

@@ -54,6 +54,8 @@
         <mycila-guice-jsr250.version>5.0</mycila-guice-jsr250.version>
         <mycila-jmx.version>1.1.ga</mycila-jmx.version>
         <juel.version>2.2.7</juel.version>
+        <manifold.version>2022.1.7</manifold.version>
+        <fastutil.version>8.5.8</fastutil.version>
     </properties>
 
     <repositories>
@@ -121,6 +123,12 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>systems.manifold</groupId>
+                <artifactId>manifold-ext-rt</artifactId>
+                <version>${manifold.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.typesafe</groupId>
@@ -338,6 +346,11 @@
                 <artifactId>juel-impl</artifactId>
                 <version>${juel.version}</version>
             </dependency>
+            <dependency>
+                <groupId>it.unimi.dsi</groupId>
+                <artifactId>fastutil</artifactId>
+                <version>${fastutil.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -388,12 +401,18 @@
                             <arg>jdk.incubator.vector</arg>
                             <arg>--add-modules</arg>
                             <arg>jdk.incubator.foreign</arg>
+                            <arg>-Xplugin:Manifold</arg>
                         </compilerArgs>
                         <annotationProcessorPaths>
                             <path>
                                 <groupId>org.projectlombok</groupId>
                                 <artifactId>lombok</artifactId>
                                 <version>${lombok.version}</version>
+                            </path>
+                            <path>
+                                <groupId>systems.manifold</groupId>
+                                <artifactId>manifold-preprocessor</artifactId>
+                                <version>${manifold.version}</version>
                             </path>
                         </annotationProcessorPaths>
                     </configuration>
@@ -416,6 +435,18 @@
                             </goals>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.2.2</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            </manifest>
+                        </archive>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

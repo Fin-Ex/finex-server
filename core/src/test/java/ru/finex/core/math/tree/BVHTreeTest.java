@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.RepeatedTest;
 import ru.finex.core.math.shape.impl.Box2f;
 import ru.finex.core.math.tree.BVHTree.Node;
+import ru.finex.core.math.vector.Vector2f;
 import ru.finex.core.math.vector.Vector3f;
 import ru.finex.core.pool.PoolService;
 import ru.finex.core.pool.impl.ArrayDequePool;
@@ -58,10 +59,10 @@ public class BVHTreeTest {
         worldTree.build(shapes);
 
         var baseBox = shapes.get(0).getBoundingBox();
-        var point = new Vector3f(baseBox.xmin + baseBox.getWidth() / 2, 0, baseBox.ymin + baseBox.getHeight() / 2);
+        var point = new Vector2f(baseBox.xmin + baseBox.getWidth() / 2, baseBox.ymin + baseBox.getHeight() / 2);
 
         List<Integer> expected = shapes.stream()
-            .filter(e -> e.getBoundingBox().contains(point) || e.getBoundingBox().intersects(point.getX(), point.getZ(), 100))
+            .filter(e -> e.getBoundingBox().contains(point) || e.getBoundingBox().intersects(point.getX(), point.getY(), 100))
             .map(BVHTreeElement::getId)
             .collect(Collectors.toList());
 
