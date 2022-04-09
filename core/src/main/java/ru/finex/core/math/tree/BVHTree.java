@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import org.apache.commons.pool2.ObjectPool;
 import ru.finex.core.math.shape.Shape;
 import ru.finex.core.math.shape.impl.Box2;
+import ru.finex.core.math.shape.impl.Box2f;
 import ru.finex.core.math.shape.impl.Circle2f;
 import ru.finex.core.math.vector.Vector2f;
 import ru.finex.core.pool.Cleanable;
@@ -175,6 +176,8 @@ public class BVHTree {
         IntList result;
         if (shape instanceof Circle2f circle) {
             result = queryCircle(circle.getCenter(), circle.getRadius());
+        } else if (shape instanceof Box2f box) {
+            result = queryBox(box);
         } else {
             throw new IllegalArgumentException("Unknown shape type: " + shape.getClass().getCanonicalName());
         }
@@ -208,6 +211,48 @@ public class BVHTree {
             Node node = nodes[index];
 
             boolean isHit = node.box.contains(x, y) || node.box.internalIntersects(x, y, sqRadius);
+            boolean isLeaf = node.left == -1 && node.right == -1;
+
+            if (isHit && isLeaf) {
+                results.add(node.value);
+            }
+
+            if (isHit) {
+                int left = node.left;
+                if (left != -1) {
+                    awaitNodes.offer(left);
+                }
+
+                int right = node.right;
+                if (right != -1) {
+                    awaitNodes.offer(right);
+                }
+            }
+        }
+
+        return results;
+    }
+
+    /**
+     * Query to search all objects in specified box space.
+     *
+     * @param box box
+     * @return search result - object ID's
+     */
+    public IntList queryBox(Box2f box) {
+        return queryBox(box.toBox2(precision));
+    }
+
+    private IntList queryBox(Box2 box) {
+        IntList results = new IntArrayList();
+
+        Queue<Integer> awaitNodes = new LinkedList<>();
+        awaitNodes.offer(root);
+
+        for (Integer index = awaitNodes.poll(); index != null; index = awaitNodes.poll()) {
+            Node node = nodes[index];
+
+            boolean isHit = node.box.intersects(box);
             boolean isLeaf = node.left == -1 && node.right == -1;
 
             if (isHit && isLeaf) {

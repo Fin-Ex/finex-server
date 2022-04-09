@@ -16,6 +16,8 @@ import ru.finex.core.math.vector.Vector3f;
 @EqualsAndHashCode
 public class Box3f implements Shape3, Cloneable {
 
+    private static final float EPSILON_SEGMENT = 0.0001f;
+
     public float xmin;
     public float xmax;
     public float ymin;
@@ -119,6 +121,65 @@ public class Box3f implements Shape3, Cloneable {
     }
 
     /**
+     * Test this box to intersect line (line segment).
+     * @param startPoint start point of line
+     * @param endPoint end point of line
+     * @return true if this box intersect line, otherwise false
+     */
+    @SuppressWarnings("checkstyle:MagicNumber")
+    public boolean intersects(Vector3f startPoint, Vector3f endPoint) {
+        // center of the box
+        float bcx = (xmin + xmax) * 0.5f;
+        float bcy = (ymin + ymax) * 0.5f;
+        float bcz = (zmin + zmax) * 0.5f;
+
+        // box half extents
+        float bex = xmax - bcx;
+        float bey = ymax - bcy;
+        float bez = zmax - bcz;
+
+        // segment midpoint
+        float smx = (startPoint.getX() + endPoint.getX()) * 0.5f;
+        float smy = (startPoint.getY() + endPoint.getY()) * 0.5f;
+        float smz = (startPoint.getZ() + endPoint.getZ()) * 0.5f;
+
+        // segment half extents
+        float sex = startPoint.getX() - smx;
+        float sey = startPoint.getY() - smy;
+        float sez = startPoint.getZ() - smz;
+
+        // translate
+        smx -= bcx;
+        smy -= bcy;
+        smz -= bcz;
+
+        float adx = Math.abs(sex);
+        if (axisSegmentBox(smx, bex, adx)) {
+            return false;
+        }
+
+        float ady = Math.abs(sey);
+        if (axisSegmentBox(smy, bey, ady)) {
+            return false;
+        }
+
+        float adz = Math.abs(sez);
+        if (axisSegmentBox(smz, bez, adz)) {
+            return false;
+        }
+
+        // correct math error when segment is parallel to coordinate axis
+        adx += EPSILON_SEGMENT;
+        ady += EPSILON_SEGMENT;
+        adz += EPSILON_SEGMENT;
+
+        // cross product
+        return Math.abs(smy * sez - smz * sey) > bey * adz + bez * ady ||
+            Math.abs(smz * sex + smx * sez) > bex * adz + bez * adx ||
+            Math.abs(smx * sey - smy * sex) > bex * ady + bey * adx;
+    }
+
+    /**
      * Test this box to intersect other box.
      * @param box other box
      * @return true if this box intersect other box, otherwise false
@@ -138,13 +199,13 @@ public class Box3f implements Shape3, Cloneable {
      * @return true if box intersect sphere, otherwise false
      */
     public boolean intersects(float x, float y, float z, float radius) {
-        final float bx = Math.max(xmin, Math.min(x, xmax));
-        final float by = Math.max(ymin, Math.min(y, ymax));
-        final float bz = Math.max(zmin, Math.min(z, zmax));
+        float bx = ExtMath.clamp(x, xmin, xmax);
+        float by = ExtMath.clamp(y, ymin, ymax);
+        float bz = ExtMath.clamp(z, zmin, zmax);
 
-        final double dx = bx - x;
-        final double dy = by - y;
-        final double dz = bz - z;
+        double dx = bx - x;
+        double dy = by - y;
+        double dz = bz - z;
 
         return Math.sqrt(dx * dx + dy * dy + dz * dz) < radius || contains(x, y, z); // intersects or inside box
     }
@@ -172,19 +233,17 @@ public class Box3f implements Shape3, Cloneable {
             return circle.intersects(this);
         } else if (shape instanceof Sphere3f sphere) {
             Vector3f center = sphere.getCenter();
-            float x = ExtMath.clamp(center.getX(), xmin, xmax);
-            float y = ExtMath.clamp(center.getY(), ymin, ymax);
-            float z = ExtMath.clamp(center.getZ(), zmin, zmax);
-            x -= center.getX();
-            y -= center.getY();
-            z -= center.getZ();
-            return x * x + y * y + z * z < sphere.getRadius() * sphere.getRadius();
+            return intersects(center.getX(), center.getY(), center.getZ(), sphere.getRadius());
         }
         return false;
     }
 
     private static boolean intersectsAABB(float a1, float a2, float b1, float b2) {
         return a2 >= b1 && b2 >= a1;
+    }
+
+    private static boolean axisSegmentBox(float sm, float be, float ad) {
+        return Math.abs(sm) > be + ad;
     }
 
     /**
