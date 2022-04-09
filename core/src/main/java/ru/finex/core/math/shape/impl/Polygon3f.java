@@ -308,6 +308,7 @@ public class Polygon3f implements Shape3, Cloneable {
         return dotProduct > EPSILON_CWW;
     }
 
+    @SuppressWarnings("checkstyle:ReturnCount")
     @Override
     public boolean intersects(Shape shape) {
         if (shape instanceof Box3f box) {
