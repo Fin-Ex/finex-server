@@ -7,11 +7,13 @@ import ru.finex.core.db.impl.TransactionalContext;
 import ru.finex.core.model.entity.Entity;
 import ru.finex.core.utils.GenericUtils;
 
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.io.Serializable;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Supplier;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * @param <T>  entity
@@ -24,15 +26,16 @@ public abstract class AbstractCrudRepository<T extends Entity<ID>, ID extends Se
     protected final Class<T> entityClass = GenericUtils.getGenericType(getClass(), 0);
 
     @Inject
-    @Named("commandExecutor")
+    @Named("Service")
     protected ExecutorService executorService;
 
     @Override
-    public RepositoryFuture<T> create(T entity) {
-        return (RepositoryFuture<T>) executorService.submit(() -> createInternal(entity));
+    public RepositoryFuture<T> createAsync(T entity) {
+        return asyncOperation(() -> create(entity));
     }
 
-    public T createInternal(T entity) {
+    @Override
+    public T create(T entity) {
         TransactionalContext ctx = TransactionalContext.get();
         Session session = ctx.session();
         try {
@@ -47,11 +50,12 @@ public abstract class AbstractCrudRepository<T extends Entity<ID>, ID extends Se
     }
 
     @Override
-    public RepositoryFuture<Void> update(T entity) {
-        return (RepositoryFuture<Void>) executorService.submit(() -> updateInternal(entity));
+    public RepositoryFuture<Void> updateAsync(T entity) {
+        return asyncOperation(() -> update(entity));
     }
 
-    public Void updateInternal(T entity) {
+    @Override
+    public Void update(T entity) {
         TransactionalContext ctx = TransactionalContext.get();
         Session session = ctx.session();
         try {
@@ -65,11 +69,12 @@ public abstract class AbstractCrudRepository<T extends Entity<ID>, ID extends Se
     }
 
     @Override
-    public RepositoryFuture<T> restore(T entity) {
-        return (RepositoryFuture<T>) executorService.submit(() -> restoreInternal(entity));
+    public RepositoryFuture<T> restoreAsync(T entity) {
+        return asyncOperation(() -> restore(entity));
     }
 
-    public T restoreInternal(T entity) {
+    @Override
+    public T restore(T entity) {
         TransactionalContext ctx = TransactionalContext.get();
         Session session = ctx.session();
         try {
@@ -83,11 +88,12 @@ public abstract class AbstractCrudRepository<T extends Entity<ID>, ID extends Se
     }
 
     @Override
-    public RepositoryFuture<Void> delete(T entity) {
-        return (RepositoryFuture<Void>) executorService.submit(() -> deleteInternal(entity));
+    public RepositoryFuture<Void> deleteAsync(T entity) {
+        return asyncOperation(() -> delete(entity));
     }
 
-    public Void deleteInternal(T entity) {
+    @Override
+    public Void delete(T entity) {
         TransactionalContext ctx = TransactionalContext.get();
         Session session = ctx.session();
         try {
@@ -100,11 +106,13 @@ public abstract class AbstractCrudRepository<T extends Entity<ID>, ID extends Se
         return null;
     }
 
-    public RepositoryFuture<List<T>> findAll() {
-        return (RepositoryFuture<List<T>>) executorService.submit(() -> findAllInternal());
+    @Override
+    public RepositoryFuture<List<T>> findAllAsync() {
+        return asyncOperation(this::findAll);
     }
 
-    public List<T> findAllInternal() {
+    @Override
+    public List<T> findAll() {
         TransactionalContext ctx = TransactionalContext.get();
         Session session = ctx.session();
         try {
@@ -119,11 +127,12 @@ public abstract class AbstractCrudRepository<T extends Entity<ID>, ID extends Se
     }
 
     @Override
-    public RepositoryFuture<T> findById(ID id) {
-        return (RepositoryFuture<T>) executorService.submit(() -> findByIdInternal(id));
+    public RepositoryFuture<T> findByIdAsync(ID id) {
+        return asyncOperation(() -> findById(id));
     }
 
-    public T findByIdInternal(ID id) {
+    @Override
+    public T findById(ID id) {
         TransactionalContext ctx = TransactionalContext.get();
         Session session = ctx.session();
         try {
@@ -134,6 +143,10 @@ public abstract class AbstractCrudRepository<T extends Entity<ID>, ID extends Se
             ctx.rollback(session);
             throw new RuntimeException(e);
         }
+    }
+
+    protected <T> RepositoryFuture<T> asyncOperation(Supplier<T> operation) {
+        return new RepositoryFuture<>(null, CompletableFuture.supplyAsync(operation, executorService));
     }
 
 }

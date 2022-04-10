@@ -11,16 +11,28 @@ import java.util.List;
 @SuppressWarnings({"checkstyle:JavadocType", "checkstyle:MissingJavadocMethod"})
 public interface CrudRepository<T extends Entity<ID>, ID extends Serializable> {
 
-    RepositoryFuture<T> create(T entity);
+    RepositoryFuture<T> createAsync(T entity);
 
-    RepositoryFuture<T> restore(T entity);
+    T create(T entity);
 
-    RepositoryFuture<Void> update(T entity);
+    RepositoryFuture<T> restoreAsync(T entity);
 
-    RepositoryFuture<Void> delete(T entity);
+    T restore(T entity);
 
-    RepositoryFuture<List<T>> findAll();
+    RepositoryFuture<Void> updateAsync(T entity);
 
-    RepositoryFuture<T> findById(ID id);
+    Void update(T entity);
+
+    RepositoryFuture<Void> deleteAsync(T entity);
+
+    Void delete(T entity);
+
+    RepositoryFuture<List<T>> findAllAsync();
+
+    List<T> findAll();
+
+    RepositoryFuture<T> findByIdAsync(ID id);
+
+    T findById(ID id);
 
 }

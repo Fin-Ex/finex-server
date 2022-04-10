@@ -3,6 +3,7 @@ package ru.finex.ws.repository.impl;
 import org.hibernate.Session;
 import ru.finex.core.db.impl.TransactionalContext;
 import ru.finex.core.repository.AbstractCrudRepository;
+import ru.finex.core.repository.RepositoryFuture;
 import ru.finex.ws.model.entity.GameObjectComponentPrototype;
 import ru.finex.ws.repository.GameObjectComponentPrototypeRepository;
 
@@ -19,16 +20,22 @@ public class GameObjectComponentPrototypeRepositoryImpl
     implements GameObjectComponentPrototypeRepository {
 
     @Override
-    public List<GameObjectComponentPrototype> findByGameObjectTemplateName(String gameObjectTemplateName) {
+    public RepositoryFuture<List<GameObjectComponentPrototype>> findByPrototypeNameAsync(String prototypeName) {
+        return asyncOperation(() -> findByPrototypeName(prototypeName));
+    }
+
+    @Override
+    public List<GameObjectComponentPrototype> findByPrototypeName(String prototypeName) {
         TransactionalContext ctx = TransactionalContext.get();
         Session session = ctx.session();
         try {
-            Query query = session.createQuery(
-                "SELECT component " +
-                    "FROM GameObjectTemplate template " +
-                    "JOIN GameObjectComponentTemplate component ON template.id = component.gameObjectTemplateId " +
-                    "WHERE template.name = :gameObjectTemplateName");
-            query.setParameter("gameObjectTemplateName", gameObjectTemplateName);
+            Query query = session.createQuery("""
+                    SELECT component 
+                    FROM GameObjectComponentPrototype component 
+                    JOIN component.gameObjectPrototype 
+                    WHERE component.gameObjectPrototype.name = :prototypeName
+                    """);
+            query.setParameter("prototypeName", prototypeName);
             List<GameObjectComponentPrototype> entities = query.getResultList();
             ctx.commit(session);
             return entities;

@@ -3,6 +3,7 @@ package ru.finex.ws.repository.impl;
 import org.hibernate.Session;
 import ru.finex.core.db.impl.TransactionalContext;
 import ru.finex.core.repository.AbstractCrudRepository;
+import ru.finex.core.repository.RepositoryFuture;
 import ru.finex.ws.model.entity.GameObjectPrototype;
 import ru.finex.ws.repository.GameObjectPrototypeRepository;
 
@@ -18,11 +19,16 @@ public class GameObjectPrototypeRepositoryImpl
     implements GameObjectPrototypeRepository {
 
     @Override
+    public RepositoryFuture<GameObjectPrototype> findByNameAsync(String name) {
+        return asyncOperation(() -> findByName(name));
+    }
+
+    @Override
     public GameObjectPrototype findByName(String name) {
         TransactionalContext ctx = TransactionalContext.get();
         Session session = ctx.session();
         try {
-            Query query = session.createQuery("SELECT t FROM GameObjectTemplate t WHERE name = :name");
+            Query query = session.createQuery("SELECT t FROM GameObjectPrototype t WHERE name = :name");
             query.setParameter("name", name);
             Object singleResult = query.getSingleResult();
             ctx.commit(session);

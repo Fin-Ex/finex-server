@@ -21,7 +21,7 @@ public class GameObjectPrototypeServiceImpl implements GameObjectPrototypeServic
 
     @Override
     public List<String> getComponentsByPrototypeName(String objectName) {
-        return componentRepository.findByGameObjectTemplateName(objectName)
+        return componentRepository.findByPrototypeName(objectName)
             .stream()
             .map(GameObjectComponentPrototype::getComponent)
             .collect(Collectors.toList());
