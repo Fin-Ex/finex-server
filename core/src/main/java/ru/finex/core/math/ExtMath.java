@@ -28,6 +28,11 @@ public class ExtMath {
      */
     public static final float HALF_PI = 0.5f * PI;
 
+    /**
+     * The value PI/4 as a float. (45 degrees)
+     */
+    public static final float QUARTER_PI = 0.25f * PI;
+
     public static final double EPSILON = 1.40129846432482E-45;
 
     /**

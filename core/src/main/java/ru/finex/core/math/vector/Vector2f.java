@@ -549,7 +549,7 @@ public class Vector2f implements MathVector, Cloneable {
         }
 
         direction.div(length) // normalize vector
-            .fma(fillOperation(length, length), floatVector()) // Vn * Dn + Pn
+            .fma(fillOperation(distance, distance), floatVector()) // Vn * Dn + Pn
             .intoArray(components, 0);
 
         return this;
@@ -571,7 +571,7 @@ public class Vector2f implements MathVector, Cloneable {
         var delta = max.floatVector()
             .sub(minLines);
 
-        minLines.fma(fillOperation(t, t), delta)
+        delta.fma(fillOperation(t, t), minLines)
             .intoArray(components, 0);
 
         return this;
