@@ -9,7 +9,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Data
-public class FutureImpl<T> implements Future<T> {
+public class RepositoryFuture<T> implements Future<T> {
 
     public static final int RUNNING = 0;
     public static final int DONE = 1;

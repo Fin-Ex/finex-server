@@ -28,8 +28,8 @@ public abstract class AbstractCrudRepository<T extends Entity<ID>, ID extends Se
     protected ExecutorService executorService;
 
     @Override
-    public FutureImpl<T> create(T entity) {
-        return (FutureImpl<T>) executorService.submit(() -> createInternal(entity));
+    public RepositoryFuture<T> create(T entity) {
+        return (RepositoryFuture<T>) executorService.submit(() -> createInternal(entity));
     }
 
     public T createInternal(T entity) {
@@ -38,7 +38,6 @@ public abstract class AbstractCrudRepository<T extends Entity<ID>, ID extends Se
         try {
             ID persistenceId = (ID) session.save(entity);
             ctx.commit(session);
-
             entity.setPersistenceId(persistenceId);
             return entity;
         } catch (Exception e) {
@@ -48,17 +47,16 @@ public abstract class AbstractCrudRepository<T extends Entity<ID>, ID extends Se
     }
 
     @Override
-    public FutureImpl<Void> update(T entity) {
-        return (FutureImpl<Void>) executorService.submit(() -> updateInternal(entity));
+    public RepositoryFuture<Void> update(T entity) {
+        return (RepositoryFuture<Void>) executorService.submit(() -> updateInternal(entity));
     }
 
     public Void updateInternal(T entity) {
         TransactionalContext ctx = TransactionalContext.get();
         Session session = ctx.session();
         try {
-            ID persistenceId = (ID) session.save(entity);
+            session.update(entity);
             ctx.commit(session);
-            entity.setPersistenceId(persistenceId);
         } catch (Exception e) {
             ctx.rollback(session);
             throw new RuntimeException(e);
@@ -67,8 +65,8 @@ public abstract class AbstractCrudRepository<T extends Entity<ID>, ID extends Se
     }
 
     @Override
-    public FutureImpl<T> restore(T entity) {
-        return (FutureImpl<T>) executorService.submit(() -> restoreInternal(entity));
+    public RepositoryFuture<T> restore(T entity) {
+        return (RepositoryFuture<T>) executorService.submit(() -> restoreInternal(entity));
     }
 
     public T restoreInternal(T entity) {
@@ -85,8 +83,8 @@ public abstract class AbstractCrudRepository<T extends Entity<ID>, ID extends Se
     }
 
     @Override
-    public FutureImpl<Void> delete(T entity) {
-        return (FutureImpl<Void>) executorService.submit(() -> deleteInternal(entity));
+    public RepositoryFuture<Void> delete(T entity) {
+        return (RepositoryFuture<Void>) executorService.submit(() -> deleteInternal(entity));
     }
 
     public Void deleteInternal(T entity) {
@@ -102,8 +100,8 @@ public abstract class AbstractCrudRepository<T extends Entity<ID>, ID extends Se
         return null;
     }
 
-    public FutureImpl<List<T>> findAll() {
-        return (FutureImpl<List<T>>) executorService.submit(() -> findAllInternal());
+    public RepositoryFuture<List<T>> findAll() {
+        return (RepositoryFuture<List<T>>) executorService.submit(() -> findAllInternal());
     }
 
     public List<T> findAllInternal() {
@@ -121,8 +119,8 @@ public abstract class AbstractCrudRepository<T extends Entity<ID>, ID extends Se
     }
 
     @Override
-    public FutureImpl<T> findById(ID id) {
-        return (FutureImpl<T>) executorService.submit(() -> findByIdInternal(id));
+    public RepositoryFuture<T> findById(ID id) {
+        return (RepositoryFuture<T>) executorService.submit(() -> findByIdInternal(id));
     }
 
     public T findByIdInternal(ID id) {
