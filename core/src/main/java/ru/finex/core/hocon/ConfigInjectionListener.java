@@ -82,6 +82,12 @@ public class ConfigInjectionListener<I> implements InjectionListener<I> {
             field.setInt(injectee, config.getInt(path));
         } else if (long.class.isAssignableFrom(fieldType)) {
             field.setLong(injectee, config.getLong(path));
+        } else if (float.class.isAssignableFrom(fieldType)) {
+            field.setFloat(injectee, (float) config.getDouble(path));
+        } else if (double.class.isAssignableFrom(fieldType)) {
+            field.setDouble(injectee, config.getDouble(path));
+        } else if (boolean.class.isAssignableFrom(fieldType)) {
+            field.setBoolean(injectee, config.getBoolean(path));
         } else {
             throw new RuntimeException(String.format(
                 "Unsupported config-type: %s %s",

@@ -21,10 +21,10 @@ import java.lang.annotation.Target;
 public @interface PooledObject {
 
     /** Начальный размер пула. */
-    int minSize() default 0;
+    String minSize() default "0";
 
     /** Максимальный размер пула, для хранения объектов. 0 - не ограничен. */
-    int maxSize() default 0;
+    String maxSize() default "0";
 
     Class<? extends PooledObjectFactory> factory() default SimplePooledObjectFactory.class;
 

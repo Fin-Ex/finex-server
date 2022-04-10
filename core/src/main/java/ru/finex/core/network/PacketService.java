@@ -10,6 +10,18 @@ import ru.finex.network.netty.serial.PacketSerializer;
 public interface PacketService {
 
     /**
+     * Save deserializer to registry.
+     * @param deserializer deserializer
+     */
+    void saveDeserializer(PacketDeserializer<?> deserializer);
+
+    /**
+     * Save serializer to registry.
+     * @param serializer serializer
+     */
+    void saveSerializer(PacketSerializer<?> serializer);
+
+    /**
      * Returns income packet metadata bound to specified opcodes.
      * @param opcodes opcodes
      * @return packet metadata or null if not found

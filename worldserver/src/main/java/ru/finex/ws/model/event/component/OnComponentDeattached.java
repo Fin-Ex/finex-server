@@ -11,7 +11,7 @@ import ru.finex.core.pool.PooledObject;
  * @author m0nster.mind
  */
 @Data
-@PooledObject(maxSize = 1024)
+@PooledObject(maxSize = "1024")
 public class OnComponentDeattached implements ComponentEvent {
 
     private GameObject gameObject;

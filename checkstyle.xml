@@ -128,7 +128,10 @@
         <!-- See http://checkstyle.sourceforge.net/config_coding.html#PackageDeclaration -->
         <module name="PackageDeclaration"/>
         <!-- See http://checkstyle.sourceforge.net/config_coding.html#ReturnCount -->
-        <module name="ReturnCount"/>
+        <module name="ReturnCount">
+            <property name="max" value="4"/>
+            <property name="maxForVoid" value="3"/>
+        </module>
         <!-- See http://checkstyle.sourceforge.net/config_coding.html#DeclarationOrder -->
         <module name="DeclarationOrder"/>
         <!-- See http://checkstyle.sourceforge.net/config_coding.html#ParameterAssignment -->

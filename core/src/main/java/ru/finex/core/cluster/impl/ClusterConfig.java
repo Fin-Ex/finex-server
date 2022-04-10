@@ -24,6 +24,8 @@ public class ClusterConfig {
 
     private int threads;
 
+    private int database;
+
     private Subscriptions subscriptions;
     private Network network;
 
