@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import ru.finex.core.math.ExtMath;
 import ru.finex.core.math.Quaternion;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,12 +27,54 @@ public class Vector3fTest {
         Arguments.of(new Vector3f(5f, 5f, 0), 20f, new Vector3f(5f, 5f, 0)),
     };
 
+    private static final Arguments[] PERPENDICULAR_ARGS = {
+        Arguments.of(new Vector3f(6f, 5f, 3f), new Vector3f(-5f, 6f, 0f)),
+        Arguments.of(new Vector3f(6f, 5f, 7f), new Vector3f(0f, -7f, 5f)),
+    };
+
+    private static final Arguments[] LERP_ARGS = {
+        Arguments.of(0.0f, new Vector3f(3f, 3f, 3f)),
+        Arguments.of(0.1f, new Vector3f(3.9f, 3.9f, 3.9f)),
+        Arguments.of(0.2f, new Vector3f(4.8f, 4.8f, 4.8f)),
+        Arguments.of(0.3f, new Vector3f(5.7f, 5.7f, 5.7f)),
+        Arguments.of(0.4f, new Vector3f(6.6f, 6.6f, 6.6f)),
+        Arguments.of(0.5f, new Vector3f(7.5f, 7.5f, 7.5f)),
+        Arguments.of(0.6f, new Vector3f(8.4f, 8.4f, 8.4f)),
+        Arguments.of(0.7f, new Vector3f(9.3f, 9.3f, 9.3f)),
+        Arguments.of(0.8f, new Vector3f(10.2f, 10.2f, 10.2f)),
+        Arguments.of(0.9f, new Vector3f(11.1f, 11.1f, 11.1f)),
+        Arguments.of(1.0f, new Vector3f(12.0f, 12.0f, 12.0f))
+    };
+
+    private static final Arguments[] ANGLE_RELATIONS = {
+        Arguments.of(new Vector3f(Vector3f.UNIT_X), new Vector3f(Vector3f.UNIT_X), ExtMath.ZERO_FLOAT),
+        Arguments.of(new Vector3f(Vector3f.UNIT_X), new Vector3f(Vector3f.UNIT_Y), ExtMath.HALF_PI),
+        Arguments.of(new Vector3f(Vector3f.UNIT_X), new Vector3f(Vector3f.UNIT_Z), ExtMath.HALF_PI),
+        Arguments.of(new Vector3f(Vector3f.UNIT_X), new Vector3f(Vector3f.UNIT_X_NEGATIVE), ExtMath.PI),
+        Arguments.of(new Vector3f(Vector3f.UNIT_X), new Vector3f(Vector3f.UNIT_Y_NEGATIVE), ExtMath.HALF_PI),
+        Arguments.of(new Vector3f(Vector3f.UNIT_X), new Vector3f(Vector3f.UNIT_Z_NEGATIVE), ExtMath.HALF_PI),
+        Arguments.of(new Vector3f(Vector3f.UNIT_XYZ), new Vector3f(Vector3f.UNIT_XYZ_NEGATIVE), ExtMath.PI),
+        Arguments.of(new Vector3f(Vector3f.UNIT_XYZ), new Vector3f(Vector3f.UNIT_X), 12),
+    };
+
     public static Arguments[] getRotateDirections() {
         return ROT_DIRECTIONS;
     }
 
     public static Arguments[] getMtpTargets() {
         return MTP_TARGETS;
+    }
+
+    public static Arguments[] getPerpendicularArgs() {
+        return PERPENDICULAR_ARGS;
+    }
+
+    public static Arguments[] getLerpArgs() {
+        return LERP_ARGS;
+    }
+
+    public static Arguments[] getAngleRelations() {
+        return ANGLE_RELATIONS;
     }
 
     @Test
@@ -92,6 +135,29 @@ public class Vector3fTest {
         vector.moveToPoint(target, distance);
 
         assertEquals(result, vector, 0.001f);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getPerpendicularArgs")
+    public void perpendicularTest(Vector3f actual, Vector3f expected) {
+        assertEquals(expected, actual.perpendicularLocal(), 0.001f);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getLerpArgs")
+    public void lerpTest(float t, Vector3f expectedVector) {
+        Vector3f vector3f = new Vector3f();
+
+        Vector3f min = new Vector3f(3f, 3f, 3f);
+        Vector3f max = new Vector3f(12f, 12f, 12f);
+
+        assertEquals(expectedVector, vector3f.lerp(min, max, t), 0.001f);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getAngleRelations")
+    public void angleTest(Vector3f first, Vector3f second, float expectedAngleRad) {
+        assertEquals(expectedAngleRad, first.angle(second), 0.001f);
     }
 
 }
