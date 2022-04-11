@@ -7,7 +7,6 @@ import org.hibernate.Session;
 import org.hibernate.service.ServiceRegistry;
 import ru.finex.core.db.DbSessionService;
 import ru.finex.core.db.impl.DbSessionServiceImpl;
-import ru.finex.core.db.impl.HibernateConfigProvider;
 import ru.finex.core.db.impl.HibernateSessionProvider;
 import ru.finex.core.db.impl.ServiceRegistryProvider;
 import ru.finex.core.db.impl.TransactionalMethodInterceptor;
@@ -17,7 +16,6 @@ import ru.finex.evolution.ClasspathScanner;
 import ru.finex.evolution.MigrationService;
 import ru.finex.evolution.impl.MigrationServiceImpl;
 
-import java.net.URL;
 import javax.sql.DataSource;
 import javax.transaction.Transactional;
 
@@ -28,7 +26,6 @@ public class DbModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(URL.class).annotatedWith(Names.named("HibernateConfig")).toProvider(HibernateConfigProvider.class);
         bind(ServiceRegistry.class).toProvider(ServiceRegistryProvider.class);
         bind(DbSessionService.class).to(DbSessionServiceImpl.class);
         bind(Session.class).toProvider(HibernateSessionProvider.class);
