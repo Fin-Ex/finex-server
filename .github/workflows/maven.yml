@@ -23,4 +23,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
+      env:
+        USER: ${{secrets.USER}}
+        TOKEN: ${{secrets.TOKEN}}
       run: mvn -B package -s $GITHUB_WORKSPACE/.github/workflows/settings.xml --file pom.xml
