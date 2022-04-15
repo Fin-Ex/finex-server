@@ -9,6 +9,9 @@ import java.util.regex.Pattern;
 import javax.inject.Singleton;
 
 /**
+ * Конфигуратор для {@code environments} сервера.
+ * Пример плэйсхолдера: ${USER_NAME}
+ *
  * @author finfan
  */
 @Singleton
@@ -16,6 +19,11 @@ public class EnvConfigurator {
 
     private static final Pattern PATTERN = Pattern.compile("\\$\\{([\\w\\d_]+)}");
 
+    /**
+     * Подменяет плэйсхолдеры на значения из {@code environments}.
+     * 
+     * @param configuration контейнер в котором хранятся подменяемые значения
+     */
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public void configure(Map<Object, Object> configuration) {
         configuration.entrySet().forEach(entry -> {
