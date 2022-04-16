@@ -40,7 +40,7 @@ public class Box2Tree {
     private int root;
 
     /**
-     * Create new BVH-bvh with {@link #DEFAULT_PRECISION default node precision}.
+     * Create new BVH-tree with {@link #DEFAULT_PRECISION default node precision}.
      * @param poolService pool service to create node pool
      * @param pooledObject pool configuration
      */
@@ -49,7 +49,7 @@ public class Box2Tree {
     }
 
     /**
-     * Create new BVH-bvh with specified node precision.
+     * Create new BVH-tree with specified node precision.
      *
      * @param precision node precision
      * @param poolService pool service to create node pool
@@ -61,9 +61,9 @@ public class Box2Tree {
     }
 
     /**
-     * Build BVH-bvh.
+     * Build BVH-tree.
      *
-     * @param elements bvh elements
+     * @param elements tree elements
      */
     public void build(Collection<Box2TreeElement> elements) {
         fastClear();
