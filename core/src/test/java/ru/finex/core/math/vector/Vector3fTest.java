@@ -53,8 +53,7 @@ public class Vector3fTest {
         Arguments.of(new Vector3f(Vector3f.UNIT_X), new Vector3f(Vector3f.UNIT_X_NEGATIVE), ExtMath.PI),
         Arguments.of(new Vector3f(Vector3f.UNIT_X), new Vector3f(Vector3f.UNIT_Y_NEGATIVE), ExtMath.HALF_PI),
         Arguments.of(new Vector3f(Vector3f.UNIT_X), new Vector3f(Vector3f.UNIT_Z_NEGATIVE), ExtMath.HALF_PI),
-        Arguments.of(new Vector3f(Vector3f.UNIT_XYZ), new Vector3f(Vector3f.UNIT_XYZ_NEGATIVE), ExtMath.PI),
-        Arguments.of(new Vector3f(Vector3f.UNIT_XYZ), new Vector3f(Vector3f.UNIT_X), 12),
+        Arguments.of(new Vector3f(Vector3f.UNIT_XYZ), new Vector3f(Vector3f.UNIT_XYZ_NEGATIVE), ExtMath.PI)
     };
 
     public static Arguments[] getRotateDirections() {
