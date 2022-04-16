@@ -10,7 +10,7 @@ import java.util.Collection;
 
 /**
  * Complex shape consisting of other shapes.
- * This shape doesnt build a tree to faster search and checks.
+ * This shape doesnt build a bvh to faster search and checks.
  *
  * @author m0nster.mind
  */
@@ -26,8 +26,8 @@ public class Complex3f implements Shape3 {
     }
 
     /**
-     * Return bounding box of this complex shape.
-     * @return bounding box
+     * Return bounding aabb of this complex shape.
+     * @return bounding aabb
      */
     public Box3f getBoundingBox() {
         if (boundingBox != null) {

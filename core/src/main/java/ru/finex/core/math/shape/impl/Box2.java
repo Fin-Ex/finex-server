@@ -5,7 +5,7 @@ import lombok.ToString;
 import ru.finex.core.math.vector.Vector3f;
 
 /**
- * Integer-based 2D box shape.
+ * Integer-based 2D aabb shape.
  *
  * @author m0nster.mind
  * @since wgp 29.08.2018
@@ -42,8 +42,8 @@ public class Box2 {
     }
 
     /**
-     * Copy box size & coordinates from other box to this box.
-     * @param box other box
+     * Copy aabb size & coordinates from other aabb to this aabb.
+     * @param box other aabb
      * @return this
      */
     public Box2 set(Box2 box) {
@@ -55,8 +55,8 @@ public class Box2 {
     }
 
     /**
-     * Copy box size & coordinates from other box to this box with specified precision.
-     * @param box other box
+     * Copy aabb size & coordinates from other aabb to this aabb with specified precision.
+     * @param box other aabb
      * @param precision precision
      * @return this
      */
@@ -69,7 +69,7 @@ public class Box2 {
     }
 
     /**
-     * The box width.
+     * The aabb width.
      * @return width
      */
     public int getWidth() {
@@ -77,7 +77,7 @@ public class Box2 {
     }
 
     /**
-     * The box height.
+     * The aabb height.
      * @return height
      */
     public int getHeight() {
@@ -85,19 +85,19 @@ public class Box2 {
     }
 
     /**
-     * Test this box to contain specified point inside.
+     * Test this aabb to contain specified point inside.
      * @param x x-axis coordinate of point
      * @param y y-axis coordinate of point
-     * @return true if this box contain specified point inside, otherwise false
+     * @return true if this aabb contain specified point inside, otherwise false
      */
     public boolean contains(int x, int y) {
         return x >= xmin && x <= xmax && y >= ymin && y <= ymax;
     }
 
     /**
-     * Test this box to intersect other box.
-     * @param box other box
-     * @return true if this box intersect other box, otherwise false
+     * Test this aabb to intersect other aabb.
+     * @param box other aabb
+     * @return true if this aabb intersect other aabb, otherwise false
      */
     public boolean intersects(Box2 box) {
         return box.xmax >= xmin && box.xmin <= xmax &&
@@ -105,25 +105,23 @@ public class Box2 {
     }
 
     /**
-     * Test box to intersect circle.
+     * Test aabb to intersect circle.
      * @param x x-axis coordinate circle center point
      * @param y y-axis coordinate circle center point
      * @param radius circle radius
-     * @return true if box intersect circle, otherwise false
+     * @return true if aabb intersect circle, otherwise false
      */
     public boolean intersects(int x, int y, int radius) {
         final long sqRadius = radius * radius;
-
-        return isInside(x, y, xmin, ymin, sqRadius) || isInside(x, y, xmin, ymax, sqRadius) ||
-            isInside(x, y, xmax, ymin, sqRadius) || isInside(x, y, xmax, ymax, sqRadius);
+        return internalIntersects(x, y, sqRadius);
     }
 
     /**
-     * Test box to intersect circle.
+     * Test aabb to intersect circle.
      * @param x x-axis coordinate circle center point
      * @param y y-axis coordinate circle center point
      * @param sqRadius squared radius
-     * @return true if box intersect circle, otherwise false
+     * @return true if aabb intersect circle, otherwise false
      */
     public boolean internalIntersects(int x, int y, long sqRadius) {
         return isInside(x, y, xmin, ymin, sqRadius) || isInside(x, y, xmin, ymax, sqRadius) ||
@@ -137,8 +135,8 @@ public class Box2 {
     }
 
     /**
-     * Expand box to encapsulate a full other box.
-     * @param other other box
+     * Expand aabb to encapsulate a full other aabb.
+     * @param other other aabb
      */
     public void union(Box2 other) {
         xmin = Math.min(xmin, other.xmin);
@@ -149,8 +147,8 @@ public class Box2 {
 
     /**
      * Union two boxes into one.
-     * @param b1 first box
-     * @param b2 second box
+     * @param b1 first aabb
+     * @param b2 second aabb
      * @return union of boxes
      */
     public static Box2 union(Box2 b1, Box2 b2) {
@@ -163,7 +161,7 @@ public class Box2 {
     }
 
     /**
-     * Expand box to encapsulate specified point.
+     * Expand aabb to encapsulate specified point.
      * @param x x-axis coordinate point
      * @param y y-axis coordinate point
      */
@@ -175,7 +173,7 @@ public class Box2 {
     }
 
     /**
-     * Expand box by specified value on each side.
+     * Expand aabb by specified value on each side.
      * @param xExtents x-axis expand value
      * @param yExtents y-axis expand value
      */
@@ -187,7 +185,7 @@ public class Box2 {
     }
 
     /**
-     * Move box left-upper corner to specified point.
+     * Move aabb left-upper corner to specified point.
      * @param x x-axis coordinate of point
      * @param y y-axis coordinate of point
      */
@@ -199,7 +197,7 @@ public class Box2 {
     }
 
     /**
-     * Move box center to specified point.
+     * Move aabb center to specified point.
      * @param x x-axis coordinate of point
      * @param y y-axis coordinate of point
      */
@@ -213,27 +211,27 @@ public class Box2 {
     }
 
     /**
-     * Move box center to specified point.
+     * Move aabb center to specified point.
      * @param point point
-     * @param precision box precision
+     * @param precision aabb precision
      */
     public void moveCenter(Vector3f point, int precision) {
         moveCenter((int) (point.getX() * precision), (int) (point.getZ() * precision));
     }
 
     /**
-     * Compare this box and other box by X-axis.
-     * @param o other box
-     * @return -1 if this box is less, +1 if this box is greater, otherwise 0
+     * Compare this aabb and other aabb by X-axis.
+     * @param o other aabb
+     * @return -1 if this aabb is less, +1 if this aabb is greater, otherwise 0
      */
     public int compareX(Box2 o) {
         return Integer.compare(xmin, o.xmin);
     }
 
     /**
-     * Compare this box and other box by Y-axis.
-     * @param o other box
-     * @return -1 if this box is less, +1 if this box is greater, otherwise 0
+     * Compare this aabb and other aabb by Y-axis.
+     * @param o other aabb
+     * @return -1 if this aabb is less, +1 if this aabb is greater, otherwise 0
      */
     public int compareY(Box2 o) {
         return Integer.compare(ymin, o.ymin);

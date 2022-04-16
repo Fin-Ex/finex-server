@@ -97,7 +97,7 @@ public class Circle2f implements Shape2, Cloneable {
 
     /**
      * Create a new {@link Box2f} with circle bounding.
-     * @return box
+     * @return aabb
      */
     public Box2f toBox2f() {
         float minX = center.getX() - radius;

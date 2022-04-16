@@ -52,7 +52,7 @@ public class Box3f implements Shape3, Cloneable {
     }
 
     /**
-     * The box width.
+     * The aabb width.
      * @return width
      */
     public float getWidth() {
@@ -60,7 +60,7 @@ public class Box3f implements Shape3, Cloneable {
     }
 
     /**
-     * The box height.
+     * The aabb height.
      * @return height
      */
     public float getHeight() {
@@ -68,7 +68,7 @@ public class Box3f implements Shape3, Cloneable {
     }
 
     /**
-     * The box depth.
+     * The aabb depth.
      * @return depth
      */
     public float getDepth() {
@@ -76,7 +76,7 @@ public class Box3f implements Shape3, Cloneable {
     }
 
     /**
-     * Expand box to encapsulate specified point.
+     * Expand aabb to encapsulate specified point.
      * @param x x-axis coordinate point
      * @param y y-axis coordinate point
      * @param z z-axis coordinate point
@@ -91,7 +91,7 @@ public class Box3f implements Shape3, Cloneable {
     }
 
     /**
-     * Expand box to encapsulate specified point.
+     * Expand aabb to encapsulate specified point.
      * @param point point
      */
     public void encapsulate(Vector3f point) {
@@ -99,11 +99,11 @@ public class Box3f implements Shape3, Cloneable {
     }
 
     /**
-     * Test this box to contain specified point inside.
+     * Test this aabb to contain specified point inside.
      * @param x x-axis coordinate of point
      * @param y y-axis coordinate of point
      * @param z z-axis coordinate of point
-     * @return true if this box contain specified point inside, otherwise false
+     * @return true if this aabb contain specified point inside, otherwise false
      */
     @Override
     public boolean contains(float x, float y, float z) {
@@ -111,9 +111,9 @@ public class Box3f implements Shape3, Cloneable {
     }
 
     /**
-     * Test this box to contain specified point inside.
+     * Test this aabb to contain specified point inside.
      * @param point point
-     * @return true if this box contain specified point inside, otherwise false
+     * @return true if this aabb contain specified point inside, otherwise false
      */
     @Override
     public boolean contains(Vector3f point) {
@@ -121,19 +121,19 @@ public class Box3f implements Shape3, Cloneable {
     }
 
     /**
-     * Test this box to intersect line (line segment).
+     * Test this aabb to intersect line (line segment).
      * @param startPoint start point of line
      * @param endPoint end point of line
-     * @return true if this box intersect line, otherwise false
+     * @return true if this aabb intersect line, otherwise false
      */
     @SuppressWarnings("checkstyle:MagicNumber")
     public boolean intersects(Vector3f startPoint, Vector3f endPoint) {
-        // center of the box
+        // center of the aabb
         float bcx = (xmin + xmax) * 0.5f;
         float bcy = (ymin + ymax) * 0.5f;
         float bcz = (zmin + zmax) * 0.5f;
 
-        // box half extents
+        // aabb half extents
         float bex = xmax - bcx;
         float bey = ymax - bcy;
         float bez = zmax - bcz;
@@ -180,9 +180,9 @@ public class Box3f implements Shape3, Cloneable {
     }
 
     /**
-     * Test this box to intersect other box.
-     * @param box other box
-     * @return true if this box intersect other box, otherwise false
+     * Test this aabb to intersect other aabb.
+     * @param box other aabb
+     * @return true if this aabb intersect other aabb, otherwise false
      */
     public boolean intersects(Box3f box) {
         return xmin <= box.xmin && xmax >= box.xmin &&
@@ -191,12 +191,12 @@ public class Box3f implements Shape3, Cloneable {
     }
 
     /**
-     * Test box to intersect sphere.
+     * Test aabb to intersect sphere.
      * @param x x-axis coordinate sphere center point
      * @param y y-axis coordinate sphere center point
      * @param z z-axis coordinate sphere center point
      * @param radius circle radius
-     * @return true if box intersect sphere, otherwise false
+     * @return true if aabb intersect sphere, otherwise false
      */
     public boolean intersects(float x, float y, float z, float radius) {
         float bx = ExtMath.clamp(x, xmin, xmax);
@@ -207,14 +207,14 @@ public class Box3f implements Shape3, Cloneable {
         double dy = by - y;
         double dz = bz - z;
 
-        return Math.sqrt(dx * dx + dy * dy + dz * dz) < radius || contains(x, y, z); // intersects or inside box
+        return Math.sqrt(dx * dx + dy * dy + dz * dz) < radius || contains(x, y, z); // intersects or inside aabb
     }
 
     /**
-     * Test box to intersect sphere.
+     * Test aabb to intersect sphere.
      * @param position point of sphere center
      * @param radius circle radius
-     * @return true if box intersect sphere, otherwise false
+     * @return true if aabb intersect sphere, otherwise false
      */
     public boolean intersects(Vector3f position, float radius) {
         return intersects(position.getX(), position.getY(), position.getZ(), radius);
@@ -247,7 +247,7 @@ public class Box3f implements Shape3, Cloneable {
     }
 
     /**
-     * Move box center to specified point.
+     * Move aabb center to specified point.
      * @param x x-axis coordinate of point
      * @param y y-axis coordinate of point
      * @param z z-axis coordinate of point
@@ -267,6 +267,15 @@ public class Box3f implements Shape3, Cloneable {
     @Override
     public void moveCenter(Vector3f point) {
         moveCenter(point.getX(), point.getY(), point.getZ());
+    }
+
+    /**
+     * Create new {@link Box3} and copy size and coordinates from this AABB with specified precision.
+     * @param precision precision
+     * @return Box3
+     */
+    public Box3 toBox3(int precision) {
+        return new Box3(this, precision);
     }
 
     @Override

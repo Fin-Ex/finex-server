@@ -1,4 +1,4 @@
-package ru.finex.core.math.tree;
+package ru.finex.core.math.bvh.aabb;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -23,7 +23,7 @@ import java.util.Queue;
  * @author m0nster.mind
  */
 @SuppressWarnings("checkstyle:InnerAssignment")
-public class BVHTree {
+public class Box2Tree {
 
     public static final int DEFAULT_PRECISION = 100;
 
@@ -40,32 +40,32 @@ public class BVHTree {
     private int root;
 
     /**
-     * Create new BVH-tree with {@link #DEFAULT_PRECISION default node precision}.
+     * Create new BVH-bvh with {@link #DEFAULT_PRECISION default node precision}.
      * @param poolService pool service to create node pool
      * @param pooledObject pool configuration
      */
-    public BVHTree(PoolService poolService, PooledObject pooledObject) {
+    public Box2Tree(PoolService poolService, PooledObject pooledObject) {
         this(DEFAULT_PRECISION, poolService, pooledObject);
     }
 
     /**
-     * Create new BVH-tree with specified node precision.
+     * Create new BVH-bvh with specified node precision.
      *
      * @param precision node precision
      * @param poolService pool service to create node pool
      * @param pooledObject pool configuration
      */
-    public BVHTree(int precision, PoolService poolService, PooledObject pooledObject) {
+    public Box2Tree(int precision, PoolService poolService, PooledObject pooledObject) {
         this.precision = precision;
         localNodePool = ThreadLocal.withInitial(() -> poolService.createDynamicPool(Node.class, pooledObject));
     }
 
     /**
-     * Build BVH-tree.
+     * Build BVH-bvh.
      *
-     * @param elements tree elements
+     * @param elements bvh elements
      */
-    public void build(Collection<BVHTreeElement> elements) {
+    public void build(Collection<Box2TreeElement> elements) {
         fastClear();
 
         count = elements.size();
@@ -75,14 +75,14 @@ public class BVHTree {
 
         resize((count << 1) - 1);
 
-        Iterator<BVHTreeElement> shapeIterator = elements.iterator();
+        Iterator<Box2TreeElement> shapeIterator = elements.iterator();
         try {
             for (int i = 0; i < count; i++) {
                 Node node = nodes[i];
 
-                BVHTreeElement shapeComponent = shapeIterator.next();
+                Box2TreeElement shapeComponent = shapeIterator.next();
                 node.value = shapeComponent.getId();
-                node.box.set(shapeComponent.getBoundingBox().toBox2(precision));
+                node.box.set(shapeComponent.getBoundingBox(), precision);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -234,9 +234,9 @@ public class BVHTree {
     }
 
     /**
-     * Query to search all objects in specified box space.
+     * Query to search all objects in specified aabb space.
      *
-     * @param box box
+     * @param box aabb
      * @return search result - object ID's
      */
     public IntList queryBox(Box2f box) {

@@ -42,7 +42,7 @@ public class Box2f implements Shape2, Cloneable {
     }
 
     /**
-     * The box width.
+     * The aabb width.
      * @return width
      */
     public float getWidth() {
@@ -50,7 +50,7 @@ public class Box2f implements Shape2, Cloneable {
     }
 
     /**
-     * The box height.
+     * The aabb height.
      * @return height
      */
     public float getHeight() {
@@ -58,10 +58,10 @@ public class Box2f implements Shape2, Cloneable {
     }
 
     /**
-     * Test this box to contain specified point inside.
+     * Test this aabb to contain specified point inside.
      * @param x x-axis coordinate of point
      * @param y y-axis coordinate of point
-     * @return true if this box contain specified point inside, otherwise false
+     * @return true if this aabb contain specified point inside, otherwise false
      */
     @Override
     public boolean contains(float x, float y) {
@@ -69,9 +69,9 @@ public class Box2f implements Shape2, Cloneable {
     }
 
     /**
-     * Test this box to contain specified point inside.
+     * Test this aabb to contain specified point inside.
      * @param point point
-     * @return true if this box contain specified point inside, otherwise false
+     * @return true if this aabb contain specified point inside, otherwise false
      */
     @Override
     public boolean contains(Vector2f point) {
@@ -79,9 +79,9 @@ public class Box2f implements Shape2, Cloneable {
     }
 
     /**
-     * Test this box to contain specified point inside.
+     * Test this aabb to contain specified point inside.
      * @param point point
-     * @return true if this box contain specified point inside, otherwise false
+     * @return true if this aabb contain specified point inside, otherwise false
      */
     @Override
     public boolean contains(Vector3f point) {
@@ -89,11 +89,11 @@ public class Box2f implements Shape2, Cloneable {
     }
 
     /**
-     * Test box to intersect circle.
+     * Test aabb to intersect circle.
      * @param x x-axis coordinate circle center point
      * @param y y-axis coordinate circle center point
      * @param radius circle radius
-     * @return true if box intersect circle, otherwise false
+     * @return true if aabb intersect circle, otherwise false
      */
     public boolean intersects(float x, float y, float radius) {
         final float sqRadius = radius * radius;
@@ -103,10 +103,10 @@ public class Box2f implements Shape2, Cloneable {
     }
 
     /**
-     * Test box to intersect circle.
+     * Test aabb to intersect circle.
      * @param position point of circle center
      * @param radius circle radius
-     * @return true if box intersect circle, otherwise false
+     * @return true if aabb intersect circle, otherwise false
      */
     public boolean intersects(Vector2f position, float radius) {
         return intersects(position.getX(), position.getY(), radius);
@@ -142,8 +142,8 @@ public class Box2f implements Shape2, Cloneable {
     }
 
     /**
-     * Expand box to encapsulate a full other box.
-     * @param other other box
+     * Expand aabb to encapsulate a full other aabb.
+     * @param other other aabb
      */
     public void union(Box2f other) {
         xmin = Math.min(xmin, other.xmin);
@@ -154,8 +154,8 @@ public class Box2f implements Shape2, Cloneable {
 
     /**
      * Union two boxes into one.
-     * @param b1 first box
-     * @param b2 second box
+     * @param b1 first aabb
+     * @param b2 second aabb
      * @return union of boxes
      */
     public static Box2f union(Box2f b1, Box2f b2) {
@@ -168,7 +168,7 @@ public class Box2f implements Shape2, Cloneable {
     }
 
     /**
-     * Expand box to encapsulate specified point.
+     * Expand aabb to encapsulate specified point.
      * @param x x-axis coordinate point
      * @param y y-axis coordinate point
      */
@@ -180,7 +180,7 @@ public class Box2f implements Shape2, Cloneable {
     }
 
     /**
-     * Expand box to encapsulate specified point.
+     * Expand aabb to encapsulate specified point.
      * @param point point
      */
     public void encapsulate(Vector2f point) {
@@ -188,7 +188,7 @@ public class Box2f implements Shape2, Cloneable {
     }
 
     /**
-     * Expand box to encapsulate specified point.
+     * Expand aabb to encapsulate specified point.
      * @param point point
      */
     public void encapsulate(Vector3f point) {
@@ -196,7 +196,7 @@ public class Box2f implements Shape2, Cloneable {
     }
 
     /**
-     * Expand box by specified value on each side.
+     * Expand aabb by specified value on each side.
      * @param xExtents x-axis expand value
      * @param yExtents y-axis expand value
      */
@@ -208,7 +208,7 @@ public class Box2f implements Shape2, Cloneable {
     }
 
     /**
-     * Move box left-upper corner to specified point.
+     * Move aabb left-upper corner to specified point.
      * @param x x-axis coordinate of point
      * @param y y-axis coordinate of point
      */
@@ -220,7 +220,7 @@ public class Box2f implements Shape2, Cloneable {
     }
 
     /**
-     * Move box left-upper corner to specified point.
+     * Move aabb left-upper corner to specified point.
      * @param point point
      */
     public void move(Vector2f point) {
@@ -228,7 +228,7 @@ public class Box2f implements Shape2, Cloneable {
     }
 
     /**
-     * Move box left-upper corner to specified point.
+     * Move aabb left-upper corner to specified point.
      * @param point point
      */
     public void move(Vector3f point) {
@@ -236,7 +236,7 @@ public class Box2f implements Shape2, Cloneable {
     }
 
     /**
-     * Move box center to specified point.
+     * Move aabb center to specified point.
      * @param x x-axis coordinate of point
      * @param y y-axis coordinate of point
      */
@@ -250,7 +250,7 @@ public class Box2f implements Shape2, Cloneable {
     }
 
     /**
-     * Move box center to specified point.
+     * Move aabb center to specified point.
      * @param point point
      */
     @Override
@@ -259,7 +259,7 @@ public class Box2f implements Shape2, Cloneable {
     }
 
     /**
-     * Move box center to specified point.
+     * Move aabb center to specified point.
      * @param point point
      */
     @Override
@@ -268,26 +268,25 @@ public class Box2f implements Shape2, Cloneable {
     }
 
     /**
-     * Compare this box and other box by X-axis.
-     * @param o other box
-     * @return -1 if this box is less, +1 if this box is greater, otherwise 0
+     * Compare this aabb and other aabb by X-axis.
+     * @param o other aabb
+     * @return -1 if this aabb is less, +1 if this aabb is greater, otherwise 0
      */
     public int compareX(Box2f o) {
         return Float.compare(xmin, o.xmin);
     }
 
     /**
-     * Compare this box and other box by X-axis.
-     * @param o other box
-     * @return -1 if this box is less, +1 if this box is greater, otherwise 0
+     * Compare this aabb and other aabb by X-axis.
+     * @param o other aabb
+     * @return -1 if this aabb is less, +1 if this aabb is greater, otherwise 0
      */
     public int compareY(Box2f o) {
         return Float.compare(ymin, o.ymin);
     }
 
     /**
-     * Create new {@link Box2} and copy size and coordinates from this box
-     *  with specified precision.
+     * Create new {@link Box2} and copy size and coordinates from this AABB with specified precision.
      * @param precision precision
      * @return Box2
      */

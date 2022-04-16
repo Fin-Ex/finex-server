@@ -121,8 +121,8 @@ public class Polygon3f implements Shape3, Cloneable {
     }
 
     /**
-     * Return box with this polygon encapsulate (polygon AABB).
-     * @return box
+     * Return aabb with this polygon encapsulate (polygon AABB).
+     * @return aabb
      */
     public Box3f getBox() {
         if (box == null) {
