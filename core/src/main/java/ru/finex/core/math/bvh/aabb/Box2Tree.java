@@ -2,6 +2,7 @@ package ru.finex.core.math.bvh.aabb;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import lombok.ToString;
 import org.apache.commons.pool2.ObjectPool;
 import ru.finex.core.math.shape.Shape;
 import ru.finex.core.math.shape.impl.Box2;
@@ -20,6 +21,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
+ * 2D AABB-tree.
+ *
  * @author m0nster.mind
  */
 @SuppressWarnings("checkstyle:InnerAssignment")
@@ -88,10 +91,10 @@ public class Box2Tree {
             throw new RuntimeException(e);
         }
 
-        root = bindNodes(0, count);
+        root = bindNodes(-1, 0, count);
     }
 
-    private int bindNodes(int start, int end) {
+    private int bindNodes(int parent, int start, int end) {
         int remains = end - start;
         if (remains == 1) { // leaf
             leafs++;
@@ -100,6 +103,8 @@ public class Box2Tree {
 
         int index = count++;
         Node node = nodes[index];
+        node.parent = parent;
+
         Box2 box = calculateBox(node, start, end);
 
         int width = box.getWidth();
@@ -108,8 +113,8 @@ public class Box2Tree {
 
         int divider = start + remains / 2;
 
-        node.left = bindNodes(start, divider);
-        node.right = bindNodes(divider, end);
+        node.left = bindNodes(index, start, divider);
+        node.right = bindNodes(index, divider, end);
 
         return index;
     }
@@ -124,7 +129,94 @@ public class Box2Tree {
     }
 
     /**
-     * Clear BVH.
+     * Insert a new element to tree.
+     * Each insertion operation makes tree is more unbalanced.
+     *
+     * @param element tree element
+     */
+    public void insert(Box2TreeElement element) {
+        count += 2; // leaf and branch
+        resize(count);
+
+        Node leafNode = nodes[count - 1];
+        leafNode.box.set(element.getBoundingBox(), precision);
+
+        Node branchNode = nodes[count - 2];
+        branchNode.right = count - 1;
+        branchNode.box.set(leafNode.box);
+
+        if (count == 2) { // tree is empty
+            root = 0;
+            return;
+        }
+
+        // find node split candidate
+        int candidateIndex = findCandidate(leafNode.box);
+        if (candidateIndex == -1) {
+            candidateIndex = root;
+        }
+
+        // replace candidate node to new branch node
+        Node candidate = nodes[candidateIndex];
+        branchNode.box.union(candidate.box);
+        branchNode.parent = candidate.parent;
+        branchNode.left = candidateIndex;
+        candidate.parent = count - 2;
+
+        // resize all parents
+        for (int index = candidate.parent; index != -1; ) {
+            Node node = nodes[index];
+            node.box.union(branchNode.box);
+            index = node.parent;
+        }
+    }
+
+    private int findCandidate(Box2 box) {
+        int candidateIndex = -1;
+
+        Queue<Integer> awaitNodes = new LinkedList<>();
+        awaitNodes.offer(root);
+
+        for (Integer index = awaitNodes.poll(); index != null; index = awaitNodes.poll()) {
+            Node node = nodes[index];
+
+            boolean isHit = node.box.intersects(box);
+            boolean isLeaf = node.left == -1 && node.right == -1;
+
+            if (isHit && isLeaf) {
+                return index;
+            }
+
+            if (isHit) {
+                int left = node.left;
+                if (left != -1) {
+                    awaitNodes.offer(left);
+                }
+
+                int right = node.right;
+                if (right != -1) {
+                    awaitNodes.offer(right);
+                }
+            }
+
+            if (candidateIndex == -1) {
+                candidateIndex = index;
+            } else {
+                // search smaller candidate
+                Node candidate = nodes[candidateIndex];
+                int avgBoxSize = (candidate.box.getHeight() + candidate.box.getWidth()) / 2;
+                int nAvgBoxSize = (node.box.getHeight() + candidate.box.getWidth()) / 2;
+                if (nAvgBoxSize < avgBoxSize) {
+                    candidateIndex = index;
+                }
+            }
+        }
+
+        return candidateIndex;
+    }
+
+    /**
+     * Clear tree.
      * Reset all indices and return nodes into pool.
      */
     public void clear() {
@@ -276,9 +368,11 @@ public class Box2Tree {
     }
 
     @SuppressWarnings("checkstyle:VisibilityModifier")
+    @ToString
     public static class Node implements Cleanable {
         public final Box2 box = new Box2();
         public int value;
+        public int parent = -1;
         public int left = -1;
         public int right = -1;
 
@@ -289,7 +383,7 @@ public class Box2Tree {
         public void clear() {
             box.xmax = box.ymax = box.xmin = box.ymin = 0;
             value = 0;
-            left = right = -1;
+            parent = left = right = -1;
         }
     }
 
