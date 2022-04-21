@@ -41,6 +41,10 @@ public class TransactionalContext {
         return ctx;
     }
 
+    public static void set(TransactionalContext ctx) {
+        LOCAL.set(ctx);
+    }
+
     void putSession(Session session) {
         sessionStack.addFirst(session);
     }

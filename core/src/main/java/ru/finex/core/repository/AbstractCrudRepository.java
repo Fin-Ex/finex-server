@@ -23,10 +23,10 @@ import javax.inject.Named;
 @Slf4j
 public abstract class AbstractCrudRepository<T extends Entity<ID>, ID extends Serializable> implements CrudRepository<T, ID> {
 
-    protected final Class<T> entityClass = GenericUtils.getGenericType(getClass(), 0);
+    protected Class<T> entityClass = GenericUtils.getGenericType(getClass(), 0);
 
     @Inject
-    @Named("Service")
+    @Named("RepositoryExecutor")
     protected ExecutorService executorService;
 
     @Override

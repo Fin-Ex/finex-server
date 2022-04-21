@@ -1,15 +1,13 @@
 package ru.finex.ws.repository;
 
-import com.google.inject.ImplementedBy;
 import ru.finex.core.repository.CrudRepository;
+import ru.finex.core.repository.NamedQuery;
 import ru.finex.core.repository.RepositoryFuture;
 import ru.finex.ws.model.entity.GameObjectPrototype;
-import ru.finex.ws.repository.impl.GameObjectPrototypeRepositoryImpl;
 
 /**
  * @author finfan
  */
-@ImplementedBy(GameObjectPrototypeRepositoryImpl.class)
 public interface GameObjectPrototypeRepository extends CrudRepository<GameObjectPrototype, Integer> {
 
     /**
@@ -17,6 +15,7 @@ public interface GameObjectPrototypeRepository extends CrudRepository<GameObject
      * @param name prototype name
      * @return future
      */
+    @NamedQuery
     RepositoryFuture<GameObjectPrototype> findByNameAsync(String name);
 
     /**
@@ -24,6 +23,7 @@ public interface GameObjectPrototypeRepository extends CrudRepository<GameObject
      * @param name prototype name
      * @return prototype
      */
+    @NamedQuery
     GameObjectPrototype findByName(String name);
 
 }

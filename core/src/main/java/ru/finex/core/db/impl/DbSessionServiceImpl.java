@@ -6,12 +6,18 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl;
+import org.hibernate.boot.spi.XmlMappingBinderAccess;
 import org.hibernate.service.ServiceRegistry;
+import org.reflections.scanners.Scanners;
 import ru.finex.core.GlobalContext;
 import ru.finex.core.db.DbSessionService;
 import ru.finex.core.model.entity.Entity;
 import ru.finex.evolution.MigrationService;
 
+import java.util.Collection;
+import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -21,6 +27,7 @@ import javax.inject.Singleton;
 @Singleton
 public class DbSessionServiceImpl implements DbSessionService {
 
+    private static final Pattern MAPPING_FILE = Pattern.compile("^mappings/[\\w\\d_-]+.xml$");
     private static final String EVO_AUTO_ROLLBACK = "--evo-auto-rollback";
 
     @Getter
@@ -33,6 +40,19 @@ public class DbSessionServiceImpl implements DbSessionService {
 
         MetadataSources metaSrc = new MetadataSources(serviceRegistry);
         GlobalContext.reflections.getSubTypesOf(Entity.class).forEach(metaSrc::addAnnotatedClass);
+
+        // load xml queries and mappings
+        XmlMappingBinderAccess binder = metaSrc.getXmlMappingBinderAccess();
+        Set<String> mappings = GlobalContext.reflections.get(ctx -> ctx.get(Scanners.Resources.index()).values()
+                .stream()
+                .flatMap(Collection::stream)
+                .filter(e -> MAPPING_FILE.matcher(e).matches())
+                .collect(Collectors.toSet())
+        );
+        mappings.stream()
+            .map(e -> getClass().getClassLoader().getResource(e))
+            .map(binder::bind)
+            .forEach(metaSrc::addXmlBinding);
 
         Metadata metadata = metaSrc.getMetadataBuilder()
             .applyImplicitNamingStrategy(ImplicitNamingStrategyJpaCompliantImpl.INSTANCE)

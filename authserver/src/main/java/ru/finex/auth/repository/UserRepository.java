@@ -1,14 +1,12 @@
 package ru.finex.auth.repository;
 
-import com.google.inject.ImplementedBy;
 import ru.finex.auth.model.entity.UserEntity;
-import ru.finex.auth.repository.impl.UserRepositoryImpl;
 import ru.finex.core.repository.CrudRepository;
+import ru.finex.core.repository.NamedQuery;
 
 /**
  * @author m0nster.mind
  */
-@ImplementedBy(UserRepositoryImpl.class)
 public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
     /**
@@ -16,19 +14,22 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
      * @param login login name
      * @return user or null if not exists
      */
+    @NamedQuery
     UserEntity findByLogin(String login);
 
     /**
      * Clear user TOTP secret.
-     * @param id user ID
+     * @param userId user ID
      */
-    void clearSecret(Long id);
+    @NamedQuery
+    void clearSecret(Long userId);
 
     /**
      * Check users secret to null.
      * @param login users login
      * @return true if users secret not null, otherwise false
      */
+    @NamedQuery
     boolean isSecretNotNull(String login);
 
 }
