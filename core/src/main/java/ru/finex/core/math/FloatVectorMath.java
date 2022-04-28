@@ -35,13 +35,13 @@ public class FloatVectorMath {
     }
 
     /**
-     * Calculate cross product between v1 and v2 float vectors (128bit).
+     * Calculate wedge product between v1 and v2 float vectors (128bit).
      * Four dimension version.
      * @param v1 first vector
      * @param v2 second vector
      * @return result vector
      */
-    public static FloatVector cross128fd(FloatVector v1, FloatVector v2) {
+    public static FloatVector wedge128fd(FloatVector v1, FloatVector v2) {
         // x = w1*x2 + x1*w2 + y1*z2 - z1*y2
         // y = w1*y2 + y1*w2 + z1*x2 - x1*z2
         // z = w1*z2 + z1*w2 + x1*y2 - y1*x2

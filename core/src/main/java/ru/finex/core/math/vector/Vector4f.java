@@ -472,7 +472,7 @@ public class Vector4f implements MathVector, Cloneable {
      * @return result changed vector.
      */
     public Vector4f cross(Vector4f vector, Vector4f result) {
-        FloatVectorMath.cross128fd(floatVector(), vector.floatVector())
+        FloatVectorMath.wedge128fd(floatVector(), vector.floatVector())
             .intoArray(result.components, 0);
 
         return result;
@@ -485,7 +485,7 @@ public class Vector4f implements MathVector, Cloneable {
      * @return float vector (128bit)
      */
     public FloatVector cross(Vector4f vector) {
-        return FloatVectorMath.cross128fd(floatVector(), vector.floatVector());
+        return FloatVectorMath.wedge128fd(floatVector(), vector.floatVector());
     }
 
     /**
