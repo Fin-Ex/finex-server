@@ -63,7 +63,13 @@ public class Vector4fTest {
 
     @Test
     public void crossTest() {
-        // TODO oracle: research and develop this test
+        Vector4f x = new Vector4f(2f, 3f, 1f, 5f);
+        Vector4f y = new Vector4f(1f, 4f, 2f, 6f);
+
+        Vector4f xy = new Vector4f();
+        x.cross(y, xy);
+
+        assertEquals(new Vector4f(19f, 35f, 21f, 14f), xy, 0.001f);
     }
 
     @Test
