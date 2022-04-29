@@ -23,6 +23,7 @@ public class RedissonConfigProvider implements Provider<Config> {
             .setAddress(clusterConfig.getRedisAddress())
             .setUsername(clusterConfig.getUsername())
             .setPassword(clusterConfig.getPassword())
+            .setDatabase(clusterConfig.getDatabase())
             .setConnectionPoolSize(clusterConfig.getNetwork().getConnectionPoolSize())
             .setConnectionMinimumIdleSize(clusterConfig.getNetwork().getConnectionMinimumIdleSize())
             .setDnsMonitoringInterval(clusterConfig.getDnsMonitoringInterval())

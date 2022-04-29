@@ -308,9 +308,42 @@ public class Polygon3f implements Shape3, Cloneable {
         return dotProduct > EPSILON_CWW;
     }
 
+    @SuppressWarnings("checkstyle:ReturnCount")
     @Override
     public boolean intersects(Shape shape) {
-        //FIXME: xxx mangol
+        if (shape instanceof Box3f box) {
+            Box3f boundingBox = getBox();
+            if (!box.intersects(boundingBox)) {
+                return false;
+            }
+
+            for (int i = 0; i < vertices.length; i++) {
+                Vector3f vertex = vertices[i];
+                Vector3f prevVertex = vertices[i == 0 ? vertices.length - 1 : i - 1];
+
+                if (box.intersects(prevVertex, vertex)) {
+                    return true;
+                }
+            }
+
+        } else if (shape instanceof Sphere3f sphere) {
+            Box3f boundingBox = getBox();
+            if (!boundingBox.intersects(sphere)) {
+                return false;
+            }
+
+            for (int i = 0; i < vertices.length; i++) {
+                Vector3f vertex = vertices[i];
+                Vector3f prevVertex = vertices[i == 0 ? vertices.length - 1 : i - 1];
+
+                if (sphere.intersects(prevVertex, vertex)) {
+                    return true;
+                }
+            }
+        } else {
+            throw new RuntimeException("Unimplemented");
+        }
+
         return false;
     }
 

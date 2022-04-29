@@ -30,15 +30,7 @@ public class PacketServiceImpl implements PacketService {
     private final Map<Class<? extends NetworkDto>, PacketMetadata<PacketSerializer<?>>> outcomeDataTypeRegistry = new HashMap<>();
 
     public PacketServiceImpl() {
-        GlobalContext.reflections.getSubTypesOf(PacketDeserializer.class)
-            .stream()
-            .filter(this::filterPacket)
-            .forEach(this::saveDeserializer);
 
-        GlobalContext.reflections.getSubTypesOf(PacketSerializer.class)
-            .stream()
-            .filter(this::filterPacket)
-            .forEach(this::saveSerializer);
     }
 
     private boolean filterPacket(Class<?> type) {
@@ -47,16 +39,20 @@ public class PacketServiceImpl implements PacketService {
             !Modifier.isInterface(type.getModifiers());
     }
 
-    private void saveDeserializer(Class<? extends PacketDeserializer> type) {
+    @Override
+    public void saveDeserializer(PacketDeserializer<?> deserializer) {
+        Class<? extends PacketDeserializer> type = deserializer.getClass();
         IncomePacket metadata = type.getAnnotation(IncomePacket.class);
+        if (metadata == null) {
+            throw new RuntimeException("@IncomePacket at type '" + type.getCanonicalName() + "' not found!");
+        }
+
         int[] opcodes = getOpcodes(metadata.value());
         Class[] commands = Stream.of(metadata.command())
             .map(Cmd::value)
             .toArray(Class[]::new);
 
-        Class<? extends NetworkDto> dataType = GenericUtils.getInterfaceGenericType(type, PacketSerializer.class, 0);
-
-        PacketDeserializer<?> deserializer = GlobalContext.injector.getInstance(type);
+        Class<? extends NetworkDto> dataType = GenericUtils.getInterfaceGenericType(type, PacketDeserializer.class, 0);
         saveDeserializer(new PacketMetadata<>(opcodes, commands, dataType, deserializer));
     }
 
@@ -64,11 +60,16 @@ public class PacketServiceImpl implements PacketService {
         saveSerial(incomeRegistry, packetMetadata);
     }
 
-    private void saveSerializer(Class<? extends PacketSerializer> type) {
+    @Override
+    public void saveSerializer(PacketSerializer<?> serializer) {
+        Class<? extends PacketSerializer> type = serializer.getClass();
         OutcomePacket metadata = type.getAnnotation(OutcomePacket.class);
+        if (metadata == null) {
+            throw new RuntimeException("@OutcomePacket at type '" + type.getCanonicalName() + "' not found!");
+        }
+
         int[] opcodes = getOpcodes(metadata.value());
-        Class<? extends NetworkDto> dataType = GenericUtils.getInterfaceGenericType(type, PacketDeserializer.class, 0);
-        PacketSerializer<?> serializer = GlobalContext.injector.getInstance(type);
+        Class<? extends NetworkDto> dataType = GenericUtils.getInterfaceGenericType(type, PacketSerializer.class, 0);
 
         PacketMetadata<PacketSerializer<?>> packetMetadata = new PacketMetadata<>(opcodes, dataType, serializer);
         saveSerializer(packetMetadata);

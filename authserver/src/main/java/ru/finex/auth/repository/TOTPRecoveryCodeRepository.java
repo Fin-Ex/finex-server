@@ -1,14 +1,12 @@
 package ru.finex.auth.repository;
 
-import com.google.inject.ImplementedBy;
 import ru.finex.auth.model.entity.TOTPRecoveryCodeEntity;
-import ru.finex.auth.repository.impl.TOTPRecoveryCodeRepositoryImpl;
 import ru.finex.core.repository.CrudRepository;
+import ru.finex.core.repository.NamedQuery;
 
 /**
  * @author m0nster.mind
  */
-@ImplementedBy(TOTPRecoveryCodeRepositoryImpl.class)
 public interface TOTPRecoveryCodeRepository extends CrudRepository<TOTPRecoveryCodeEntity, Long> {
 
     /**
@@ -17,6 +15,7 @@ public interface TOTPRecoveryCodeRepository extends CrudRepository<TOTPRecoveryC
      * @param code code
      * @return true if code deleted, otherwise specified code doesnt exists
      */
+    @NamedQuery
     boolean deleteByUserIdAndCode(Long userId, String code);
 
     /**
@@ -24,6 +23,7 @@ public interface TOTPRecoveryCodeRepository extends CrudRepository<TOTPRecoveryC
      * @param userId user id
      * @return count of deleted records
      */
+    @NamedQuery
     int deleteByUserId(Long userId);
 
 }

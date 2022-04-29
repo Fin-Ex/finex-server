@@ -5,6 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.PooledObjectFactory;
 import ru.finex.core.GlobalContext;
+import ru.finex.core.placeholder.PlaceholderService;
 import ru.finex.core.pool.PoolConfiguration;
 import ru.finex.core.pool.PoolService;
 import ru.finex.core.pool.PooledObject;
@@ -15,15 +16,22 @@ import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author m0nster.mind
  */
+@Singleton
 public class PoolServiceImpl implements PoolService {
 
     private final Map<Class<?>, ObjectPool> pools = new HashMap<>();
+    private final PlaceholderService placeholderService;
 
-    public PoolServiceImpl() {
+    @Inject
+    public PoolServiceImpl(PlaceholderService placeholderService) {
+        this.placeholderService = placeholderService;
+
         GlobalContext.reflections.getTypesAnnotatedWith(PoolConfiguration.class)
             .stream()
             .map(type -> GlobalContext.injector.getInstance(type))
@@ -62,18 +70,22 @@ public class PoolServiceImpl implements PoolService {
         return typeAndPool;
     }
 
-    private void createDynamicPool(Class<?> pooledObjectType) {
-        PooledObject poolConfiguration = pooledObjectType.getDeclaredAnnotation(PooledObject.class);
+    @Override
+    public void unregisterPool(Class<?> type) {
+        pools.remove(type);
+    }
 
+    @Override
+    public <T> ObjectPool<T> createDynamicPool(Class<T> pooledObjectType, PooledObject pooledObject) {
         PooledObjectFactory<?> pooledObjectFactory;
-        if (poolConfiguration.factory() == SimplePooledObjectFactory.class) {
+        if (pooledObject.factory() == SimplePooledObjectFactory.class) {
             pooledObjectFactory = new SimplePooledObjectFactory(pooledObjectType);
         } else {
-            pooledObjectFactory = GlobalContext.injector.getInstance(poolConfiguration.factory());
+            pooledObjectFactory = GlobalContext.injector.getInstance(pooledObject.factory());
         }
 
-        int maxSize = poolConfiguration.maxSize();
-        int minSize = poolConfiguration.minSize();
+        int maxSize = placeholderService.evaluate(pooledObject.maxSize(), int.class);
+        int minSize = placeholderService.evaluate(pooledObject.minSize(), int.class);
         ArrayDequePool<?> pool = new ArrayDequePool(pooledObjectFactory, maxSize);
         try {
             for (int i = 0; i < minSize; i++) {
@@ -84,6 +96,12 @@ public class PoolServiceImpl implements PoolService {
         }
 
         registerPool(pooledObjectType, pool);
+        return (ObjectPool<T>) pool;
+    }
+
+    private <T> ObjectPool<T> createDynamicPool(Class<T> pooledObjectType) {
+        PooledObject poolConfiguration = pooledObjectType.getDeclaredAnnotation(PooledObject.class);
+        return createDynamicPool(pooledObjectType, poolConfiguration);
     }
 
     private Class<?> getPoolType(Method method) {
