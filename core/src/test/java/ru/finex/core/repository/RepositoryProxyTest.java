@@ -114,7 +114,7 @@ public class RepositoryProxyTest {
         );
 
         Long id = 11L;
-        proxy.testOp(id);
+        proxy.testOpAsync(id);
         verify(repository).asyncOperation(any());
     }
 
