@@ -220,13 +220,10 @@ public class Plane {
      * @return the distance.
      */
     public float distance(Vector3f point, Vector3f planePoint) {
-        // get delta
-        float dx = point.getX() - planePoint.getX();
-        float dy = point.getY() - planePoint.getY();
-        float dz = point.getZ() - planePoint.getZ();
-
-        // calculate dot product with delta and normal
-        return dx * normal.getX() + dy * normal.getY() + dz * normal.getZ();
+        return FloatVectorMath.dot128(
+            point.floatVector().sub(planePoint.floatVector()),
+            normal.floatVector()
+        );
     }
 
     /**
