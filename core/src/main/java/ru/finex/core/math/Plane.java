@@ -433,4 +433,117 @@ public class Plane {
     public String toString() {
         return "Plane(normal=" + normal + ", d=" + d + ")";
     }
+
+    /* Operator overriding */
+
+    /**
+     * Operator {@code +} for Plane.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #addLocal(Plane)
+     */
+    public Plane plus(Plane rhs) {
+        return addLocal(rhs);
+    }
+
+    /**
+     * Operator {@code +} for Vector3f.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #addLocal(Vector3f)
+     */
+    public Plane plus(Vector3f rhs) {
+        return addLocal(rhs);
+    }
+
+    /**
+     * Operator {@code -} for Plane.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #subtractLocal(Plane)
+     */
+    public Plane minus(Plane rhs) {
+        return subtractLocal(rhs);
+    }
+
+    /**
+     * Operator {@code -} for Vector3f.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #subtractLocal(Vector3f)
+     */
+    public Plane minus(Vector3f rhs) {
+        return subtractLocal(rhs);
+    }
+
+    /**
+     * Operator {@code *} for Vector2f.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #multLocal(Plane)
+     */
+    public Plane times(Plane rhs) {
+        return multLocal(rhs);
+    }
+
+    /**
+     * Operator {@code *} for Vector3f.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #multLocal(Vector3f)
+     */
+    public Plane times(Vector3f rhs) {
+        return multLocal(rhs);
+    }
+
+    /**
+     * Operator {@code *} for float.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #multLocal(float)
+     */
+    public Plane times(float rhs) {
+        return multLocal(rhs);
+    }
+
+    /**
+     * Operator {@code /} for Plane.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #divideLocal(Plane)
+     */
+    public Plane div(Plane rhs) {
+        return divideLocal(rhs);
+    }
+
+    /**
+     * Operator {@code /} for Vector3f.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #divideLocal(Vector3f)
+     */
+    public Plane div(Vector3f rhs) {
+        return divideLocal(rhs);
+    }
+
+    /**
+     * Operator {@code /} for float.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #divideLocal(float)
+     */
+    public Plane div(float rhs) {
+        return divideLocal(rhs);
+    }
+
 }
