@@ -69,7 +69,7 @@ public class Vector2fTest {
         Vector2f x = new Vector2f(Vector2f.UNIT_X);
         Vector2f y = new Vector2f(Vector2f.UNIT_Y);
 
-        assertEquals(1f, x.cross(y), 0.001f);
+        assertEquals(1f, x % y, 0.001f);
     }
 
     @Test

@@ -2,6 +2,7 @@ package ru.finex.core.math.vector;
 
 import jdk.incubator.vector.FloatVector;
 import jdk.incubator.vector.VectorSpecies;
+import manifold.ext.rt.api.ComparableUsing;
 import ru.finex.core.math.ExtMath;
 import ru.finex.core.math.FloatVectorMath;
 
@@ -16,7 +17,7 @@ import static java.lang.Float.isFinite;
  * @author JavaSaBr
  * @author m0nster.mind
  */
-public class Vector2f implements MathVector, Cloneable {
+public class Vector2f implements MathVector, Cloneable, ComparableUsing<Vector2f> {
 
     public static final Vector2f ZERO = new Vector2f(0, 0);
     public static final Vector2f NAN = new Vector2f(Float.NaN, Float.NaN);
@@ -665,5 +666,128 @@ public class Vector2f implements MathVector, Cloneable {
         operation[0] = x;
         operation[1] = y;
         return FloatVector.fromArray(SPECIES, operation, 0);
+    }
+
+    /* Operator overriding */
+
+    /**
+     * Operator {@code +} for Vector2f.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #addLocal(Vector2f)
+     */
+    public Vector2f plus(Vector2f rhs) {
+        return addLocal(rhs);
+    }
+
+    /**
+     * Operator {@code +} for float.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #addLocal(float, float)
+     */
+    public Vector2f plus(float rhs) {
+        return addLocal(rhs, rhs);
+    }
+
+    /**
+     * Operator {@code -} for Vector2f.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #subtractLocal(Vector2f)
+     */
+    public Vector2f minus(Vector2f rhs) {
+        return subtractLocal(rhs);
+    }
+
+    /**
+     * Operator {@code -} for float.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #subtractLocal(float, float)
+     */
+    public Vector2f minus(float rhs) {
+        return subtractLocal(rhs, rhs);
+    }
+
+    /**
+     * Operator {@code *} for Vector2f.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #multLocal(Vector2f)
+     */
+    public Vector2f times(Vector2f rhs) {
+        return multLocal(rhs);
+    }
+
+    /**
+     * Operator {@code *} for float.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #multLocal(float)
+     */
+    public Vector2f times(float rhs) {
+        return multLocal(rhs);
+    }
+
+    /**
+     * Operator {@code /} for Vector2f.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #divideLocal(Vector2f)
+     */
+    public Vector2f div(Vector2f rhs) {
+        return divideLocal(rhs);
+    }
+
+    /**
+     * Operator {@code /} for float.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #divideLocal(float)
+     */
+    public Vector2f div(float rhs) {
+        return divideLocal(rhs);
+    }
+
+    /**
+     * Operator {@code %} for Vector2f.
+     *
+     * @param rhs right value
+     * @return cross product
+     * @see #cross(Vector2f)
+     */
+    public float rem(Vector2f rhs) {
+        return cross(rhs);
+    }
+
+    /**
+     * Unary operator {@code -} (negate).
+     *
+     * @return this
+     * @see #negateLocal()
+     */
+    public Vector2f unaryMinus() {
+        return negateLocal();
+    }
+
+    @Override
+    public int compareTo(Vector2f o) {
+        // requires by ComparableUsing, stub comparable.
+        // using only for override equals operator (== and !=)
+        throw new RuntimeException("Not supported.");
+    }
+
+    @Override
+    public EqualityMode equalityMode() {
+        return EqualityMode.Equals;
     }
 }
