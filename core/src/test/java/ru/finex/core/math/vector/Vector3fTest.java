@@ -102,7 +102,7 @@ public class Vector3fTest {
     @ParameterizedTest
     public void rotateTest(Quaternion quaternion, Vector3f forward) {
         Vector3f direction = new Vector3f(Vector3f.UNIT_X);
-        direction.rotateLocal(quaternion);
+        direction *= quaternion;
 
         System.out.println(quaternion);
         System.out.println(forward);

@@ -3,6 +3,7 @@ package ru.finex.core.math.vector;
 import jdk.incubator.vector.FloatVector;
 import jdk.incubator.vector.VectorOperators;
 import jdk.incubator.vector.VectorSpecies;
+import manifold.ext.rt.api.ComparableUsing;
 import ru.finex.core.math.ExtMath;
 import ru.finex.core.math.FloatVectorMath;
 import ru.finex.core.math.Quaternion;
@@ -21,7 +22,7 @@ import static ru.finex.core.math.FloatVectorMath.shuffle128;
  * @author JavaSaBr
  * @author m0nster.mind
  */
-public final class Vector3f implements MathVector, Cloneable {
+public final class Vector3f implements MathVector, Cloneable, ComparableUsing<Vector3f> {
 
     public static final Vector3f ZERO = new Vector3f(0, 0, 0);
     public static final Vector3f NAN = new Vector3f(Float.NaN, Float.NaN, Float.NaN);
@@ -846,6 +847,140 @@ public final class Vector3f implements MathVector, Cloneable {
         operation[1] = y;
         operation[2] = z;
         return FloatVector.fromArray(SPECIES, operation, 0);
+    }
+
+    /* Operator overriding */
+
+    /**
+     * Operator {@code +} for Vector3f.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #addLocal(Vector3f)
+     */
+    public Vector3f plus(Vector3f rhs) {
+        return addLocal(rhs);
+    }
+
+    /**
+     * Operator {@code +} for float.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #addLocal(float, float, float)
+     */
+    public Vector3f plus(float rhs) {
+        return addLocal(rhs, rhs, rhs);
+    }
+
+    /**
+     * Operator {@code -} for Vector3f.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #subtractLocal(Vector3f)
+     */
+    public Vector3f minus(Vector3f rhs) {
+        return subtractLocal(rhs);
+    }
+
+    /**
+     * Operator {@code -} for float.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #subtractLocal(float, float, float)
+     */
+    public Vector3f minus(float rhs) {
+        return subtractLocal(rhs, rhs, rhs);
+    }
+
+    /**
+     * Operator {@code *} for Vector3f.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #multLocal(Vector3f)
+     */
+    public Vector3f times(Vector3f rhs) {
+        return multLocal(rhs);
+    }
+
+    /**
+     * Operator {@code *} for float.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #multLocal(float)
+     */
+    public Vector3f times(float rhs) {
+        return multLocal(rhs);
+    }
+
+    /**
+     * Operator {@code *} for {@link Quaternion Quaternion}.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #rotateLocal(Quaternion)
+     */
+    public Vector3f times(Quaternion rhs) {
+        return rotateLocal(rhs);
+    }
+
+    /**
+     * Operator {@code /} for Vector3f.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #divideLocal(Vector3f)
+     */
+    public Vector3f div(Vector3f rhs) {
+        return divideLocal(rhs);
+    }
+
+    /**
+     * Operator {@code /} for float.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #divideLocal(float)
+     */
+    public Vector3f div(float rhs) {
+        return divideLocal(rhs);
+    }
+
+    /**
+     * Operator {@code %} for Vector3f.
+     *
+     * @param rhs right value
+     * @return cross product
+     * @see #cross(Vector3f)
+     */
+    public Vector3f rem(Vector3f rhs) {
+        return crossLocal(rhs);
+    }
+
+    /**
+     * Unary operator {@code -} (negate).
+     *
+     * @return this
+     * @see #negateLocal()
+     */
+    public Vector3f unaryMinus() {
+        return negateLocal();
+    }
+
+    @Override
+    public int compareTo(Vector3f o) {
+        // requires by ComparableUsing, stub comparable.
+        // using only for override equals operator (== and !=)
+        throw new RuntimeException("Not supported.");
+    }
+
+    @Override
+    public EqualityMode equalityMode() {
+        return EqualityMode.Equals;
     }
 
 }
