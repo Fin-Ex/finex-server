@@ -49,7 +49,7 @@ public class QuaternionTest {
         quaternion.lookAtLocal(forward);
 
         Vector3f vector = new Vector3f(Vector3f.UNIT_X);
-        vector.rotateLocal(quaternion);
+        vector *= quaternion;
 
         System.out.println(quaternion);
         System.out.println(forward);
@@ -61,7 +61,8 @@ public class QuaternionTest {
     public void eulerAnglesAndRotateVector() {
         Quaternion quaternion = new Quaternion(0, 0, ExtMath.toRad(180f));
         Vector3f forward = new Vector3f(Vector3f.UNIT_X);
-        forward.rotateLocal(quaternion).normalizeLocal();
+        forward *= quaternion;
+        forward.normalizeLocal();
 
         Vector3f expected = Vector3f.UNIT_X_NEGATIVE;
         assertEquals(expected, forward, 0.001f);

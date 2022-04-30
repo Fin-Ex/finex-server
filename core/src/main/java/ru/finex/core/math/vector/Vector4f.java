@@ -2,6 +2,7 @@ package ru.finex.core.math.vector;
 
 import jdk.incubator.vector.FloatVector;
 import jdk.incubator.vector.VectorSpecies;
+import manifold.ext.rt.api.ComparableUsing;
 import ru.finex.core.math.ExtMath;
 import ru.finex.core.math.FloatVectorMath;
 
@@ -15,7 +16,7 @@ import static java.lang.Float.isFinite;
  *
  * @author m0nster.mind
  */
-public class Vector4f implements MathVector, Cloneable {
+public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f> {
 
     public static final Vector4f ZERO = new Vector4f(0, 0, 0, 0);
     public static final Vector4f NAN = new Vector4f(Float.NaN, Float.NaN, Float.NaN, Float.NaN);
@@ -768,5 +769,128 @@ public class Vector4f implements MathVector, Cloneable {
         operation[2] = z;
         operation[3] = w;
         return FloatVector.fromArray(SPECIES, operation, 0);
+    }
+
+    /* Operator overriding */
+
+    /**
+     * Operator {@code +} for Vector4f.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #addLocal(Vector4f)
+     */
+    public Vector4f plus(Vector4f rhs) {
+        return addLocal(rhs);
+    }
+
+    /**
+     * Operator {@code +} for float.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #addLocal(float, float, float, float)
+     */
+    public Vector4f plus(float rhs) {
+        return addLocal(rhs, rhs, rhs, rhs);
+    }
+
+    /**
+     * Operator {@code -} for Vector4f.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #subtractLocal(Vector4f)
+     */
+    public Vector4f minus(Vector4f rhs) {
+        return subtractLocal(rhs);
+    }
+
+    /**
+     * Operator {@code -} for float.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #subtractLocal(float, float, float, float)
+     */
+    public Vector4f minus(float rhs) {
+        return subtractLocal(rhs, rhs, rhs, rhs);
+    }
+
+    /**
+     * Operator {@code *} for Vector4f.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #multLocal(Vector4f)
+     */
+    public Vector4f times(Vector4f rhs) {
+        return multLocal(rhs);
+    }
+
+    /**
+     * Operator {@code *} for float.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #multLocal(float)
+     */
+    public Vector4f times(float rhs) {
+        return multLocal(rhs);
+    }
+
+    /**
+     * Operator {@code /} for Vector4f.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #divideLocal(Vector4f)
+     */
+    public Vector4f div(Vector4f rhs) {
+        return divideLocal(rhs);
+    }
+
+    /**
+     * Operator {@code /} for float.
+     *
+     * @param rhs right value
+     * @return this
+     * @see #divideLocal(float)
+     */
+    public Vector4f div(float rhs) {
+        return divideLocal(rhs);
+    }
+
+    /**
+     * Operator {@code %} for Vector4f.
+     *
+     * @param rhs right value
+     * @return cross product
+     * @see #cross(Vector4f)
+     */
+    public Vector4f rem(Vector4f rhs) {
+        return crossLocal(rhs);
+    }
+
+    /**
+     * Unary operator {@code -} (negate).
+     *
+     * @return this
+     * @see #negateLocal()
+     */
+    public Vector4f unaryMinus() {
+        return negateLocal();
+    }
+
+    @Override
+    public int compareTo(Vector4f o) {
+        // requires by ComparableUsing, stub comparable.
+        // using only for override equals operator (== and !=)
+        throw new RuntimeException("Not supported.");
+    }
+
+    @Override
+    public EqualityMode equalityMode() {
+        return EqualityMode.Equals;
     }
 }

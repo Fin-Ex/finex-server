@@ -89,13 +89,7 @@ public class Vector3fTest {
         Vector3f x = new Vector3f(Vector3f.UNIT_X);
         Vector3f y = new Vector3f(Vector3f.UNIT_Y);
 
-        Vector3f xy = new Vector3f();
-        x.cross(y, xy);
-
-        Vector3f z = Vector3f.UNIT_Z;
-        System.out.println(z);
-        System.out.println(xy);
-        assertEquals(z, xy, 0.001f);
+        assertEquals(Vector3f.UNIT_Z, x % y, 0.001f);
     }
 
     @MethodSource("getRotateDirections")
