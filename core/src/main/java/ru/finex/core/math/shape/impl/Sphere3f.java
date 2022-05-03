@@ -105,7 +105,7 @@ public class Sphere3f implements Shape3, Cloneable {
 
     /**
      * Create a new {@link Box3f} with sphere bounding.
-     * @return box
+     * @return aabb
      */
     public Box3f toBox3f() {
         float minX = center.getX() - radius;

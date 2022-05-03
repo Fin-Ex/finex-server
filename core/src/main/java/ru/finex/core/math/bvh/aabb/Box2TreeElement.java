@@ -1,11 +1,11 @@
-package ru.finex.core.math.tree;
+package ru.finex.core.math.bvh.aabb;
 
 import ru.finex.core.math.shape.impl.Box2f;
 
 /**
  * @author m0nster.mind
  */
-public interface BVHTreeElement {
+public interface Box2TreeElement {
 
     /**
      * Unique ID to store in BVH.
@@ -15,9 +15,9 @@ public interface BVHTreeElement {
     int getId();
 
     /**
-     * Bounding box of object.
+     * Bounding AABB of object.
      *
-     * @return bounding box
+     * @return AABB
      */
     Box2f getBoundingBox();
 
