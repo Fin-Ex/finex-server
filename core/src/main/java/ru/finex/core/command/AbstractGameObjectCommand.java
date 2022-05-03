@@ -5,6 +5,9 @@ import lombok.Setter;
 import ru.finex.core.model.GameObject;
 
 /**
+ * Абстрактная команда игровой логики.
+ * Инкапсулирует внутри себя игровой объект на который направлено действие.
+ *
  * @author m0nster.mind
  */
 public abstract class AbstractGameObjectCommand implements Command {

@@ -24,12 +24,25 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Производит инициализацию ядра.
+ *
  * @author m0nster.mind
  */
 @Evolution("core")
 public class ServerApplication {
 
-    @SuppressWarnings("checkstyle:MissingJavadocMethod")
+    /**
+     * Производит инициализацию ядра:
+     * <li/> Настраивает логирование
+     * <li/> Инициализирует {@link GlobalContext глобальный контекст}
+     * <li/> Иницилазация модулей
+     * <li/> Создаёт инжектор
+     * <li/> Регистрирует {@link SigtermListener}
+     * <li/> Уведомляет {@link ApplicationBuilt подписчиков} о старте.
+     *
+     * @param modulePackage root package сервера
+     * @param args аргументы запуска
+     */
     public static void start(String modulePackage, String[] args) {
         saveArguments(args);
 

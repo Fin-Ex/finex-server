@@ -4,19 +4,43 @@ import ru.finex.core.model.GameObject;
 import ru.finex.core.persistence.PersistenceObject;
 
 /**
+ * Компонент игрового объекта.
+ * Является сохраняемой сущностью.
+ *
  * @author m0nster.mind
  */
-@SuppressWarnings("checkstyle:MissingJavadocMethod")
 public interface Component extends PersistenceObject {
 
+    /**
+     * Возвращает игровой объект (владельца компонента).
+     *
+     * @return gameObject
+     */
     GameObject getGameObject();
 
+    /**
+     * Устанавливает владельца компонента.
+     *
+     * @param gameObject игровой объект
+     */
     void setGameObject(GameObject gameObject);
 
-    default boolean isType(Class<?> type) {
-        return getClass().isInstance(type);
+    /**
+     * Проверяет тип компонента.
+     *
+     * @param component проверяемый компонент
+     * @return true если текущий тип равен по иерархии или находится выше проверяемого, в ином случае false
+     */
+    default boolean isType(Component component) {
+        return getClass().isInstance(component);
     }
 
+    /**
+     * Проверяет тип компонента.
+     *
+     * @param type проверямый тип компонента
+     * @return true если текущий тип наследуется от проверяемого, в ином случае false
+     */
     default boolean isChildOf(Class<? extends Component> type) {
         return getClass().isAssignableFrom(type);
     }

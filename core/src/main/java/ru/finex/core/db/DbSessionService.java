@@ -4,7 +4,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 /**
+ * Сервис для работы с сессией БД.
+ *
  * @author m0nster.mind
+ * @see Session
  */
 public interface DbSessionService {
 

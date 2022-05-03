@@ -21,6 +21,8 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 /**
+ * Репрезентация игрового клиента.
+ *
  * @author m0nster.mind
  */
 public abstract class AbstractClientSession

@@ -14,6 +14,8 @@ import ru.finex.network.netty.serial.PacketSerializer;
 import java.lang.reflect.Type;
 
 /**
+ * Скоуп сетевой команды.
+ *
  * @author m0nster.mind
  */
 public class NetworkCommandScope implements Scope, CommandScope<NetworkCommandContext> {

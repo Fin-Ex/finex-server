@@ -20,6 +20,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
+ * Реализация сетевой очереди команд.
+ *
  * @author m0nster.mind
  */
 @Slf4j
@@ -38,7 +40,6 @@ public class NetworkCommandQueueImpl extends AbstractCommandQueue<AbstractNetwor
     @Getter
     private final NetworkCommandScope commandScope;
 
-    @SuppressWarnings("checkstyle:MagicNumber")
     @Override
     protected Deque<Pair<AbstractNetworkCommand, NetworkCommandContext>> createQueue() {
         return new ConcurrentLinkedDeque<>();

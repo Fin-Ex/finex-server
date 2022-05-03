@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Глобальный контекс всего сервера.
+ *
  * @author m0nster.mind
  */
 @SuppressWarnings("checkstyle:VisibilityModifier")

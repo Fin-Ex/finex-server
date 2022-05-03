@@ -1,6 +1,8 @@
 package ru.finex.core.command;
 
 /**
+ * Скоуп выполнения команды.
+ *
  * @param <T> generic command context
  * @author m0nster.mind
  */
