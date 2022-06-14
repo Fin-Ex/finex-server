@@ -22,6 +22,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.Objects;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -35,6 +36,7 @@ public class HawtioServiceImpl implements HawtioService {
     private static final String VERSION = "2.14.3";
     private static final String WAR_NAME = "hawtio-default-" + VERSION + ".war";
 
+    private Server server;
     private Slf4jLog log;
     private Options options;
     private boolean enabled;
@@ -61,7 +63,7 @@ public class HawtioServiceImpl implements HawtioService {
         configureLogging();
 
         try {
-            Server server = new Server(new InetSocketAddress(InetAddress.getByName(options.getHost()), options.getPort()));
+            server = new Server(new InetSocketAddress(InetAddress.getByName(options.getHost()), options.getPort()));
 
             HandlerCollection handlers = new HandlerCollection();
             handlers.setServer(server);
@@ -87,6 +89,14 @@ public class HawtioServiceImpl implements HawtioService {
             log.info("Embedded Hawtio: {}://{}:{}{}", scheme, options.getHost(), options.getPort(), options.getContextPath());
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @PreDestroy
+    private void destroy() throws Exception {
+        if (server != null) {
+            server.stop();
+            server.destroy();
         }
     }
 

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.redisson.api.RedissonClient;
 import ru.finex.core.cluster.ClusterService;
 
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -17,5 +18,10 @@ public class ClusterServiceImpl implements ClusterService {
 
     @Getter
     private final RedissonClient client;
+
+    @PreDestroy
+    private void destroy() {
+        client.shutdown();
+    }
 
 }

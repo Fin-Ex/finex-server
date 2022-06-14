@@ -1,13 +1,10 @@
 package ru.finex.core.db.migration.impl;
 
-import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import org.hibernate.service.spi.Configurable;
-import ru.finex.core.EnvConfigurator;
 import ru.finex.core.utils.ClassUtils;
 
-import java.net.URL;
-import java.util.Properties;
+import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
@@ -18,24 +15,20 @@ import javax.sql.DataSource;
  */
 public class DataSourceProvider implements Provider<DataSource> {
 
-    private final URL hibernateConfig;
-    private final EnvConfigurator configurator;
+    private final Map<String, String> hibernateProperties;
 
     @Inject
-    public DataSourceProvider(@Named("HibernateConfig") URL hibernateConfig, EnvConfigurator configurator) {
-        this.hibernateConfig = hibernateConfig;
-        this.configurator = configurator;
+    public DataSourceProvider(@Named("HibernateProperties") Map<String, String> hibernateProperties) {
+        this.hibernateProperties = hibernateProperties;
     }
 
     @Override
     public DataSource get() {
-        Configuration configuration = new Configuration().configure(hibernateConfig);
-        Properties properties = configuration.getProperties();
-        configurator.configure(properties);
-        Class<?> providerClass = ClassUtils.forName(properties.getProperty("hibernate.connection.provider_class"));
+        String providerPath = hibernateProperties.get("hibernate.connection.provider_class");
+        Class<?> providerClass = ClassUtils.forName(providerPath);
         ConnectionProvider connectionProvider = (ConnectionProvider) ClassUtils.createInstance(providerClass);
         if (connectionProvider instanceof Configurable configurable) {
-            configurable.configure(properties);
+            configurable.configure(hibernateProperties);
         }
 
         return connectionProvider.unwrap(DataSource.class);

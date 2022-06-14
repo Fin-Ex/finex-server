@@ -9,6 +9,7 @@ import org.hibernate.service.ServiceRegistry;
 import ru.finex.core.GlobalContext;
 import ru.finex.core.db.DbSessionService;
 import ru.finex.core.db.impl.DbSessionServiceImpl;
+import ru.finex.core.db.impl.HibernatePropertyProvider;
 import ru.finex.core.db.impl.HibernateSessionProvider;
 import ru.finex.core.db.impl.ServiceRegistryProvider;
 import ru.finex.core.db.impl.TransactionalMethodInterceptor;
@@ -24,6 +25,7 @@ import ru.finex.evolution.impl.MigrationServiceImpl;
 
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import javax.sql.DataSource;
 import javax.transaction.Transactional;
@@ -35,6 +37,8 @@ public class DbModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        bind(new TypeLiteral<Map<String, String>>() { }).annotatedWith(Names.named("HibernateProperties"))
+            .toProvider(HibernatePropertyProvider.class);
         bind(ServiceRegistry.class).toProvider(ServiceRegistryProvider.class);
         bind(DbSessionService.class).to(DbSessionServiceImpl.class);
         bind(Session.class).toProvider(HibernateSessionProvider.class);
