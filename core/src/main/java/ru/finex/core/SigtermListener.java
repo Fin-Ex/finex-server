@@ -19,7 +19,11 @@ public class SigtermListener implements Runnable {
 
     @Override
     public void run() {
-        injector.close();
+        try {
+            injector.close();
+        } finally {
+            GlobalContext.clear();
+        }
     }
 
 }

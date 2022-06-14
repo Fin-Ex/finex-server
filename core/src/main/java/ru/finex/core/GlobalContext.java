@@ -21,4 +21,15 @@ public class GlobalContext {
     public static Reflections reflections;
     public static String rootPackage;
 
+    /**
+     * Clear global context.
+     */
+    public static void clear() {
+        context.clear();
+        injector = null;
+        arguments = null;
+        reflections = null;
+        rootPackage = null;
+    }
+
 }
