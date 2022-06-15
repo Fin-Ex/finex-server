@@ -10,6 +10,7 @@ import ru.finex.network.netty.model.NetworkDto;
  */
 @Data
 @AllArgsConstructor
+@NetworkCommandScoped
 public class PacketMetadata<T> {
 
     private static final Class[] EMPTY_COMMANDS = new Class[0];

@@ -6,16 +6,13 @@ import ru.finex.core.command.CommandContext;
 import ru.finex.core.network.PacketMetadata;
 import ru.finex.network.netty.model.ClientSession;
 import ru.finex.network.netty.model.NetworkDto;
-import ru.finex.network.netty.serial.PacketDeserializer;
-import ru.finex.network.netty.serial.PacketSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Контекст для сетевой команды.
- * Включает в себя: мета-данные пакета, серилайзер, десериалайзер,
- *  пэйлоад (dto), сессию клиента и переменные (ключ-значение).
+ * Включает в себя: мета-данные пакета, пэйлоад (dto), сессию клиента и переменные (ключ-значение).
  *
  * @author m0nster.mind
  */
@@ -25,8 +22,6 @@ public class NetworkCommandContext implements CommandContext {
 
     private final Map<Object, Object> variables = new HashMap<>();
     private PacketMetadata<?> metadata;
-    private PacketSerializer<?> serializer;
-    private PacketDeserializer<?> deserializer;
     private NetworkDto dto;
     private ClientSession session;
 
@@ -36,7 +31,7 @@ public class NetworkCommandContext implements CommandContext {
      * @return new context for command running
      */
     public NetworkCommandContext newCommand() {
-        return new NetworkCommandContext(metadata, serializer, deserializer, dto, session);
+        return new NetworkCommandContext(metadata, dto, session);
     }
 
 }

@@ -1,6 +1,7 @@
 package ru.finex.core.network.codec;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import ru.finex.network.netty.serial.PacketDeserializer;
 
 import java.util.Arrays;
 import java.util.List;
+import javax.inject.Inject;
 
 /**
  * Decodes {@link ByteBuf ByteBuf} into {@link Pair pair} of
@@ -24,8 +26,8 @@ import java.util.List;
  * @author m0nster.mind
  */
 @Slf4j
-@RequiredArgsConstructor
-public class NetworkCommandDecoder extends ByteToMessageDecoder {
+@RequiredArgsConstructor(onConstructor_ = { @Inject })
+public class NetworkDtoDecoder extends ByteToMessageDecoder {
 
     private final OpcodeCodec opcodeCodec;
     private final PacketService packetService;

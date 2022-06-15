@@ -1,6 +1,5 @@
 package ru.finex.core.network.impl;
 
-import ru.finex.core.GlobalContext;
 import ru.finex.core.network.Cmd;
 import ru.finex.core.network.IncomePacket;
 import ru.finex.core.network.Opcode;
@@ -12,7 +11,6 @@ import ru.finex.network.netty.model.NetworkDto;
 import ru.finex.network.netty.serial.PacketDeserializer;
 import ru.finex.network.netty.serial.PacketSerializer;
 
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,13 +28,6 @@ public class PacketServiceImpl implements PacketService {
     private final Map<Class<? extends NetworkDto>, PacketMetadata<PacketSerializer<?>>> outcomeDataTypeRegistry = new HashMap<>();
 
     public PacketServiceImpl() {
-
-    }
-
-    private boolean filterPacket(Class<?> type) {
-        return type.getCanonicalName().startsWith(GlobalContext.rootPackage) &&
-            !Modifier.isAbstract(type.getModifiers()) &&
-            !Modifier.isInterface(type.getModifiers());
     }
 
     @Override

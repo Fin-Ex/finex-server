@@ -60,7 +60,7 @@ public abstract class AbstractCommandQueue<T extends Command, C extends CommandC
         try {
             command.executeCommand();
         } catch (Exception e) {
-            log.error("Failed to execute command: {}", command);
+            log.error("Failed to execute command: {}", command, e);
         }
     }
 

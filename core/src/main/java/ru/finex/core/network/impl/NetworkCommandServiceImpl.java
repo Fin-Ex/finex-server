@@ -28,7 +28,8 @@ public class NetworkCommandServiceImpl implements NetworkCommandService {
     private final NetworkCommandScope commandScope;
 
     @Override
-    public List<Pair<AbstractNetworkCommand, NetworkCommandContext>> createCommands(PacketMetadata<PacketDeserializer<?>> metadata, NetworkDto dto, ClientSession session) {
+    public List<Pair<AbstractNetworkCommand, NetworkCommandContext>> createCommands(PacketMetadata<PacketDeserializer<?>> metadata, NetworkDto dto,
+        ClientSession session) {
         NetworkCommandContext ctx = createCommandContext(metadata, dto, session);
 
         Class[] commandTypes = ctx.getMetadata().getCommands();
@@ -58,7 +59,6 @@ public class NetworkCommandServiceImpl implements NetworkCommandService {
     public NetworkCommandContext createCommandContext(PacketMetadata<PacketDeserializer<?>> metadata, NetworkDto dto, ClientSession session) {
         return NetworkCommandContext.builder()
             .metadata(metadata)
-            .deserializer(metadata.getSerial())
             .dto(dto)
             .session(session)
             .build();

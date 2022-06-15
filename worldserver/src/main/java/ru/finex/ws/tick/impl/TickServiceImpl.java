@@ -17,6 +17,8 @@ import ru.finex.ws.tick.TickStage;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -25,6 +27,9 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class TickServiceImpl implements TickService {
+
+    private static final long TICKS_PER_SEC = 20;
+    private final Thread thread = new Thread(this::tickThread, "TickThread");
 
     private final TickStageStorage[] tickStorages;
 
@@ -48,6 +53,16 @@ public class TickServiceImpl implements TickService {
         for (int i = 0; i < tickStorages.length; i++) {
             tickStorages[i] = new TickStageStorage();
         }
+    }
+
+    @PostConstruct
+    private void start() {
+        thread.start();
+    }
+
+    @PreDestroy
+    private void destroy() {
+        thread.stop();
     }
 
     @Override
@@ -90,6 +105,19 @@ public class TickServiceImpl implements TickService {
 
         return (Class<? extends TickInvokeDecorator>) definedClass.load(getClass().getClassLoader())
             .getLoaded();
+    }
+
+    private void tickThread() {
+        for (; ; ) {
+            tick();
+
+            long maxTickTime = 1000L / TICKS_PER_SEC;
+            try {
+                Thread.sleep(Math.max(maxTickTime - deltaTimeMillis, 0));
+            } catch (InterruptedException e) {
+                break;
+            }
+        }
     }
 
     @Override

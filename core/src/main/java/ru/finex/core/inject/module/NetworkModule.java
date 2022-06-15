@@ -2,6 +2,7 @@ package ru.finex.core.inject.module;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.matcher.Matchers;
+import ru.finex.core.GlobalContext;
 import ru.finex.core.command.NetworkCommandQueue;
 import ru.finex.core.command.network.NetworkCommandQueueImpl;
 import ru.finex.core.command.network.NetworkCommandScope;
@@ -11,6 +12,8 @@ import ru.finex.core.network.PacketListener;
 import ru.finex.core.network.PacketService;
 import ru.finex.core.network.impl.NetworkCommandServiceImpl;
 import ru.finex.core.network.impl.PacketServiceImpl;
+import ru.finex.network.netty.serial.PacketDeserializer;
+import ru.finex.network.netty.serial.PacketSerializer;
 
 /**
  * Core network module.
@@ -29,6 +32,10 @@ public class NetworkModule extends AbstractModule {
 
         bind(NetworkCommandQueue.class).to(NetworkCommandQueueImpl.class);
         bindListener(Matchers.any(), new PacketListener());
+        GlobalContext.reflections.getSubTypesOf(PacketDeserializer.class)
+            .forEach(this::bind);
+        GlobalContext.reflections.getSubTypesOf(PacketSerializer.class)
+            .forEach(this::bind);
     }
 
 }
