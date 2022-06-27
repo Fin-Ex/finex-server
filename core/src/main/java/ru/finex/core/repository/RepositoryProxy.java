@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import ru.finex.core.db.impl.TransactionalContext;
-import ru.finex.core.model.entity.Entity;
+import ru.finex.core.model.entity.EntityObject;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
@@ -26,7 +26,7 @@ import javax.persistence.Query;
  * @author m0nster.mind
  */
 @RequiredArgsConstructor
-public class RepositoryProxy<E extends Entity<ID>, ID extends Serializable> implements InvocationHandler {
+public class RepositoryProxy<E extends EntityObject<ID>, ID extends Serializable> implements InvocationHandler {
 
     private final DefaultCrudRepository<E, ID> repository;
     @Getter

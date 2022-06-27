@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
+import ru.finex.core.model.entity.EntityObject;
 
 import java.time.Instant;
 import javax.persistence.Column;
@@ -26,7 +27,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @SequenceGenerator(name = "user_totp_recovery_codes_id_seq", sequenceName = "user_totp_recovery_codes_id_seq", allocationSize = 1)
-public class TOTPRecoveryCodeEntity implements ru.finex.core.model.entity.Entity<Long> {
+public class TOTPRecoveryCodeEntity implements EntityObject<Long> {
 
     @Id
     @Column(name = "id")

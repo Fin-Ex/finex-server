@@ -2,7 +2,7 @@ package ru.finex.core.persistence.impl;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import ru.finex.core.GlobalContext;
-import ru.finex.core.model.entity.Entity;
+import ru.finex.core.model.entity.EntityObject;
 import ru.finex.core.persistence.ObjectPersistenceService;
 import ru.finex.core.persistence.PersistenceField;
 import ru.finex.core.persistence.PersistenceObject;
@@ -26,7 +26,7 @@ public class ObjectPersistenceServiceImpl implements ObjectPersistenceService {
     private void persist(PersistenceObject object, Field field, Class<? extends PersistenceService> persistenceServiceType) {
         PersistenceService persistenceService = GlobalContext.injector.getInstance(persistenceServiceType);
         try {
-            Entity entity = (Entity) FieldUtils.readField(field, object);
+            EntityObject entity = (EntityObject) FieldUtils.readField(field, object);
             if (entity != null) {
                 persistenceService.persist(entity);
             }
@@ -44,7 +44,7 @@ public class ObjectPersistenceServiceImpl implements ObjectPersistenceService {
     private void restore(PersistenceObject object, Field field, Class<? extends PersistenceService> persistenceServiceType) {
         PersistenceService persistenceService = GlobalContext.injector.getInstance(persistenceServiceType);
         try {
-            Entity entity = persistenceService.restore(object.getPersistenceId());
+            EntityObject entity = persistenceService.restore(object.getPersistenceId());
             FieldUtils.writeField(field, object, entity, true);
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);

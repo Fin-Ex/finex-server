@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author m0nster.mind
  */
 @SuppressWarnings("checkstyle:JavadocType")
-public interface Entity<ID extends Serializable> {
+public interface EntityObject<ID extends Serializable> {
 
     /**
      * Получить ID (primary key) под которым идет сохранение сущности в БД.

@@ -20,6 +20,7 @@ import org.reflections.util.ConfigurationBuilder;
 import ru.finex.core.GlobalContext;
 import ru.finex.core.db.impl.TransactionalContext;
 import ru.finex.core.inject.module.DbModule;
+import ru.finex.core.model.entity.EntityObject;
 
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
@@ -121,7 +122,7 @@ public class RepositoryProxyTest {
     @Data
     @Entity
     @Table(name = "test_table")
-    public static class TestEntity implements ru.finex.core.model.entity.Entity<Long> {
+    public static class TestEntity implements EntityObject<Long> {
         @Id
         @Column(name = "id")
         private Long persistenceId;

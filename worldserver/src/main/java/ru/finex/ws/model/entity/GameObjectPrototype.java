@@ -1,6 +1,7 @@
 package ru.finex.ws.model.entity;
 
 import lombok.Data;
+import ru.finex.core.model.entity.EntityObject;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +17,7 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "game_object_prototypes")
-public class GameObjectPrototype implements ru.finex.core.model.entity.Entity<Integer> {
+public class GameObjectPrototype implements EntityObject<Integer> {
     @Id
     @Column(name = "id")
     @SequenceGenerator(name = "game_object_prototypes_id_seq", sequenceName = "game_object_prototypes_id_seq", allocationSize = 1)

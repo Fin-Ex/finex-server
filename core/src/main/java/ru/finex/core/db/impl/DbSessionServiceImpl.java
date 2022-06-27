@@ -11,7 +11,7 @@ import org.hibernate.service.ServiceRegistry;
 import org.reflections.scanners.Scanners;
 import ru.finex.core.GlobalContext;
 import ru.finex.core.db.DbSessionService;
-import ru.finex.core.model.entity.Entity;
+import ru.finex.core.model.entity.EntityObject;
 import ru.finex.evolution.MigrationService;
 
 import java.util.Collection;
@@ -39,7 +39,7 @@ public class DbSessionServiceImpl implements DbSessionService {
         migrationService.autoMigration(GlobalContext.arguments.containsKey(EVO_AUTO_ROLLBACK));
 
         MetadataSources metaSrc = new MetadataSources(serviceRegistry);
-        GlobalContext.reflections.getSubTypesOf(Entity.class).forEach(metaSrc::addAnnotatedClass);
+        GlobalContext.reflections.getSubTypesOf(EntityObject.class).forEach(metaSrc::addAnnotatedClass);
 
         // load xml queries and mappings
         XmlMappingBinderAccess binder = metaSrc.getXmlMappingBinderAccess();
