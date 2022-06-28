@@ -1,0 +1,33 @@
+@startuml GameObjectFactory.createGameObject.png
+actor Developer as actor
+participant "Object Factory" as factory #LightBlue
+participant "Component Service" as service
+participant "Prototype Service" as protoservice
+participant Mapper as mapper
+participant Repository as repo
+database DB as db
+
+actor->factory: Create a new GameObject
+	note over factory #LightGrey: GameObjectFactory.createGameObject
+	activate factory
+factory->service: Get components for GameObject
+	activate service 
+service->protoservice: Get components prototypes for GameObject
+	activate protoservice
+protoservice->repo: Query to fetch prototypes
+	activate repo 
+repo->db: Recursive fetch prototypes
+db-->repo: Return entities
+repo-->protoservice: Return entities
+	deactivate repo 
+protoservice-->service: Map entities to ComponentPrototype
+	deactivate protoservice
+service->mapper: Map prototypes to components
+	activate mapper 
+mapper-->service: Return component
+	deactivate mapper 
+service-->factory: Inject dependencies into components\n and return components
+	deactivate service
+factory-->actor: Allocate new GameObject\n and attach components to it
+	deactivate factory 
+@enduml

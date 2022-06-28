@@ -443,8 +443,8 @@
                     <version>1.18.20.0</version>
                     <configuration>
                         <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
-                        <!--<outputDirectory>${delombok.source}</outputDirectory>-->
-                        <!--<addOutputDirectory>false</addOutputDirectory>-->
+                        <outputDirectory>${delombok.source}</outputDirectory>
+                        <addOutputDirectory>false</addOutputDirectory>
                         <encoding>UTF-8</encoding>
                     </configuration>
                     <executions>
@@ -474,15 +474,16 @@
                     <version>3.3.1</version>
                     <executions>
                         <execution>
-                            <id>attach-javadocs</id>
+                            <id>javadoc-package</id>
                             <goals>
                                 <goal>jar</goal>
                             </goals>
                         </execution>
                     </executions>
                     <configuration>
-                        <additionalOptions>--enable-preview --add-modules jdk.incubator.vector --add-modules jdk.incubator.foreign</additionalOptions>
+                        <additionalJOption>--enable-preview --add-modules jdk.incubator.vector --add-modules jdk.incubator.foreign</additionalJOption>
                         <sourcepath>${delombok.source}</sourcepath>
+                        <encoding>${project.build.sourceEncoding}</encoding>
                         <doclet>nl.talsmasoftware.umldoclet.UMLDoclet</doclet>
                         <docletArtifact>
                             <groupId>nl.talsmasoftware</groupId>
@@ -491,7 +492,9 @@
                         </docletArtifact>
                         <useStandardDocletOptions>true</useStandardDocletOptions>
                         <additionalOptions>
-                            <!-- https://github.com/gboersma/uml-java-doclet#diagram-options -->
+                            <!-- https://github.com/talsma-ict/umldoclet/blob/develop/usage.md#additional-options -->
+                            <additionalOption>-umlImageFormat svg</additionalOption>
+
                         </additionalOptions>
                     </configuration>
                 </plugin>

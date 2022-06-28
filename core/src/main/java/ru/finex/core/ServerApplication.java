@@ -33,12 +33,14 @@ public class ServerApplication {
 
     /**
      * Производит инициализацию ядра:
-     * <li/> Настраивает логирование
-     * <li/> Инициализирует {@link GlobalContext глобальный контекст}
-     * <li/> Иницилазация модулей
-     * <li/> Создаёт инжектор
-     * <li/> Регистрирует {@link SigtermListener}
-     * <li/> Уведомляет {@link ApplicationBuilt подписчиков} о старте.
+     * <ul>
+     * <li> Настраивает логирование</li>
+     * <li> Инициализирует {@link GlobalContext глобальный контекст}</li>
+     * <li> Иницилазация модулей</li>
+     * <li> Создаёт инжектор</li>
+     * <li> Регистрирует {@link SigtermListener}</li>
+     * <li> Уведомляет {@link ApplicationBuilt подписчиков} о старте.</li>
+     * </ul>
      *
      * @param modulePackage root package сервера
      * @param args аргументы запуска

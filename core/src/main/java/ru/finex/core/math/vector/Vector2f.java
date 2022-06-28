@@ -100,7 +100,7 @@ public class Vector2f implements MathVector, Cloneable, ComparableUsing<Vector2f
 
     /**
      * Return float vector with 64 bit species.
-     * @return float vector of x & y components
+     * @return float vector of x and y components
      */
     public FloatVector floatVector() {
         return FloatVector.fromArray(SPECIES, components, 0);
@@ -116,7 +116,7 @@ public class Vector2f implements MathVector, Cloneable, ComparableUsing<Vector2f
     }
 
     /**
-     * Save 64bit (two floats) from float vector as x & y components.
+     * Save 64bit (two floats) from float vector as x and y components.
      * @param floatVector float vector
      * @return this
      */
