@@ -2,8 +2,9 @@ package ru.finex.ws.repository;
 
 import ru.finex.core.repository.CrudRepository;
 import ru.finex.core.repository.NamedQuery;
-import ru.finex.core.repository.RepositoryFuture;
 import ru.finex.ws.model.entity.GameObjectPrototype;
+
+import java.util.concurrent.Future;
 
 /**
  * @author finfan
@@ -16,7 +17,7 @@ public interface GameObjectPrototypeRepository extends CrudRepository<GameObject
      * @return future
      */
     @NamedQuery
-    RepositoryFuture<GameObjectPrototype> findByNameAsync(String name);
+    Future<GameObjectPrototype> findByNameAsync(String name);
 
     /**
      * Find game object prototype by name.

@@ -1,6 +1,7 @@
 package ru.finex.ws.service;
 
 import com.google.inject.ImplementedBy;
+import ru.finex.ws.model.prototype.ComponentPrototype;
 import ru.finex.ws.service.impl.GameObjectPrototypeServiceImpl;
 
 import java.util.List;
@@ -12,6 +13,6 @@ import java.util.List;
 public interface GameObjectPrototypeService {
 
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
-    List<String> getComponentsByPrototypeName(String objectName);
+    List<ComponentPrototype> getPrototypesByName(String prototypeName);
 
 }

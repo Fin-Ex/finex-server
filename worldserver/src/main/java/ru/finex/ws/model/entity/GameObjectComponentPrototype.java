@@ -28,10 +28,16 @@ public class GameObjectComponentPrototype implements EntityObject<Integer> {
     @GeneratedValue(generator = "game_object_component_prototypes_id_seq", strategy = GenerationType.SEQUENCE)
     private Integer persistenceId;
 
-    @Column(name = "component", nullable = false)
+    @Column(nullable = false)
     private String component;
 
     @JoinColumn(name = "prototype_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private GameObjectPrototype gameObjectPrototype;
+
+    @Column(nullable = false)
+    private String data;
+
+    @Column(name = "parent_id")
+    private Integer parent;
 }

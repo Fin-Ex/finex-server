@@ -9,4 +9,30 @@
             WHERE component.gameObjectPrototype.name = :prototypeName
         </query>
     </named-query>
+
+    <named-query name="GameObjectComponentPrototypeRepository.findPrototypesByPrototypeName">
+        <query>
+            with recursive prototypes as (
+                with recursive game_object_sets as (
+                    select id, parent_id, 1 as "order"
+                        from game_object_prototypes
+                        where "name" = :prototypeName
+                    union
+                    select game_objects.id, game_objects.parent_id, game_object_sets."order" + 1 as "order"
+                        from game_object_prototypes game_objects
+                        join game_object_sets on game_object_sets.parent_id = game_objects.id
+                )
+                select prototype.*, game_object."order"
+                    from game_object_sets game_object
+                    join game_object_component_prototypes prototype on game_object.id = prototype.prototype_id
+                union
+                select prototype.*, prototypes."order" + 1 as "order"
+                    from game_object_component_prototypes prototype
+                    join prototypes on prototypes.parent_id = prototype.id
+            )
+            select component, jsonb_merge_object(data)
+                from prototypes
+                group by component
+        </query>
+    </named-query>
 </entity-mappings>

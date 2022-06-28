@@ -23,6 +23,10 @@ public class GameObjectPrototype implements EntityObject<Integer> {
     @SequenceGenerator(name = "game_object_prototypes_id_seq", sequenceName = "game_object_prototypes_id_seq", allocationSize = 1)
     @GeneratedValue(generator = "game_object_prototypes_id_seq", strategy = GenerationType.SEQUENCE)
     private Integer persistenceId;
-    @Column(name = "name", unique = true, nullable = false)
+
+    @Column(unique = true, nullable = false)
     private String name;
+
+    @Column(name = "parent_id")
+    private Integer parent;
 }

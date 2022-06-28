@@ -9,10 +9,10 @@ import ru.finex.core.events.cluster.ClusterEventBus;
 import ru.finex.core.model.GameObject;
 import ru.finex.core.model.GameObjectEvent;
 import ru.finex.core.pool.PoolService;
-import ru.finex.core.utils.ClassUtils;
 import ru.finex.ws.model.GameObjectComponents;
 import ru.finex.ws.model.event.component.OnComponentAttached;
 import ru.finex.ws.model.event.component.OnComponentDeattached;
+import ru.finex.ws.model.prototype.ComponentPrototype;
 import ru.finex.ws.service.GameObjectInjectorService;
 import ru.finex.ws.service.GameObjectPrototypeService;
 
@@ -41,10 +41,16 @@ public class ComponentServiceImpl implements ComponentService {
 
     @Override
     public Class[] getComponentTypesForObject(String objectName) {
-        return prototypeService.getComponentsByPrototypeName(objectName)
-            .stream()
-            .map(ClassUtils::forName)
-            .toArray(Class<?>[]::new);
+        return null;
+    }
+
+    /**
+     * Ok.
+     * @param gameObject s
+     * @param prototype s
+     */
+    public void addComponent(GameObject gameObject, ComponentPrototype prototype) {
+        //
     }
 
     @Override

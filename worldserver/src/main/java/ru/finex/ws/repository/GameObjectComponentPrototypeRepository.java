@@ -1,31 +1,52 @@
 package ru.finex.ws.repository;
 
-import ru.finex.core.repository.CrudRepository;
-import ru.finex.core.repository.NamedQuery;
-import ru.finex.core.repository.RepositoryFuture;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
+import ru.finex.core.db.impl.TransactionalContext;
+import ru.finex.core.repository.DefaultCrudRepository;
 import ru.finex.ws.model.entity.GameObjectComponentPrototype;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
- * @author finfan
+ * @author m0nster.mind
  */
-public interface GameObjectComponentPrototypeRepository extends CrudRepository<GameObjectComponentPrototype, Integer> {
+public class GameObjectComponentPrototypeRepository extends DefaultCrudRepository<GameObjectComponentPrototype, Integer> {
+
+    @Inject
+    public GameObjectComponentPrototypeRepository(@Named("RepositoryExecutor") ExecutorService executorService) {
+        this.executorService = executorService;
+        entityClass = GameObjectComponentPrototype.class;
+    }
 
     /**
-     * Find all components by prototype name asynchronously.
+     * Async find component prototypes by prototype name.
      * @param prototypeName prototype name
-     * @return future
+     * @return component prototypes entity
      */
-    @NamedQuery
-    RepositoryFuture<List<GameObjectComponentPrototype>> findByPrototypeNameAsync(String prototypeName);
+    public Future<List<GameObjectComponentPrototype>> findPrototypesByPrototypeNameAsync(String prototypeName) {
+        return asyncOperation(() -> findPrototypesByPrototypeName(prototypeName));
+    }
 
     /**
-     * Find all components by prototype name.
+     * Find a component prototypes by prototype name.
      * @param prototypeName prototype name
-     * @return components
+     * @return component prototypes entity
      */
-    @NamedQuery
-    List<GameObjectComponentPrototype> findByPrototypeName(String prototypeName);
-
+    public List<GameObjectComponentPrototype> findPrototypesByPrototypeName(String prototypeName) {
+        TransactionalContext ctx = TransactionalContext.get();
+        Session session = ctx.session();
+        try {
+            Query<GameObjectComponentPrototype> query = session.createNamedQuery(getClass().getCanonicalName() + ".findPrototypesByPrototypeName", GameObjectComponentPrototype.class)
+                .setParameter("prototypeName", prototypeName);
+            return query.getResultList();
+        } catch (Exception e) {
+            ctx.rollback(session);
+            throw new RuntimeException(e);
+        }
+    }
 }
