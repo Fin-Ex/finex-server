@@ -40,6 +40,10 @@ public class GameObjectInjectorServiceImpl implements GameObjectInjectorService 
 
     @Override
     public Injector create(GameObject gameObject) {
+        // TODO m0nster.mind: здесь надо создавать не новый инжектор, а принципиально переделать логику
+        //  необходимо создавать скоуп игрового объекта и в фактори, при инжектировании, входить в него
+        //  таким образом мы избавляемся от отдельных инжекторов - что является огромным расходом памяти,
+        //  а также процессорного времени на его создание.
         GameObjectImpl go = (GameObjectImpl) gameObject;
         List<Module> modules = InjectorUtils.collectModules(GameplayModule.class);
         modules.add(new GameObjectModule(gameObject));

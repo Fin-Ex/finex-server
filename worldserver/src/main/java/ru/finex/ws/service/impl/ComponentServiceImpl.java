@@ -13,6 +13,7 @@ import ru.finex.ws.model.GameObjectComponents;
 import ru.finex.ws.model.event.component.OnComponentAttached;
 import ru.finex.ws.model.event.component.OnComponentDeattached;
 import ru.finex.ws.model.prototype.ComponentPrototype;
+import ru.finex.ws.model.prototype.ComponentPrototypeMapper;
 import ru.finex.ws.service.GameObjectInjectorService;
 import ru.finex.ws.service.GameObjectPrototypeService;
 
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 /**
@@ -39,18 +41,25 @@ public class ComponentServiceImpl implements ComponentService {
     @Clustered(GameObjectEvent.CHANNEL)
     private ClusterEventBus<GameObjectEvent> eventBus;
 
+    @Named("ComponentMappers")
+    private Map<Class<? extends ComponentPrototype>, ComponentPrototypeMapper> mappers;
+
     @Override
-    public Class[] getComponentTypesForObject(String objectName) {
-        return null;
+    public void addComponentsFromPrototype(String prototypeName, GameObject gameObject) {
+        prototypeService.getPrototypesByName(prototypeName)
+            .forEach(prototype -> addComponent(gameObject, prototype));
     }
 
+    //@Override
     /**
-     * Ok.
-     * @param gameObject s
-     * @param prototype s
+     * Добавляет игровому объекту компонент, создавая его из прототипа.
+     * @param gameObject игровой объект, которому будет добавлен компонент
+     * @param prototype прототип компонента
      */
     public void addComponent(GameObject gameObject, ComponentPrototype prototype) {
-        //
+        ComponentPrototypeMapper mapper = mappers.get(prototype.getClass());
+        Component component = mapper.map(prototype);
+        addComponent(gameObject, component);
     }
 
     @Override
