@@ -1,6 +1,6 @@
 package ru.finex.core.repository.impl;
 
-import ru.finex.core.model.entity.GameObjectPrototype;
+import ru.finex.core.model.entity.impl.GameObjectPrototype;
 import ru.finex.core.repository.CrudRepository;
 import ru.finex.core.repository.NamedQuery;
 

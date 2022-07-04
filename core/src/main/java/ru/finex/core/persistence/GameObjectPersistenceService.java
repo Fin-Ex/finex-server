@@ -1,6 +1,6 @@
 package ru.finex.core.persistence;
 
-import ru.finex.core.model.GameObject;
+import ru.finex.core.model.object.GameObject;
 
 /**
  * Сервис для управления персистенцией игрового объекта.

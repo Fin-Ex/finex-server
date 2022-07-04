@@ -28,7 +28,7 @@
         </query>
     </named-native-query>
     <sql-result-set-mapping name="GameObjectComponentPrototypeRepository.findPrototypesByPrototypeName">
-        <constructor-result target-class="ru.finex.core.model.entity.GameObjectComponentPrototype">
+        <constructor-result target-class="ru.finex.core.model.entity.impl.GameObjectComponentPrototype">
             <column name="component"/>
             <column name="data"/>
         </constructor-result>

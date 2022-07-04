@@ -1,5 +1,6 @@
 package ru.finex.core.model;
 
+import ru.finex.core.model.object.GameObject;
 import ru.finex.core.pool.Cleanable;
 
 /**

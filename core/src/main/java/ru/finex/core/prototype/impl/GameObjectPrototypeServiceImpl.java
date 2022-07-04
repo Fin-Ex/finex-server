@@ -3,7 +3,7 @@ package ru.finex.core.prototype.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import ru.finex.core.model.entity.GameObjectComponentPrototype;
+import ru.finex.core.model.entity.impl.GameObjectComponentPrototype;
 import ru.finex.core.prototype.ComponentPrototype;
 import ru.finex.core.prototype.GameObjectPrototypeService;
 import ru.finex.core.repository.impl.GameObjectComponentPrototypeRepository;

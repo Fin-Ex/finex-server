@@ -1,6 +1,6 @@
 package ru.finex.core.component;
 
-import ru.finex.core.model.GameObject;
+import ru.finex.core.model.object.GameObject;
 import ru.finex.core.persistence.PersistenceObject;
 
 /**

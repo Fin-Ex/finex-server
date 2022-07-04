@@ -3,7 +3,7 @@ package ru.finex.core.repository.impl;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import ru.finex.core.db.impl.TransactionalContext;
-import ru.finex.core.model.entity.GameObjectComponentPrototype;
+import ru.finex.core.model.entity.impl.GameObjectComponentPrototype;
 import ru.finex.core.repository.DefaultCrudRepository;
 
 import java.util.List;
