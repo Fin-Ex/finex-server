@@ -41,8 +41,10 @@ public class GameObjectComponentPrototypeRepository extends DefaultCrudRepositor
         TransactionalContext ctx = TransactionalContext.get();
         Session session = ctx.session();
         try {
-            Query<GameObjectComponentPrototype> query = session.createNamedQuery(getClass().getCanonicalName() + ".findPrototypesByPrototypeName", GameObjectComponentPrototype.class)
-                .setParameter("prototypeName", prototypeName);
+            Query<GameObjectComponentPrototype> query = session.createNamedQuery(
+                "GameObjectComponentPrototypeRepository.findPrototypesByPrototypeName",
+                GameObjectComponentPrototype.class
+            ).setParameter("prototypeName", prototypeName);
             return query.getResultList();
         } catch (Exception e) {
             ctx.rollback(session);

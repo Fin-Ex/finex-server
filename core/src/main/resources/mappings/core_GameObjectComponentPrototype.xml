@@ -2,7 +2,7 @@
 <entity-mappings version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd">
 
-    <named-query name="GameObjectComponentPrototypeRepository.findPrototypesByPrototypeName">
+    <named-native-query name="GameObjectComponentPrototypeRepository.findPrototypesByPrototypeName" result-set-mapping="GameObjectComponentPrototypeRepository.findPrototypesByPrototypeName">
         <query>
             with recursive prototypes as (
                 with recursive game_object_sets as (
@@ -22,9 +22,15 @@
                     from game_object_component_prototypes prototype
                     join prototypes on prototypes.parent_id = prototype.id
             )
-            select component, jsonb_merge_object(data)
+            select component, jsonb_merge_object(data) as data
                 from prototypes
                 group by component
         </query>
-    </named-query>
+    </named-native-query>
+    <sql-result-set-mapping name="GameObjectComponentPrototypeRepository.findPrototypesByPrototypeName">
+        <constructor-result target-class="ru.finex.core.model.entity.GameObjectComponentPrototype">
+            <column name="component"/>
+            <column name="data"/>
+        </constructor-result>
+    </sql-result-set-mapping>
 </entity-mappings>

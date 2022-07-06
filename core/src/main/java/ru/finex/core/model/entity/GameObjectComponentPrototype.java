@@ -1,6 +1,8 @@
 package ru.finex.core.model.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,6 +22,7 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "game_object_component_prototypes")
+@NoArgsConstructor
 public class GameObjectComponentPrototype implements EntityObject<Integer> {
     @Id
     @Column(name = "id")
@@ -35,7 +38,13 @@ public class GameObjectComponentPrototype implements EntityObject<Integer> {
     private GameObjectPrototype gameObjectPrototype;
 
     @Column(nullable = false)
+    @Type(type = "RawJsonb")
     private String data;
 
     private Integer parentId;
+
+    public GameObjectComponentPrototype(String component, String data) {
+        this.component = component;
+        this.data = data;
+    }
 }

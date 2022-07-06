@@ -26,10 +26,6 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -120,11 +116,7 @@ public class RepositoryProxyTest {
     }
 
     @Data
-    @Entity
-    @Table(name = "test_table")
     public static class TestEntity implements EntityObject<Long> {
-        @Id
-        @Column(name = "id")
         private Long persistenceId;
     }
 

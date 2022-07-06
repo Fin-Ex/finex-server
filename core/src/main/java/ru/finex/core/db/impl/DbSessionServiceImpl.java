@@ -35,7 +35,7 @@ public class DbSessionServiceImpl implements DbSessionService {
 
     @Inject
     public DbSessionServiceImpl(ServiceRegistry serviceRegistry, MigrationService migrationService,
-        SnakeCasePhysicalNamingStrategy physicalNamingStrategy) {
+        SnakeCasePhysicalNamingStrategy physicalNamingStrategy, RawJsonUserType jsonUserType) {
         // do migration before up hibernate
         migrationService.autoMigration(GlobalContext.arguments.containsKey(EVO_AUTO_ROLLBACK));
 
@@ -58,6 +58,7 @@ public class DbSessionServiceImpl implements DbSessionService {
         Metadata metadata = metaSrc.getMetadataBuilder()
             .applyImplicitNamingStrategy(ImplicitNamingStrategyJpaCompliantImpl.INSTANCE)
             .applyPhysicalNamingStrategy(physicalNamingStrategy)
+            .applyBasicType(jsonUserType, "RawJsonb")
             .build();
 
         sessionFactory = metadata.buildSessionFactory();
