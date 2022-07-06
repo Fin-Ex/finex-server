@@ -5,6 +5,7 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.multibindings.MapBinder;
 import com.google.inject.name.Names;
+import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.tuple.Pair;
 import ru.finex.core.GlobalContext;
 import ru.finex.core.component.ComponentService;
@@ -29,6 +30,7 @@ import ru.finex.ws.tick.impl.TickServiceImpl;
  * @author m0nster.mind
  */
 @LoaderModule
+@EqualsAndHashCode
 public class WorldServerModule extends AbstractModule {
 
     @Override

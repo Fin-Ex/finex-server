@@ -7,12 +7,14 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.AbstractModule;
+import lombok.EqualsAndHashCode;
 import ru.finex.core.inject.LoaderModule;
 
 /**
  * @author m0nster.mind
  */
 @LoaderModule
+@EqualsAndHashCode
 public class JacksonModule extends AbstractModule {
 
     @Override
