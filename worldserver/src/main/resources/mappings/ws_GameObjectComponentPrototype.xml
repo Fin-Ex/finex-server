@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <entity-mappings version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd">
-    <named-query name="GameObjectComponentPrototypeRepository.findByPrototypeName">
-        <query>
-            SELECT component
-            FROM GameObjectComponentPrototype component
-            JOIN component.gameObjectPrototype
-            WHERE component.gameObjectPrototype.name = :prototypeName
-        </query>
-    </named-query>
 
     <named-query name="GameObjectComponentPrototypeRepository.findPrototypesByPrototypeName">
         <query>
