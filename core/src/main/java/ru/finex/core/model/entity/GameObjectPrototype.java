@@ -1,7 +1,6 @@
-package ru.finex.ws.model.entity;
+package ru.finex.core.model.entity;
 
 import lombok.Data;
-import ru.finex.core.model.entity.EntityObject;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,6 +26,5 @@ public class GameObjectPrototype implements EntityObject<Integer> {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @Column(name = "parent_id")
-    private Integer parent;
+    private Integer parentId;
 }

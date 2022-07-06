@@ -1,4 +1,4 @@
-package ru.finex.ws.model.prototype;
+package ru.finex.core.prototype;
 
 /**
  * @author m0nster.mind

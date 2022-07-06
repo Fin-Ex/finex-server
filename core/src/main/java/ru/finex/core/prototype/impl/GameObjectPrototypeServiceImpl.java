@@ -1,13 +1,13 @@
-package ru.finex.ws.service.impl;
+package ru.finex.core.prototype.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import ru.finex.core.model.entity.GameObjectComponentPrototype;
+import ru.finex.core.prototype.ComponentPrototype;
+import ru.finex.core.prototype.GameObjectPrototypeService;
+import ru.finex.core.repository.impl.GameObjectComponentPrototypeRepository;
 import ru.finex.core.utils.ClassUtils;
-import ru.finex.ws.model.entity.GameObjectComponentPrototype;
-import ru.finex.ws.model.prototype.ComponentPrototype;
-import ru.finex.ws.repository.GameObjectComponentPrototypeRepository;
-import ru.finex.ws.service.GameObjectPrototypeService;
 
 import java.util.List;
 import java.util.stream.Collectors;

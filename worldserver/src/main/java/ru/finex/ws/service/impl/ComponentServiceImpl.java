@@ -9,13 +9,13 @@ import ru.finex.core.events.cluster.ClusterEventBus;
 import ru.finex.core.model.GameObject;
 import ru.finex.core.model.GameObjectEvent;
 import ru.finex.core.pool.PoolService;
+import ru.finex.core.prototype.ComponentPrototype;
+import ru.finex.core.prototype.ComponentPrototypeMapper;
+import ru.finex.core.prototype.GameObjectPrototypeService;
 import ru.finex.ws.model.GameObjectComponents;
 import ru.finex.ws.model.event.component.OnComponentAttached;
 import ru.finex.ws.model.event.component.OnComponentDeattached;
-import ru.finex.ws.model.prototype.ComponentPrototype;
-import ru.finex.ws.model.prototype.ComponentPrototypeMapper;
 import ru.finex.ws.service.GameObjectInjectorService;
-import ru.finex.ws.service.GameObjectPrototypeService;
 
 import java.util.ArrayList;
 import java.util.Collections;

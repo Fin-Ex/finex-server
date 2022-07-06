@@ -1,8 +1,8 @@
-package ru.finex.ws.repository;
+package ru.finex.core.repository.impl;
 
+import ru.finex.core.model.entity.GameObjectPrototype;
 import ru.finex.core.repository.CrudRepository;
 import ru.finex.core.repository.NamedQuery;
-import ru.finex.ws.model.entity.GameObjectPrototype;
 
 import java.util.concurrent.Future;
 

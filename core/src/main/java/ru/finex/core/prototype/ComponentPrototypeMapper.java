@@ -1,4 +1,4 @@
-package ru.finex.ws.model.prototype;
+package ru.finex.core.prototype;
 
 import ru.finex.core.component.Component;
 

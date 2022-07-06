@@ -1,8 +1,7 @@
-package ru.finex.ws.service;
+package ru.finex.core.prototype;
 
 import com.google.inject.ImplementedBy;
-import ru.finex.ws.model.prototype.ComponentPrototype;
-import ru.finex.ws.service.impl.GameObjectPrototypeServiceImpl;
+import ru.finex.core.prototype.impl.GameObjectPrototypeServiceImpl;
 
 import java.util.List;
 
