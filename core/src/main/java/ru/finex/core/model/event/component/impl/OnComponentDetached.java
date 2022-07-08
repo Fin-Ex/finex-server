@@ -3,7 +3,7 @@ package ru.finex.core.model.event.component.impl;
 import lombok.Data;
 import ru.finex.core.component.Component;
 import ru.finex.core.model.event.component.ComponentEvent;
-import ru.finex.core.model.object.GameObject;
+import ru.finex.core.object.GameObject;
 import ru.finex.core.pool.PooledObject;
 
 /**

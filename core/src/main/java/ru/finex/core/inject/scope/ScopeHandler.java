@@ -3,6 +3,7 @@ package ru.finex.core.inject.scope;
 /**
  * A global interface that should be implemented by custom scopes.
  *
+ * @param <T> scope owner
  * @author oracle
  */
 public interface ScopeHandler<T> {

@@ -1,7 +1,7 @@
-package ru.finex.core.model.object;
+package ru.finex.core.object;
 
 import com.google.inject.ImplementedBy;
-import ru.finex.core.model.object.impl.GameObjectFactoryImpl;
+import ru.finex.core.object.impl.GameObjectFactoryImpl;
 
 /**
  * @author finfan

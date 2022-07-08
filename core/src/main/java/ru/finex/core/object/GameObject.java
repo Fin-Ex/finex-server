@@ -1,4 +1,4 @@
-package ru.finex.core.model.object;
+package ru.finex.core.object;
 
 /**
  * @author m0nster.mind

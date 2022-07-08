@@ -1,12 +1,12 @@
-package ru.finex.core.model.object.impl;
+package ru.finex.core.object.impl;
 
 import lombok.RequiredArgsConstructor;
 import ru.finex.core.component.ComponentService;
-import ru.finex.core.model.object.GameObject;
-import ru.finex.core.model.object.GameObjectFactory;
+import ru.finex.core.id.RuntimeIdService;
 import ru.finex.core.model.object.scope.GameObjectScope;
+import ru.finex.core.object.GameObject;
+import ru.finex.core.object.GameObjectFactory;
 import ru.finex.core.persistence.GameObjectPersistenceService;
-import ru.finex.core.service.id.RuntimeIdService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

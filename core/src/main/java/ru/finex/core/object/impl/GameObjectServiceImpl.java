@@ -1,15 +1,15 @@
-package ru.finex.core.service.object.impl;
+package ru.finex.core.object.impl;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ru.finex.core.cluster.impl.Clustered;
 import ru.finex.core.events.cluster.ClusterEventBus;
-import ru.finex.core.model.GameObjectEvent;
+import ru.finex.core.model.event.object.GameObjectEvent;
 import ru.finex.core.model.event.object.impl.GameObjectDestroyed;
-import ru.finex.core.model.object.GameObject;
-import ru.finex.core.model.object.GameObjectFactory;
+import ru.finex.core.object.GameObject;
+import ru.finex.core.object.GameObjectFactory;
+import ru.finex.core.object.GameObjectService;
 import ru.finex.core.pool.PoolService;
-import ru.finex.core.service.object.GameObjectService;
 
 import java.util.Map;
 import java.util.Objects;

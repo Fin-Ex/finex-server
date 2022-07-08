@@ -1,6 +1,6 @@
-package ru.finex.core.service.id.impl;
+package ru.finex.core.id.impl;
 
-import ru.finex.core.service.id.RuntimeIdService;
+import ru.finex.core.id.RuntimeIdService;
 
 import java.util.BitSet;
 import javax.inject.Singleton;

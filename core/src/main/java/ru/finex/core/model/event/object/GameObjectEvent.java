@@ -1,6 +1,6 @@
-package ru.finex.core.model;
+package ru.finex.core.model.event.object;
 
-import ru.finex.core.model.object.GameObject;
+import ru.finex.core.object.GameObject;
 import ru.finex.core.pool.Cleanable;
 
 /**
@@ -8,7 +8,7 @@ import ru.finex.core.pool.Cleanable;
  */
 public interface GameObjectEvent extends Cleanable {
 
-    String CHANNEL = "ru.finex.core.model.GameObject";
+    String CHANNEL = "ru.finex.core.model.object.GameObject";
 
     /**
      * Игровой объект, который является инициатором события.

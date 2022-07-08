@@ -1,9 +1,9 @@
-package ru.finex.core.model.object.impl;
+package ru.finex.core.object.impl;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import ru.finex.core.model.object.GameObject;
 import ru.finex.core.model.object.scope.GameObjectScoped;
+import ru.finex.core.object.GameObject;
 
 /**
  * @author m0nster.mind

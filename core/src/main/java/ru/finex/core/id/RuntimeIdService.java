@@ -1,7 +1,7 @@
-package ru.finex.core.service.id;
+package ru.finex.core.id;
 
 import com.google.inject.ImplementedBy;
-import ru.finex.core.service.id.impl.RuntimeIdServiceImpl;
+import ru.finex.core.id.impl.RuntimeIdServiceImpl;
 
 /**
  * @author m0nster.mind

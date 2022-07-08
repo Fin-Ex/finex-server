@@ -21,7 +21,7 @@ import ru.finex.core.inject.module.PoolModule;
 import ru.finex.core.prototype.ComponentPrototype;
 import ru.finex.core.prototype.ComponentPrototypeMapper;
 import ru.finex.core.utils.GenericUtils;
-import ru.finex.core.service.component.impl.ComponentServiceImpl;
+import ru.finex.core.component.impl.ComponentServiceImpl;
 import ru.finex.ws.tick.TickService;
 import ru.finex.ws.tick.impl.RegisterTickListener;
 import ru.finex.ws.tick.impl.TickServiceImpl;

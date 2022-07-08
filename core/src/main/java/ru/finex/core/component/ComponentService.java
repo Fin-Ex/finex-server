@@ -1,6 +1,6 @@
 package ru.finex.core.component;
 
-import ru.finex.core.model.object.GameObject;
+import ru.finex.core.object.GameObject;
 
 import java.util.List;
 
@@ -27,14 +27,6 @@ public interface ComponentService {
      * @param component добавляемый компонент
      */
     void addComponent(GameObject gameObject, Component component);
-
-    /**
-     * Добавляет компонент игровому объекту.
-     *
-     * @param gameObject игровой объект
-     * @param componentType добавляемый тип компонента
-     */
-    void addComponent(GameObject gameObject, Class<? extends Component> componentType);
 
     /**
      * Удаляет компонент у игрового объекта.

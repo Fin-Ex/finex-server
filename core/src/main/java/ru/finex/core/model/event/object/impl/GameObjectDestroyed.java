@@ -1,8 +1,8 @@
 package ru.finex.core.model.event.object.impl;
 
 import lombok.Data;
-import ru.finex.core.model.GameObjectEvent;
-import ru.finex.core.model.object.GameObject;
+import ru.finex.core.model.event.object.GameObjectEvent;
+import ru.finex.core.object.GameObject;
 
 /**
  * @author m0nster.mind

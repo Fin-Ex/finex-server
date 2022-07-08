@@ -1,10 +1,9 @@
-package ru.finex.core.service.object;
+package ru.finex.core.object;
 
 import com.google.inject.ImplementedBy;
 import ru.finex.core.events.cluster.ClusterEventBus;
-import ru.finex.core.model.GameObjectEvent;
-import ru.finex.core.model.object.GameObject;
-import ru.finex.core.service.object.impl.GameObjectServiceImpl;
+import ru.finex.core.model.event.object.GameObjectEvent;
+import ru.finex.core.object.impl.GameObjectServiceImpl;
 
 /**
  * @author m0nster.mind
