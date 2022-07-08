@@ -38,7 +38,7 @@ public interface EventSubscription<T> {
     EventSubscription<T> forEach(Consumer<T> consumer);
 
     /**
-     * Short notation filter & map to specified type.
+     * Short notation filter and map to specified type.
      * <pre>{@code
      * subscription
      *     .filter(e -> e instanceof Type)

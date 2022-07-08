@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import ru.finex.core.db.impl.TransactionalContext;
-import ru.finex.core.model.entity.Entity;
+import ru.finex.core.model.entity.EntityObject;
 import ru.finex.core.utils.GenericUtils;
 
 import java.io.Serializable;
@@ -21,7 +21,7 @@ import javax.inject.Named;
  * @author finfan
  */
 @Slf4j
-public abstract class AbstractCrudRepository<T extends Entity<ID>, ID extends Serializable> implements CrudRepository<T, ID> {
+public abstract class AbstractCrudRepository<T extends EntityObject<ID>, ID extends Serializable> implements CrudRepository<T, ID> {
 
     protected Class<T> entityClass = GenericUtils.getGenericType(getClass(), 0);
 

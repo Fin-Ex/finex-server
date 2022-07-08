@@ -1,4 +1,4 @@
-package ru.finex.ws.model.entity;
+package ru.finex.core.model.entity;
 
 import lombok.Data;
 
@@ -16,12 +16,15 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "game_object_prototypes")
-public class GameObjectPrototype implements ru.finex.core.model.entity.Entity<Integer> {
+public class GameObjectPrototype implements EntityObject<Integer> {
     @Id
     @Column(name = "id")
     @SequenceGenerator(name = "game_object_prototypes_id_seq", sequenceName = "game_object_prototypes_id_seq", allocationSize = 1)
     @GeneratedValue(generator = "game_object_prototypes_id_seq", strategy = GenerationType.SEQUENCE)
     private Integer persistenceId;
-    @Column(name = "name", unique = true, nullable = false)
+
+    @Column(unique = true, nullable = false)
     private String name;
+
+    private Integer parentId;
 }

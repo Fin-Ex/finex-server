@@ -12,12 +12,13 @@ import java.util.List;
 public interface ComponentService {
 
     /**
-     * Возвращает массив классов компонентов прототипа игрового объекта.
-     *
-     * @param objectName имя прототипа объекта
-     * @return массив классов компонентов
+     * Добавляет компоненты из прототипа игрового объекта.
+     * @param prototypeName имя прототипа игрового объекта
+     * @param gameObject игровой объект, которому будут добавлены компоненты
      */
-    Class[] getComponentTypesForObject(String objectName);
+    void addComponentsFromPrototype(String prototypeName, GameObject gameObject);
+
+    //void addComponent(GameObject gameObject, ComponentPrototype prototype);
 
     /**
      * Добавляет компонент игровому объекту.

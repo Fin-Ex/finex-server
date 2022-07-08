@@ -11,7 +11,7 @@ import org.hibernate.service.ServiceRegistry;
 import org.reflections.scanners.Scanners;
 import ru.finex.core.GlobalContext;
 import ru.finex.core.db.DbSessionService;
-import ru.finex.core.model.entity.Entity;
+import ru.finex.core.model.entity.EntityObject;
 import ru.finex.evolution.MigrationService;
 
 import java.util.Collection;
@@ -34,12 +34,13 @@ public class DbSessionServiceImpl implements DbSessionService {
     private final SessionFactory sessionFactory;
 
     @Inject
-    public DbSessionServiceImpl(ServiceRegistry serviceRegistry, MigrationService migrationService) {
+    public DbSessionServiceImpl(ServiceRegistry serviceRegistry, MigrationService migrationService,
+        SnakeCasePhysicalNamingStrategy physicalNamingStrategy, RawJsonUserType jsonUserType) {
         // do migration before up hibernate
         migrationService.autoMigration(GlobalContext.arguments.containsKey(EVO_AUTO_ROLLBACK));
 
         MetadataSources metaSrc = new MetadataSources(serviceRegistry);
-        GlobalContext.reflections.getSubTypesOf(Entity.class).forEach(metaSrc::addAnnotatedClass);
+        GlobalContext.reflections.getSubTypesOf(EntityObject.class).forEach(metaSrc::addAnnotatedClass);
 
         // load xml queries and mappings
         XmlMappingBinderAccess binder = metaSrc.getXmlMappingBinderAccess();
@@ -56,6 +57,8 @@ public class DbSessionServiceImpl implements DbSessionService {
 
         Metadata metadata = metaSrc.getMetadataBuilder()
             .applyImplicitNamingStrategy(ImplicitNamingStrategyJpaCompliantImpl.INSTANCE)
+            .applyPhysicalNamingStrategy(physicalNamingStrategy)
+            .applyBasicType(jsonUserType, "RawJsonb")
             .build();
 
         sessionFactory = metadata.buildSessionFactory();

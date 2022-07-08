@@ -47,7 +47,7 @@ public class Box3 {
     }
 
     /**
-     * Copy AABB size & coordinates from other AABB to this AABB.
+     * Copy AABB size and coordinates from other AABB to this AABB.
      * @param box other AABB
      * @return this
      */
@@ -62,7 +62,7 @@ public class Box3 {
     }
 
     /**
-     * Copy AABB size & coordinates from other AABB to this AABB with specified precision.
+     * Copy AABB size and coordinates from other AABB to this AABB with specified precision.
      * @param box other AABB
      * @param precision precision
      * @return this

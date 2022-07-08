@@ -1,6 +1,6 @@
 package ru.finex.core.repository;
 
-import ru.finex.core.model.entity.Entity;
+import ru.finex.core.model.entity.EntityObject;
 import ru.finex.core.utils.GenericUtils;
 
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutorService;
  * @param <ID> entity ID type
  * @author m0nster.mind
  */
-public class DefaultCrudRepository<E extends Entity<ID>, ID extends Serializable> extends AbstractCrudRepository<E, ID> {
+public class DefaultCrudRepository<E extends EntityObject<ID>, ID extends Serializable> extends AbstractCrudRepository<E, ID> {
 
     /**
      * Create new builder.
@@ -27,14 +27,14 @@ public class DefaultCrudRepository<E extends Entity<ID>, ID extends Serializable
     public static class Builder {
 
         private ExecutorService executorService;
-        private Class<? extends Entity> entityType;
+        private Class<? extends EntityObject> entityType;
 
         public Builder executorService(ExecutorService executorService) {
             this.executorService = executorService;
             return this;
         }
 
-        public Builder entityType(Class<? extends Entity> entityType) {
+        public Builder entityType(Class<? extends EntityObject> entityType) {
             this.entityType = entityType;
             return this;
         }

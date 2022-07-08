@@ -9,12 +9,13 @@ import ru.finex.core.events.cluster.ClusterEventBus;
 import ru.finex.core.model.GameObject;
 import ru.finex.core.model.GameObjectEvent;
 import ru.finex.core.pool.PoolService;
-import ru.finex.core.utils.ClassUtils;
+import ru.finex.core.prototype.ComponentPrototype;
+import ru.finex.core.prototype.ComponentPrototypeMapper;
+import ru.finex.core.prototype.GameObjectPrototypeService;
 import ru.finex.ws.model.GameObjectComponents;
 import ru.finex.ws.model.event.component.OnComponentAttached;
 import ru.finex.ws.model.event.component.OnComponentDeattached;
 import ru.finex.ws.service.GameObjectInjectorService;
-import ru.finex.ws.service.GameObjectPrototypeService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 /**
@@ -39,12 +41,25 @@ public class ComponentServiceImpl implements ComponentService {
     @Clustered(GameObjectEvent.CHANNEL)
     private ClusterEventBus<GameObjectEvent> eventBus;
 
+    @Named("ComponentMappers")
+    private Map<Class<? extends ComponentPrototype>, ComponentPrototypeMapper> mappers;
+
     @Override
-    public Class[] getComponentTypesForObject(String objectName) {
-        return prototypeService.getComponentsByPrototypeName(objectName)
-            .stream()
-            .map(ClassUtils::forName)
-            .toArray(Class<?>[]::new);
+    public void addComponentsFromPrototype(String prototypeName, GameObject gameObject) {
+        prototypeService.getPrototypesByName(prototypeName)
+            .forEach(prototype -> addComponent(gameObject, prototype));
+    }
+
+    //@Override
+    /**
+     * Добавляет игровому объекту компонент, создавая его из прототипа.
+     * @param gameObject игровой объект, которому будет добавлен компонент
+     * @param prototype прототип компонента
+     */
+    public void addComponent(GameObject gameObject, ComponentPrototype prototype) {
+        ComponentPrototypeMapper mapper = mappers.get(prototype.getClass());
+        Component component = mapper.map(prototype);
+        addComponent(gameObject, component);
     }
 
     @Override

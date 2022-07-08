@@ -2,6 +2,7 @@ package ru.finex.ws.inject.module.loader;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
+import lombok.EqualsAndHashCode;
 import ru.finex.core.inject.LoaderModule;
 import ru.finex.ws.concurrent.game.GameExecutorProvider;
 import ru.finex.ws.concurrent.game.GameExecutorServiceImpl;
@@ -14,6 +15,7 @@ import java.util.concurrent.ScheduledExecutorService;
  * @author m0nster.mind
  */
 @LoaderModule
+@EqualsAndHashCode
 public class GameExecutorServiceModule extends AbstractModule {
 
     @Override

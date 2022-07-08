@@ -18,10 +18,11 @@ import ru.finex.core.utils.InjectorUtils;
 import ru.finex.evolution.Evolution;
 
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Производит инициализацию ядра.
@@ -31,14 +32,18 @@ import java.util.Map;
 @Evolution("core")
 public class ServerApplication {
 
+    public static final String MODULES_ARG = "modules";
+
     /**
      * Производит инициализацию ядра:
-     * <li/> Настраивает логирование
-     * <li/> Инициализирует {@link GlobalContext глобальный контекст}
-     * <li/> Иницилазация модулей
-     * <li/> Создаёт инжектор
-     * <li/> Регистрирует {@link SigtermListener}
-     * <li/> Уведомляет {@link ApplicationBuilt подписчиков} о старте.
+     * <ul>
+     * <li> Настраивает логирование</li>
+     * <li> Инициализирует {@link GlobalContext глобальный контекст}</li>
+     * <li> Иницилазация модулей</li>
+     * <li> Создаёт инжектор</li>
+     * <li> Регистрирует {@link SigtermListener}</li>
+     * <li> Уведомляет {@link ApplicationBuilt подписчиков} о старте.</li>
+     * </ul>
      *
      * @param modulePackage root package сервера
      * @param args аргументы запуска
@@ -66,13 +71,7 @@ public class ServerApplication {
         LoggerFactory.getLogger(ServerApplication.class)
             .info("Core version: {}", Version.getImplVersion());
 
-        List<Module> modules = new ArrayList<>();
-        modules.add(new CloseableModule());
-        modules.add(new Jsr250Module());
-        modules.add(new JmxModule());
-        modules.addAll(InjectorUtils.collectModules(ServerApplication.class.getPackageName(), LoaderModule.class));
-        modules.addAll(InjectorUtils.collectModules(modulePackage, LoaderModule.class));
-
+        Set<Module> modules = createModules();
         Injector globalInjector = Guice.createInjector(Stage.PRODUCTION, modules);
         GlobalContext.injector = globalInjector;
 
@@ -90,13 +89,28 @@ public class ServerApplication {
         Map<String, String> arguments = new HashMap<>();
         for (String arg : args) {
             if (arg.contains("=")) {
-                String[] pair = arg.split("=", 1);
+                String[] pair = arg.split("=", 2);
                 arguments.put(pair[0], pair[1]);
             } else {
                 arguments.put(arg, arg);
             }
         }
         GlobalContext.arguments = arguments;
+    }
+
+    private static Set<Module> createModules() {
+        HashSet<Module> modules = new HashSet<>();
+        modules.add(new CloseableModule());
+        modules.add(new Jsr250Module());
+        modules.add(new JmxModule());
+        modules.addAll(InjectorUtils.collectModules(ServerApplication.class.getPackageName(), LoaderModule.class));
+        modules.addAll(InjectorUtils.collectModules(GlobalContext.rootPackage, LoaderModule.class));
+        Optional.ofNullable(GlobalContext.arguments.get(MODULES_ARG))
+            .map(e -> e.split(",;"))
+            .map(InjectorUtils::collectModules)
+            .ifPresent(modules::addAll);
+
+        return modules;
     }
 
 }

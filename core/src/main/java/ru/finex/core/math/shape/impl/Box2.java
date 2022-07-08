@@ -42,7 +42,7 @@ public class Box2 {
     }
 
     /**
-     * Copy aabb size & coordinates from other aabb to this aabb.
+     * Copy aabb size and coordinates from other aabb to this aabb.
      * @param box other aabb
      * @return this
      */
@@ -55,7 +55,7 @@ public class Box2 {
     }
 
     /**
-     * Copy aabb size & coordinates from other aabb to this aabb with specified precision.
+     * Copy aabb size and coordinates from other aabb to this aabb with specified precision.
      * @param box other aabb
      * @param precision precision
      * @return this

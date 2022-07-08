@@ -9,6 +9,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author m0nster.mind
@@ -25,6 +26,15 @@ public class InjectorUtils {
         return GlobalContext.reflections.getTypesAnnotatedWith(annType)
             .stream()
             .filter(e -> e.getCanonicalName().startsWith(rootPackage))
+            .filter(e -> !Modifier.isAbstract(e.getModifiers()) && !Modifier.isInterface(e.getModifiers()))
+            .map(ClassUtils::createInstance)
+            .map(e -> (Module) e)
+            .collect(Collectors.toList());
+    }
+
+    public static List<Module> collectModules(String[] canonicalPaths) {
+        return Stream.of(canonicalPaths)
+            .map(ClassUtils::forName)
             .filter(e -> !Modifier.isAbstract(e.getModifiers()) && !Modifier.isInterface(e.getModifiers()))
             .map(ClassUtils::createInstance)
             .map(e -> (Module) e)

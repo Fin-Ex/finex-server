@@ -1,6 +1,6 @@
 package ru.finex.core.repository;
 
-import ru.finex.core.model.entity.Entity;
+import ru.finex.core.model.entity.EntityObject;
 
 import java.io.Serializable;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
  * @author finfan: 14.09.2021
  */
 @SuppressWarnings({"checkstyle:JavadocType", "checkstyle:MissingJavadocMethod"})
-public interface CrudRepository<T extends Entity<ID>, ID extends Serializable> {
+public interface CrudRepository<T extends EntityObject<ID>, ID extends Serializable> {
 
     RepositoryFuture<T> createAsync(T entity);
 

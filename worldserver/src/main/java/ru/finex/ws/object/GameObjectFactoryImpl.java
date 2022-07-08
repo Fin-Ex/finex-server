@@ -1,7 +1,6 @@
 package ru.finex.ws.object;
 
 import lombok.RequiredArgsConstructor;
-import ru.finex.core.component.Component;
 import ru.finex.core.component.ComponentService;
 import ru.finex.core.model.GameObject;
 import ru.finex.core.persistence.GameObjectPersistenceService;
@@ -30,18 +29,10 @@ public class GameObjectFactoryImpl implements GameObjectFactory {
 
         GameObjectImpl gameObject = new GameObjectImpl(runtimeId, persistenceId);
         injectorService.create(gameObject);
-        setupComponents(templateName, gameObject);
+        componentService.addComponentsFromPrototype(templateName, gameObject);
         persistenceService.restore(gameObject);
 
         return gameObject;
-    }
-
-    private void setupComponents(String templateName, GameObject gameObject) {
-        Class[] types = componentService.getComponentTypesForObject(templateName);
-        for (int i = 0; i < types.length; i++) {
-            Class<? extends Component> componentType = types[i];
-            componentService.addComponent(gameObject, componentType);
-        }
     }
 
 }
