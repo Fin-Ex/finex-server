@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Слушастель вызывающийся при получении сигнала {@code sigterm}.
+ * Слушатель, вызывающийся при получении сигнала {@code sigterm}.
  *
  * @author m0nster.mind
  */

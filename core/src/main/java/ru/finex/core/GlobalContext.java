@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Глобальный контекс всего сервера.
+ * Глобальный контекст всего сервера.
  *
  * @author m0nster.mind
  */
