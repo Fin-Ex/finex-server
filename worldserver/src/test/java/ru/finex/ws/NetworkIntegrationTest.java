@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.Timeout;
 import ru.finex.core.GlobalContext;
 import ru.finex.core.Version;
 import ru.finex.ws.ContainerRule.Type;
@@ -48,6 +49,7 @@ public class NetworkIntegrationTest {
     }
 
     @Test
+    @Timeout(10)
     public void testPingPong() throws Exception {
         Injector injector = GlobalContext.injector;
         NetworkConfiguration networkConfiguration = injector.getInstance(NetworkConfiguration.class);
