@@ -3,6 +3,7 @@ package ru.finex.core.network.codec;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.EncoderException;
 import io.netty.handler.codec.MessageToByteEncoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,13 @@ public class NetworkDtoEncoder extends MessageToByteEncoder<NetworkDto> {
 
         opcodeCodec.encode(metadata.getOpcodes(), out);
         PacketSerializer serial = metadata.getSerial();
-        serial.serialize(msg, out);
+        try {
+            serial.serialize(msg, out);
+        } catch (Exception e) {
+            // log and throw exception because netty is hide it
+            log.error("Fail to serialize message: '{}' / {}", msg, msg.getClass().getCanonicalName(), e);
+            throw new EncoderException(e);
+        }
     }
 
 }
