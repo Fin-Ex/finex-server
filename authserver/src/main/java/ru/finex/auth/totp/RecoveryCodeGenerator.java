@@ -1,9 +1,9 @@
 package ru.finex.auth.totp;
 
-import ru.finex.core.rng.RandomProvider;
+import ru.finex.core.rng.RandomGenerator;
+import ru.finex.core.rng.RandomProviders;
 
 import java.security.InvalidParameterException;
-import java.security.SecureRandom;
 import java.util.Arrays;
 
 /**
@@ -46,7 +46,7 @@ public class RecoveryCodeGenerator {
     private String generateCode() {
         final StringBuilder code = new StringBuilder(CODE_LENGTH + (CODE_LENGTH / GROUPS_NBR) - 1);
 
-        SecureRandom random = RandomProvider.secureRandom().get();
+        RandomGenerator random = RandomProviders.secureRandom().get();
         for (int i = 0; i < CODE_LENGTH; i++) {
             // Append random character from authorized ones
             code.append(CHARACTERS[random.nextInt(CHARACTERS.length)]);

@@ -16,11 +16,11 @@ import ru.finex.core.math.vector.Vector3f;
 import ru.finex.core.pool.PoolService;
 import ru.finex.core.pool.impl.ArrayDequePool;
 import ru.finex.core.pool.impl.SimplePooledObjectFactory;
-import ru.finex.core.rng.RandomProvider;
+import ru.finex.core.rng.RandomGenerator;
+import ru.finex.core.rng.RandomProviders;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -84,7 +84,7 @@ public class Box2TreeTest {
     }
 
     private List<Box2TreeElement> generateShapes(int count, float maxX, float maxY, float maxRadius) {
-        Random rng = RandomProvider.defaultRandom().get();
+        RandomGenerator rng = RandomProviders.defaultRandom().get();
         Vector3f basePoint = new Vector3f(rng.nextFloat(maxX), 0, rng.nextFloat(maxY));
 
         List<Box2TreeElement> shapes = new ArrayList<>();
@@ -96,7 +96,7 @@ public class Box2TreeTest {
     }
 
     private Box2TreeElement generateShape(int id, Vector3f basePoint, float maxRadius, float minSize, float maxSize) {
-        Random rng = RandomProvider.defaultRandom().get();
+        RandomGenerator rng = RandomProviders.defaultRandom().get();
         Vector3f point = basePoint
             .addLocal(new Vector3f(rng.nextFloat(), 0, rng.nextFloat())
                 .normalizeLocal()

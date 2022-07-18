@@ -1,9 +1,9 @@
 package ru.finex.auth.totp;
 
 import dev.samstevens.totp.secret.SecretGenerator;
-import ru.finex.core.rng.RandomProvider;
+import ru.finex.core.rng.RandomGenerator;
+import ru.finex.core.rng.RandomProviders;
 
-import java.security.SecureRandom;
 import java.util.Base64;
 
 /**
@@ -32,7 +32,7 @@ public class SecretGeneratorImpl implements SecretGenerator {
     private byte[] getRandomBytes() {
         // 5 bits per char in base32
         byte[] bytes = new byte[(numCharacters * 5) / 8];
-        SecureRandom secureRandom = RandomProvider.secureRandom().get();
+        RandomGenerator secureRandom = RandomProviders.secureRandom().get();
         secureRandom.nextBytes(bytes);
 
         return bytes;
