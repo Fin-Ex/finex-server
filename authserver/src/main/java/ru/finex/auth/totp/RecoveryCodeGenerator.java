@@ -49,7 +49,7 @@ public class RecoveryCodeGenerator {
         RandomGenerator random = RandomProviders.secureRandom().get();
         for (int i = 0; i < CODE_LENGTH; i++) {
             // Append random character from authorized ones
-            code.append(CHARACTERS[random.nextInt(CHARACTERS.length)]);
+            code.append(random.nextElement(CHARACTERS));
 
             // Split code into groups for increased readability
             if ((i + 1) % GROUPS_NBR == 0 && (i + 1) != CODE_LENGTH) {
