@@ -29,6 +29,8 @@ public class ClusterConfig {
     private Subscriptions subscriptions;
     private Network network;
 
+    private String role;
+
     @Data
     public static class Subscriptions {
         private int subscriptionsPerConnection;

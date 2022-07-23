@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import ru.finex.core.component.ComponentService;
 import ru.finex.core.model.GameObject;
 import ru.finex.core.persistence.GameObjectPersistenceService;
+import ru.finex.core.uid.RuntimeIdService;
 import ru.finex.ws.model.GameObjectImpl;
 import ru.finex.ws.service.GameObjectInjectorService;
-import ru.finex.ws.service.RuntimeIdService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
