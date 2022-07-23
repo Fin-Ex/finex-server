@@ -1,6 +1,9 @@
 package ru.finex.core.cluster;
 
+import org.redisson.api.RObject;
 import org.redisson.api.RedissonClient;
+
+import javax.annotation.PreDestroy;
 
 /**
  * @author m0nster.mind
@@ -41,10 +44,20 @@ public interface ClusterService {
      */
     String getName(Class<?> caller, String field);
 
+    String getName(Class<?> caller, String method, String parameter);
+
     /**
      * Return count of this server instances (by role) in cluster.
      * @return server instances
      */
     int getInstances();
+
+    /**
+     * Register clustered resource as managed.
+     * All resources registered as managed will be deleted at {@link PreDestroy PreDestroy} signal
+     *  if current server instance with specified role is single.
+     * @param resource clustered resource
+     */
+    void registerManagedResource(RObject resource);
 
 }

@@ -2,9 +2,12 @@ package ru.finex.core.cluster.impl;
 
 import lombok.Getter;
 import org.redisson.api.RAtomicLong;
+import org.redisson.api.RObject;
 import org.redisson.api.RedissonClient;
 import ru.finex.core.cluster.ClusterService;
 
+import java.util.HashSet;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
@@ -15,6 +18,8 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class ClusterServiceImpl implements ClusterService {
+
+    private final Set<RObject> allocatedObjects = new HashSet<>();
 
     @Getter
     private final RedissonClient client;
@@ -45,8 +50,18 @@ public class ClusterServiceImpl implements ClusterService {
     }
 
     @Override
+    public String getName(Class<?> caller, String method, String parameter) {
+        return role + "@" + caller.getCanonicalName() + "::" + method + "#" + parameter;
+    }
+
+    @Override
     public int getInstances() {
         return (int) instances.get();
+    }
+
+    @Override
+    public void registerManagedResource(RObject resource) {
+        allocatedObjects.add(resource);
     }
 
     @PostConstruct
@@ -57,7 +72,9 @@ public class ClusterServiceImpl implements ClusterService {
 
     @PreDestroy
     private void destroy() {
-        instances.decrementAndGet();
+        if (instances.decrementAndGet() == 0) {
+            allocatedObjects.forEach(RObject::delete);
+        }
         client.shutdown();
     }
 

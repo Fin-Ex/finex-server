@@ -4,7 +4,6 @@ import org.redisson.api.RBitSet;
 import ru.finex.core.cluster.ClusterService;
 import ru.finex.core.uid.RuntimeIdService;
 
-import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -15,14 +14,13 @@ import javax.inject.Singleton;
 public class ClusteredRuntimeIdService implements RuntimeIdService {
 
     private static final long MAX_BITS = 4_294_967_295L; // 0xffff_ffff
-    private final ClusterService clusterService;
     private final RBitSet bitset;
     private long position;
 
     @Inject
     public ClusteredRuntimeIdService(ClusterService clusterService) {
-        this.clusterService = clusterService;
         bitset = clusterService.getClient().getBitSet(clusterService.getName(getClass()));
+        clusterService.registerManagedResource(bitset);
     }
 
     @Override
@@ -58,10 +56,4 @@ public class ClusteredRuntimeIdService implements RuntimeIdService {
         return -1;
     }
 
-    @PreDestroy
-    private void destroy() {
-        if (clusterService.getInstances() == 1) {
-            bitset.delete();
-        }
-    }
 }
