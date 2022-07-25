@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
+import jakarta.transaction.Transactional;
 import org.hibernate.Session;
 import org.hibernate.service.ServiceRegistry;
 import ru.finex.core.GlobalContext;
@@ -28,7 +29,6 @@ import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import javax.sql.DataSource;
-import javax.transaction.Transactional;
 
 /**
  * @author m0nster.mind
@@ -37,7 +37,7 @@ public class DbModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(new TypeLiteral<Map<String, String>>() { }).annotatedWith(Names.named("HibernateProperties"))
+        bind(new TypeLiteral<Map<String, Object>>() { }).annotatedWith(Names.named("HibernateProperties"))
             .toProvider(HibernatePropertyProvider.class);
         bind(ServiceRegistry.class).toProvider(ServiceRegistryProvider.class);
         bind(DbSessionService.class).to(DbSessionServiceImpl.class);

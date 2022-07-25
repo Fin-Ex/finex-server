@@ -1,21 +1,24 @@
 package ru.finex.auth.model.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.UpdateTimestamp;
 import ru.finex.core.model.entity.EntityObject;
 
 import java.time.Instant;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 
 /**
  * @author m0nster.mind
@@ -36,31 +39,25 @@ public class UserEntity implements EntityObject<Long> {
     @GeneratedValue(generator = "users_id_seq", strategy = GenerationType.SEQUENCE)
     private Long persistenceId;
 
-    @Column(name = "login", nullable = false)
+    @NotNull
     private String login;
 
-    @Column(name = "password", nullable = false)
+    @NotNull
     private String password;
-    @Column(name = "hash", nullable = false)
+    @NotNull
     private String hash;
 
-    @Column(name = "create_date")
+    @CreationTimestamp
     private Instant createDate;
-    @Column(name = "modify_date")
+    @UpdateTimestamp
     private Instant modifyDate;
-    @Column(name = "auth_date")
     private Instant authDate;
 
-    @Column(name = "country")
     private String country;
-    @Column(name = "ip_address")
     private String ipAddress;
 
-    @Column(name = "email")
     private String email;
-    @Column(name = "phone")
     private String phone;
-    @Column(name = "secret")
     private String secret;
 
 }

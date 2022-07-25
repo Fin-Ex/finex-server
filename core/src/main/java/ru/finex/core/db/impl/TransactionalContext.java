@@ -14,7 +14,7 @@ import javax.inject.Inject;
  * Контекст для работы с БД в рамках транзакционности.
  *
  * @author m0nster.mind
- * @see javax.transaction.Transactional
+ * @see jakarta.transaction.Transactional
  */
 @SuppressWarnings("checkstyle:MissingJavadocMethod")
 public class TransactionalContext {
@@ -73,7 +73,7 @@ public class TransactionalContext {
 
     /**
      * Commit изменениях в рамках текущей транзакции.
-     * Может не быть выполнено немедленно, если вызывающие методы помечены {@link javax.transaction.Transactional}.
+     * Может не быть выполнено немедленно, если вызывающие методы помечены {@link jakarta.transaction.Transactional}.
      *
      * @param session сессия
      */
@@ -85,7 +85,7 @@ public class TransactionalContext {
 
     /**
      * Откат всех изменений сделанных в рамках текущей транзакции.
-     * Может быть не выполнено немедленно, если вызывающие методы помеченны {@link javax.transaction.Transactional}.
+     * Может быть не выполнено немедленно, если вызывающие методы помеченны {@link jakarta.transaction.Transactional}.
      * @param session сессия
      */
     public void rollback(Session session) {

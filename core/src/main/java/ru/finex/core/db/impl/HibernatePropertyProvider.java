@@ -15,12 +15,12 @@ import javax.inject.Provider;
  * @author m0nster.mind
  */
 @RequiredArgsConstructor(onConstructor_ = { @Inject })
-public class HibernatePropertyProvider implements Provider<Map<String, String>> {
+public class HibernatePropertyProvider implements Provider<Map<String, Object>> {
 
     private final Config config;
 
     @Override
-    public Map<String, String> get() {
+    public Map<String, Object> get() {
         return config.getConfig("hibernate").entrySet()
             .stream()
             .map(this::mapProperty)
