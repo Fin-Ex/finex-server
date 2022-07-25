@@ -1,15 +1,15 @@
 package ru.finex.core.db.impl;
 
+import jakarta.transaction.InvalidTransactionException;
+import jakarta.transaction.TransactionRequiredException;
+import jakarta.transaction.Transactional;
+import jakarta.transaction.Transactional.TxType;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.util.stream.Stream;
-import javax.persistence.TransactionRequiredException;
-import javax.transaction.InvalidTransactionException;
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
 
 /**
  * Прокси методов помеченных аннотацией {@link Transactional}.

@@ -1,19 +1,22 @@
 package ru.finex.auth.model.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.UpdateTimestamp;
 import ru.finex.core.model.entity.EntityObject;
 
 import java.time.Instant;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 
 /**
  * @author m0nster.mind
@@ -34,12 +37,12 @@ public class RestorePasswordCodeEntity implements EntityObject<Long> {
 
     @Column(name = "user_id", unique = true, nullable = false)
     private Long userId;
-    @Column(name = "code", nullable = false)
+    @NotNull
     private String code;
 
-    @Column(name = "createDate")
+    @CreationTimestamp
     private Instant createDate;
-    @Column(name = "modifyDate")
+    @UpdateTimestamp
     private Instant modifyDate;
 
 }

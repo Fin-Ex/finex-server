@@ -16,6 +16,7 @@ import ru.finex.core.inject.LoaderModule;
 import ru.finex.core.logback.LogbackConfiguration;
 import ru.finex.core.utils.InjectorUtils;
 import ru.finex.evolution.Evolution;
+import ru.vyarus.guice.validator.ValidationModule;
 
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -103,10 +104,11 @@ public class ServerApplication {
         modules.add(new CloseableModule());
         modules.add(new Jsr250Module());
         modules.add(new JmxModule());
+        modules.add(new ValidationModule());
         modules.addAll(InjectorUtils.collectModules(ServerApplication.class.getPackageName(), LoaderModule.class));
         modules.addAll(InjectorUtils.collectModules(GlobalContext.rootPackage, LoaderModule.class));
         Optional.ofNullable(GlobalContext.arguments.get(MODULES_ARG))
-            .map(e -> e.split(",;"))
+            .map(e -> e.split("[,;]"))
             .map(InjectorUtils::collectModules)
             .ifPresent(modules::addAll);
 

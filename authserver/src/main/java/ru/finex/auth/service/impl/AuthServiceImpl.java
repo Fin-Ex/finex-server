@@ -1,5 +1,6 @@
 package ru.finex.auth.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import ru.finex.auth.model.AuthState;
 import ru.finex.auth.model.UserDto;
@@ -12,7 +13,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.transaction.Transactional;
 
 /**
  * @author m0nster.mind

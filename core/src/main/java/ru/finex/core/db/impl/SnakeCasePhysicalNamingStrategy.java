@@ -17,26 +17,46 @@ public class SnakeCasePhysicalNamingStrategy implements PhysicalNamingStrategy {
 
     @Override
     public Identifier toPhysicalCatalogName(Identifier name, JdbcEnvironment jdbcEnvironment) {
+        if (name == null) {
+            return null;
+        }
+
         return Identifier.toIdentifier(caseStrategy.translate(name.getText()));
     }
 
     @Override
     public Identifier toPhysicalSchemaName(Identifier name, JdbcEnvironment jdbcEnvironment) {
+        if (name == null) {
+            return null;
+        }
+
         return Identifier.toIdentifier(caseStrategy.translate(name.getText()));
     }
 
     @Override
     public Identifier toPhysicalTableName(Identifier name, JdbcEnvironment jdbcEnvironment) {
+        if (name == null) {
+            return null;
+        }
+
         return Identifier.toIdentifier(caseStrategy.translate(name.getText()));
     }
 
     @Override
     public Identifier toPhysicalSequenceName(Identifier name, JdbcEnvironment jdbcEnvironment) {
+        if (name == null) {
+            return null;
+        }
+
         return Identifier.toIdentifier(caseStrategy.translate(name.getText()));
     }
 
     @Override
     public Identifier toPhysicalColumnName(Identifier name, JdbcEnvironment jdbcEnvironment) {
+        if (name == null) {
+            return null;
+        }
+
         return Identifier.toIdentifier(caseStrategy.translate(name.getText()));
     }
 

@@ -15,16 +15,16 @@ import javax.sql.DataSource;
  */
 public class DataSourceProvider implements Provider<DataSource> {
 
-    private final Map<String, String> hibernateProperties;
+    private final Map<String, Object> hibernateProperties;
 
     @Inject
-    public DataSourceProvider(@Named("HibernateProperties") Map<String, String> hibernateProperties) {
+    public DataSourceProvider(@Named("HibernateProperties") Map<String, Object> hibernateProperties) {
         this.hibernateProperties = hibernateProperties;
     }
 
     @Override
     public DataSource get() {
-        String providerPath = hibernateProperties.get("hibernate.connection.provider_class");
+        String providerPath = (String) hibernateProperties.get("hibernate.connection.provider_class");
         Class<?> providerClass = ClassUtils.forName(providerPath);
         ConnectionProvider connectionProvider = (ConnectionProvider) ClassUtils.createInstance(providerClass);
         if (connectionProvider instanceof Configurable configurable) {

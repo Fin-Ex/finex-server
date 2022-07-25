@@ -14,36 +14,36 @@ import java.util.Objects;
 /**
  * @author m0nster.mind
  */
-public class RawJsonUserType implements UserType {
+public class RawJsonUserType implements UserType<String> {
 
     @Override
-    public int[] sqlTypes() {
-        return new int[] {Types.OTHER};
+    public int getSqlType() {
+        return Types.OTHER;
     }
 
     @Override
-    public Class returnedClass() {
+    public Class<String> returnedClass() {
         return String.class;
     }
 
     @Override
-    public boolean equals(Object x, Object y) throws HibernateException {
+    public boolean equals(String x, String y) throws HibernateException {
         return Objects.equals(x, y);
     }
 
     @Override
-    public int hashCode(Object x) throws HibernateException {
+    public int hashCode(String x) throws HibernateException {
         return x.hashCode();
     }
 
     @Override
-    public Object nullSafeGet(ResultSet rs, String[] names, SharedSessionContractImplementor session, Object owner)
+    public String nullSafeGet(ResultSet rs, int position, SharedSessionContractImplementor session, Object owner)
         throws HibernateException, SQLException {
-        return rs.getString(names[0]);
+        return rs.getString(position);
     }
 
     @Override
-    public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session)
+    public void nullSafeSet(PreparedStatement st, String value, int index, SharedSessionContractImplementor session)
         throws HibernateException, SQLException {
         if (value == null) {
             st.setNull(index, Types.OTHER);
@@ -53,7 +53,7 @@ public class RawJsonUserType implements UserType {
     }
 
     @Override
-    public Object deepCopy(Object value) throws HibernateException {
+    public String deepCopy(String value) throws HibernateException {
         return value;
     }
 
@@ -63,17 +63,17 @@ public class RawJsonUserType implements UserType {
     }
 
     @Override
-    public Serializable disassemble(Object value) throws HibernateException {
-        return (Serializable) value;
+    public Serializable disassemble(String value) throws HibernateException {
+        return value;
     }
 
     @Override
-    public Object assemble(Serializable cached, Object owner) throws HibernateException {
-        return cached;
+    public String assemble(Serializable cached, Object owner) throws HibernateException {
+        return (String) cached;
     }
 
     @Override
-    public Object replace(Object original, Object target, Object owner) throws HibernateException {
+    public String replace(String original, String target, Object owner) throws HibernateException {
         return original;
     }
 }
