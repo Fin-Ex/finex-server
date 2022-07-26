@@ -8,13 +8,17 @@ import com.google.inject.spi.TypeListener;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.redisson.api.RObject;
 import org.redisson.api.RedissonClient;
+import ru.finex.core.cluster.ClusterService;
 import ru.finex.core.cluster.impl.providers.ClusteredProvider;
 import ru.finex.core.utils.ParameterUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,6 +29,7 @@ import java.util.Objects;
 public class ClusteredListener implements TypeListener {
 
     private final Provider<ClusteredProviders> clusteredProvidersProvider;
+    private final Provider<ClusterService> clusterServiceProvider;
 
     @Override
     public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter) {
@@ -43,14 +48,18 @@ public class ClusteredListener implements TypeListener {
         for (int i = 0; i < fields.size(); i++) {
             Field field = fields.get(i);
 
-            String name = getName(clazz, field);
-
             encounter.register((MembersInjector<I>) instance -> {
-                Object value = provideObject(clientProvider, clazz, field, name);
+                var meta = getAnnotationInfo(clazz, field);
+                Object value = provideObject(clientProvider, clazz, field, meta.getLeft());
                 try {
                     FieldUtils.writeField(field, instance, value, true);
                 } catch (ReflectiveOperationException e) {
                     throw new RuntimeException(e);
+                }
+
+                if (meta.getRight() && value instanceof RObject resource) {
+                    ClusterService clusterService = clusterServiceProvider.get();
+                    clusterService.registerManagedResource(resource);
                 }
             });
         }
@@ -71,8 +80,10 @@ public class ClusteredListener implements TypeListener {
     }
 
     private void injectMethod(Provider<RedissonClient> clientProvider, TypeEncounter<?> encounter, Object instance, Class<?> clazz, Method method) {
+        ClusterService clusterService = clusterServiceProvider.get();
         Parameter[] parameters = method.getParameters();
         Object[] parameterValues = new Object[parameters.length];
+        List<RObject> managedResources = new ArrayList<>(parameters.length);
         for (int i = 0; i < parameters.length; i++) {
             Parameter parameter = parameters[i];
 
@@ -87,6 +98,10 @@ public class ClusteredListener implements TypeListener {
                 String parameterName = parameter.getName();
                 String name = getName(clazz, methodName, parameterName, clustered);
                 value = provideObject(clientProvider, clazz, type, methodName, parameter, name);
+
+                if (clustered.autoManagement() && value instanceof RObject resource) {
+                    managedResources.add(resource);
+                }
             }
 
             parameterValues[i] = value;
@@ -97,22 +112,26 @@ public class ClusteredListener implements TypeListener {
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
+
+        managedResources.forEach(clusterService::registerManagedResource);
     }
 
-    private String getName(Class<?> type, Field field) {
+    private Pair<String, Boolean> getAnnotationInfo(Class<?> type, Field field) {
+        ClusterService clusterService = clusterServiceProvider.get();
         Clustered clustered = field.getAnnotation(Clustered.class);
         String name = clustered.value();
         if (StringUtils.isBlank(name)) {
-            name = type.getCanonicalName() + "#" + field.getName();
+            name = clusterService.getName(type, field.getName());
         }
 
-        return name;
+        return Pair.of(name, clustered.autoManagement());
     }
 
     private String getName(Class<?> type, String methodName, String parameterName, Clustered clustered) {
+        ClusterService clusterService = clusterServiceProvider.get();
         String name = clustered.value();
         if (StringUtils.isBlank(name)) {
-            name = type.getCanonicalName() + "::" + methodName + "#" + parameterName;
+            name = clusterService.getName(type, methodName, parameterName);
         }
 
         return name;
