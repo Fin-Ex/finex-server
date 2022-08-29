@@ -27,11 +27,11 @@ public class ClusteredRuntimeIdService implements RuntimeIdService {
     public int generateId() {
         bitset.set(position);
         long nextPosition = nextClearBit(position);
-        if (nextPosition == -1) {
+        if (nextPosition == MAX_BITS) {
             nextPosition = nextClearBit(0);
         }
 
-        if (nextPosition == -1) {
+        if (nextPosition == MAX_BITS) {
             throw new RuntimeException("BitSet is overflow!");
         }
 
@@ -53,7 +53,7 @@ public class ClusteredRuntimeIdService implements RuntimeIdService {
             }
         }
 
-        return -1;
+        return MAX_BITS;
     }
 
 }
