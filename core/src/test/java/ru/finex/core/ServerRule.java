@@ -1,19 +1,20 @@
 package ru.finex.core;
 
 import com.google.inject.Injector;
-import com.google.inject.Module;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import ru.finex.core.hocon.ApplicationConfigProvider;
+import ru.finex.core.inject.module.ClusterModule;
+import ru.finex.core.inject.module.DbModule;
+import ru.finex.core.inject.module.HoconModule;
+import ru.finex.core.inject.module.JacksonModule;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.StringJoiner;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -29,14 +30,8 @@ public class ServerRule implements TestRule {
         this.modules = modules;
     }
 
-    public ServerRule(String config) {
-        this.config = config;
-        this.modules = new Module[0];
-    }
-
-    public ServerRule(Module...modules) {
-        this.config = null;
-        this.modules = modules;
+    public static ServerRuleBuilder builder() {
+        return new ServerRuleBuilder();
     }
 
     @Override
@@ -81,6 +76,50 @@ public class ServerRule implements TestRule {
 
         public static Module of(Class<? extends com.google.inject.Module> moduleType) {
             return new Module(moduleType);
+        }
+    }
+
+    public static class ServerRuleBuilder {
+        private final List<Module> modules = new ArrayList<>();
+        private String configPath;
+
+        public ServerRuleBuilder configPath(String configPath) {
+            this.configPath = configPath;
+            return this;
+        }
+
+        public ServerRuleBuilder module(Module module) {
+            modules.add(module);
+            return this;
+        }
+
+        public ServerRuleBuilder modules(Module...modules) {
+            this.modules.addAll(Arrays.asList(modules));
+            return this;
+        }
+
+        public ServerRuleBuilder databaseModule() {
+            modules.add(Module.of(DbModule.class));
+            return this;
+        }
+
+        public ServerRuleBuilder configModule() {
+            modules.add(Module.of(HoconModule.class));
+            return this;
+        }
+
+        public ServerRuleBuilder clusterModule() {
+            modules.add(Module.of(ClusterModule.class));
+            return this;
+        }
+
+        public ServerRuleBuilder jsonModule() {
+            modules.add(Module.of(JacksonModule.class));
+            return this;
+        }
+
+        public ServerRule build() {
+            return new ServerRule(configPath, modules.toArray(new Module[0]));
         }
     }
 

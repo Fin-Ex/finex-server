@@ -1,5 +1,6 @@
 package ru.finex.auth.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import ru.finex.auth.model.entity.UserEntity;
 import ru.finex.auth.model.exception.DuplicateUserException;
@@ -15,7 +16,6 @@ import java.util.Base64;
 import java.util.Objects;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.transaction.Transactional;
 
 /**
  * @author m0nster.mind

@@ -7,7 +7,6 @@ import ru.finex.core.ContainerRule;
 import ru.finex.core.ContainerRule.Type;
 import ru.finex.core.GlobalContext;
 import ru.finex.core.ServerRule;
-import ru.finex.core.ServerRule.Module;
 import ru.finex.core.prototype.EquipPrototype.WeaponType;
 
 import java.util.List;
@@ -21,7 +20,11 @@ public class PrototypeTest {
     public static ContainerRule containers = new ContainerRule(Type.Database);
 
     @ClassRule(order = 1)
-    public static ServerRule server = new ServerRule("prototype-test.conf", Module.of(PrototypeModule.class));
+    public static ServerRule server = ServerRule.builder()
+        .configPath("database-test.conf")
+        .configModule()
+        .databaseModule()
+        .build();
 
     @Test
     public void testGoblinWarrior() {

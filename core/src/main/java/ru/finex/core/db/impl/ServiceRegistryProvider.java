@@ -16,7 +16,7 @@ public class ServiceRegistryProvider implements Provider<ServiceRegistry> {
     private final ServiceRegistry serviceRegistry;
 
     @Inject
-    public ServiceRegistryProvider(@Named("HibernateProperties") Map<String, String> hibernateProperties) {
+    public ServiceRegistryProvider(@Named("HibernateProperties") Map<String, Object> hibernateProperties) {
         serviceRegistry = new StandardServiceRegistryBuilder()
             .applySettings(hibernateProperties)
             .build();

@@ -8,6 +8,7 @@ import dev.samstevens.totp.secret.SecretGenerator;
 import dev.samstevens.totp.time.NtpTimeProvider;
 import dev.samstevens.totp.time.SystemTimeProvider;
 import dev.samstevens.totp.time.TimeProvider;
+import jakarta.transaction.Transactional;
 import ru.finex.auth.model.entity.TOTPRecoveryCodeEntity;
 import ru.finex.auth.repository.TOTPRecoveryCodeRepository;
 import ru.finex.auth.service.TOTPService;
@@ -20,7 +21,6 @@ import java.util.Objects;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.transaction.Transactional;
 
 /**
  * @author m0nster.mind
