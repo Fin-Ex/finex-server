@@ -40,8 +40,6 @@ public class ValidationTest {
         service.rangeValue("20");
     }
 
-    // TODO m0nster.mind: entity constraint tests, maybe some one with new hibernate orm goes wrong
-
     @Singleton
     public static class SomeService {
         @Range(min = 10, max = 50)
