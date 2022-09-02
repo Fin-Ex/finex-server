@@ -46,6 +46,21 @@ public class ClusteredRuntimeIdService implements RuntimeIdService {
         bitset.clear(Integer.toUnsignedLong(id));
     }
 
+    /**
+     * Reset bitset index.
+     */
+    public void reset() {
+        position = nextClearBit(0);
+    }
+
+    /**
+     * Reset bitset index to specify the position.
+     * @param position the position
+     */
+    public void reset(long position) {
+        this.position = position;
+    }
+
     private long nextClearBit(long position) {
         for (long offset = position; offset < MAX_BITS; offset++) {
             if (!bitset.get(offset)) {
