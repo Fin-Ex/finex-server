@@ -11,6 +11,7 @@ import ru.finex.core.GlobalContext;
 import ru.finex.core.component.ComponentService;
 import ru.finex.core.inject.LoaderModule;
 import ru.finex.core.inject.module.ClusterModule;
+import ru.finex.core.inject.module.ClusteredUidModule;
 import ru.finex.core.inject.module.DbModule;
 import ru.finex.core.inject.module.HoconModule;
 import ru.finex.core.inject.module.ManagementModule;
@@ -38,6 +39,7 @@ public class WorldServerModule extends AbstractModule {
         install(new DbModule());
         install(new HoconModule());
         install(new ClusterModule());
+        install(new ClusteredUidModule());
         install(new PersistenceModule());
         install(new PoolModule());
         install(new NetworkModule());

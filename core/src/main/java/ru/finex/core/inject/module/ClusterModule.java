@@ -22,7 +22,7 @@ public class ClusterModule extends AbstractModule {
         bind(Config.class).toProvider(RedissonConfigProvider.class).in(Singleton.class);
         bind(RedissonClient.class).toProvider(RedissonClientProvider.class).in(Singleton.class);
         bind(ClusterService.class).to(ClusterServiceImpl.class);
-        bindListener(Matchers.any(), new ClusteredListener(getProvider(ClusteredProviders.class)));
+        bindListener(Matchers.any(), new ClusteredListener(getProvider(ClusteredProviders.class), getProvider(ClusterService.class)));
     }
 
 }

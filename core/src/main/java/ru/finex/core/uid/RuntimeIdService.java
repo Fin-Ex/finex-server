@@ -1,12 +1,8 @@
-package ru.finex.ws.service;
-
-import com.google.inject.ImplementedBy;
-import ru.finex.ws.id.RuntimeIdServiceImpl;
+package ru.finex.core.uid;
 
 /**
  * @author m0nster.mind
  */
-@ImplementedBy(RuntimeIdServiceImpl.class)
 public interface RuntimeIdService {
 
     /**
@@ -14,5 +10,11 @@ public interface RuntimeIdService {
      * @return runtime ID
      */
     int generateId();
+
+    /**
+     * Free runtime ID.
+     * @param id runtime ID
+     */
+    void free(int id);
 
 }

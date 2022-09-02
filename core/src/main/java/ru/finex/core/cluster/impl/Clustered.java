@@ -1,5 +1,7 @@
 package ru.finex.core.cluster.impl;
 
+import org.redisson.api.RObject;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -19,6 +21,20 @@ import javax.inject.Qualifier;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Clustered {
 
+    /**
+     * Name of object.
+     * If empty name will generate from field name or method name.
+     * @return name of object
+     * @see ru.finex.core.cluster.ClusterService#getName(Class, String)
+     * @see ru.finex.core.cluster.ClusterService#getName(Class, String, String)
+     */
     String value() default "";
+
+    /**
+     * Determines what clustered object is automatically managed (registered as managed resource).
+     * @return auto management
+     * @see ru.finex.core.cluster.ClusterService#registerManagedResource(RObject)
+     */
+    boolean autoManagement() default true;
 
 }
