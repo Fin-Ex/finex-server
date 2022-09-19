@@ -19,7 +19,7 @@ import javax.inject.Singleton;
  */
 @Slf4j
 @Singleton
-@Evolution("ws")
+@Evolution(value = "ws", dependencies = "core")
 public class WorldServerApplication implements ApplicationBuilt {
 
     @Getter
