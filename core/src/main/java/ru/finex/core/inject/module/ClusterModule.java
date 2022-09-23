@@ -9,6 +9,7 @@ import ru.finex.core.cluster.ClusterService;
 import ru.finex.core.cluster.impl.ClusterServiceImpl;
 import ru.finex.core.cluster.impl.ClusteredListener;
 import ru.finex.core.cluster.impl.ClusteredProviders;
+import ru.finex.core.cluster.impl.ClusteredServiceListener;
 import ru.finex.core.cluster.impl.RedissonClientProvider;
 import ru.finex.core.cluster.impl.RedissonConfigProvider;
 
@@ -23,6 +24,7 @@ public class ClusterModule extends AbstractModule {
         bind(RedissonClient.class).toProvider(RedissonClientProvider.class).in(Singleton.class);
         bind(ClusterService.class).to(ClusterServiceImpl.class);
         bindListener(Matchers.any(), new ClusteredListener(getProvider(ClusteredProviders.class), getProvider(ClusterService.class)));
+        bindListener(Matchers.any(), new ClusteredServiceListener());
     }
 
 }
