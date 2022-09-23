@@ -1,7 +1,6 @@
 package ru.finex.core.network.codec;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,7 @@ import javax.inject.Inject;
  * Decodes {@link ByteBuf ByteBuf} into {@link Pair pair} of
  * {@link PacketMetadata packet metadata} and {@link NetworkDto network DTO}.
  *
- * Doesnt support singleton scope!
+ * Doesn't support singleton scope!
  *
  * @author m0nster.mind
  */
