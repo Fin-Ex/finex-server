@@ -19,7 +19,7 @@ import javax.inject.Singleton;
  */
 @Slf4j
 @Singleton
-@Evolution("auth")
+@Evolution(value = "auth", dependencies = "core")
 public class AuthServerApplication implements ApplicationBuilt {
 
     @Getter
