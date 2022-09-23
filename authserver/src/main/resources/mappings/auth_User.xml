@@ -22,4 +22,11 @@
             where u.login = :login
         </query>
     </named-query>
+    <named-query name="UserRepository.updateAuthDate">
+        <query>
+            update UserEntity
+            set authDate = CURRENT_TIMESTAMP
+            where userId = :userId
+        </query>
+    </named-query>
 </entity-mappings>

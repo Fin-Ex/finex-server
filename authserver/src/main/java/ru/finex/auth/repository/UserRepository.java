@@ -32,4 +32,11 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
     @NamedQuery
     boolean isSecretNotNull(String login);
 
+    /**
+     * Update authDate for specified user to current date.
+     * @param userId user ID
+     */
+    @NamedQuery
+    void updateAuthDate(Long userId);
+
 }

@@ -91,4 +91,10 @@ public interface UserService {
      */
     boolean checkTOTPCode(String login, String totpCode) throws UserNotFoundException, TOTPException;
 
+    /**
+     * Update user auth date.
+     * @param userId user ID
+     */
+    void refreshAuthDate(long userId) throws UserNotFoundException;
+
 }

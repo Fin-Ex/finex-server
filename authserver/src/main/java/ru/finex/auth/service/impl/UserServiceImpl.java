@@ -150,4 +150,10 @@ public class UserServiceImpl implements UserService {
 
         return totpService.verifyCode(totpCode, user.getSecret());
     }
+
+    @Transactional
+    @Override
+    public void refreshAuthDate(long userId) throws UserNotFoundException {
+        userRepository.updateAuthDate(userId);
+    }
 }
