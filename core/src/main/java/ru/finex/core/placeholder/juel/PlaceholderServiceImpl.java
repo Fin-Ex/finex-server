@@ -10,6 +10,7 @@ import ru.finex.core.placeholder.PlaceholderService;
 
 import java.lang.reflect.Field;
 import javax.el.ArrayELResolver;
+import javax.el.BeanELResolver;
 import javax.el.CompositeELResolver;
 import javax.el.ELContext;
 import javax.el.ELResolver;
@@ -56,6 +57,7 @@ public class PlaceholderServiceImpl implements PlaceholderService {
                 add(new ListELResolver(true));
                 add(new MapELResolver(true));
                 add(new ELConfigResolver());
+                add(new BeanELResolver(true));
             }
         };
 

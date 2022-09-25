@@ -51,7 +51,7 @@ public class ClusteredServiceListener implements TypeListener {
         encounter.register((InjectionListener<I>) injectee -> {
             RedissonClient redisson = clientProvider.get();
 
-            RRemoteService remoteService = remoteService(redisson, server);
+            RRemoteService remoteService = remoteService(redisson, injectee, server);
             for (Class remoteInterface : interfaces) {
                 remoteService.register(remoteInterface, injectee);
             }
@@ -73,7 +73,7 @@ public class ClusteredServiceListener implements TypeListener {
                 RedissonClient redisson = clientProvider.get();
                 Class<?> fieldType = field.getType();
 
-                RRemoteService remoteService = remoteService(redisson, meta);
+                RRemoteService remoteService = remoteService(redisson, instance, meta);
                 Object service = remoteService.get(fieldType);
                 try {
                     FieldUtils.writeField(field, instance, service, true);
@@ -84,13 +84,13 @@ public class ClusteredServiceListener implements TypeListener {
         }
     }
 
-    private RRemoteService remoteService(RedissonClient redisson, ClusteredService meta) {
+    private <I> RRemoteService remoteService(RedissonClient redisson, I instance, ClusteredService meta) {
         RRemoteService remoteService;
         if (StringUtils.isBlank(meta.value())) {
             remoteService = redisson.getRemoteService();
         } else {
             PlaceholderService placeholderService = placeholderServiceProvider.get();
-            String name = placeholderService.evaluate(meta.value(), String.class);
+            String name = placeholderService.evaluate(meta.value(), instance, String.class);
             remoteService = redisson.getRemoteService(name);
         }
 

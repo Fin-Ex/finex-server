@@ -1,6 +1,7 @@
 package ru.finex.core.placeholder;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -46,17 +47,24 @@ public class PlaceholderTest {
     }
 
     @Test
-    public void callerContext() {
+    public void callerContextBoxing() {
         PlaceholderService service = GlobalContext.injector.getInstance(PlaceholderService.class);
 
-        TestCaller caller = new TestCaller("And in myself I feel that Im always outside the reality");
-        String value = service.evaluate("${theValue}", caller, String.class);
-        Assertions.assertEquals(caller.theValue, value);
+        TestCallerBox caller = new TestCallerBox(new TestCaller("And inside my fragile me lies the truth concealed"));
+        String value = service.evaluate("${caller.getTheValue()}", caller, String.class);
+        Assertions.assertEquals(caller.caller.theValue, value);
     }
 
+    @Data
     @AllArgsConstructor
     public class TestCaller {
         private String theValue;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public class TestCallerBox {
+        private TestCaller caller;
     }
 
 }
