@@ -46,6 +46,11 @@ public class NetworkDtoDecoder extends ByteToMessageDecoder {
             dto = serial.deserialize(in);
         }
 
+        if (in.readableBytes() > 0) {
+            log.debug("Serializer {} is not fully read payload!", metadata.getSerial().getClass().getCanonicalName());
+            in.readerIndex(in.writerIndex());
+        }
+
         out.add(Pair.of(metadata, dto));
     }
 }
