@@ -21,9 +21,19 @@ public class PacketPostProcessor<I> implements InjectionListener<I> {
     public void afterInjection(I injectee) {
         PacketService packetService = packetServiceProvider.get();
         if (injectee instanceof PacketDeserializer deserializer) {
-            packetService.saveDeserializer(deserializer);
+            Class<?> type = injectee.getClass();
+            IncomePacket incomePacketInfo = type.getAnnotation(IncomePacket.class);
+
+            if (incomePacketInfo != null && incomePacketInfo.autoRegister()) {
+                packetService.saveDeserializer(deserializer);
+            }
         } else {
-            packetService.saveSerializer((PacketSerializer) injectee);
+            Class<?> type = injectee.getClass();
+            OutcomePacket outcomePacketInfo = type.getAnnotation(OutcomePacket.class);
+
+            if (outcomePacketInfo != null && outcomePacketInfo.autoRegister()) {
+                packetService.saveSerializer((PacketSerializer) injectee);
+            }
         }
     }
 

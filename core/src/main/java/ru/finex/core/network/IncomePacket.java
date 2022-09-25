@@ -22,4 +22,7 @@ public @interface IncomePacket {
     /** Выполняемые команды. */
     Cmd[] command();
 
+    /** Auto registration packet in {@link ru.finex.core.network.PacketService PacketService}. */
+    boolean autoRegister() default true;
+
 }

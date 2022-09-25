@@ -19,4 +19,7 @@ public @interface OutcomePacket {
     /** Опкоды пакета. */
     Opcode[] value();
 
+    /** Auto registration packet in {@link ru.finex.core.network.PacketService PacketService}. */
+    boolean autoRegister() default true;
+
 }

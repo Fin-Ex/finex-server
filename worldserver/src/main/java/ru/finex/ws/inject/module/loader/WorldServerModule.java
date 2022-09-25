@@ -45,7 +45,6 @@ public class WorldServerModule extends AbstractModule {
         install(new PoolModule());
         install(new NetworkModule());
         install(new CommandModule());
-        install(new PlaceholderJuelModule());
         install(new ManagementModule());
         bindPrototypeMappers();
         bind(ComponentService.class).to(ComponentServiceImpl.class);
