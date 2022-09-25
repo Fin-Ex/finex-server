@@ -12,7 +12,7 @@ public interface AuthService {
 
     /**
      * FIXME write a doc!
-     * @param login users login
+     * @param login user login
      * @param password hashed password
      * @return user auth state
      */
@@ -20,10 +20,17 @@ public interface AuthService {
 
     /**
      * 2FA auth. FIXME write a doc!
-     * @param login users login
+     * @param login user login
      * @param totpCode 2FA TOTP code
      * @return user auth state
      */
     AuthState authUserTOTP(String login, String totpCode);
+
+    /**
+     * Exit user. FIXME write a doc!
+     * @param login user login
+     * @return previous user status
+     */
+    AuthState deauthUser(String login);
 
 }

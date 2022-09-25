@@ -2,6 +2,7 @@ package ru.finex.auth.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import ru.finex.auth.model.entity.UserEntity;
 import ru.finex.auth.model.exception.DuplicateUserException;
 import ru.finex.auth.model.exception.TOTPException;
@@ -39,7 +40,11 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException(String.format("User with '%s' login not found", login));
         }
 
-        return checkPassword(user, password);
+        if (StringUtils.isBlank(user.getHash())) {
+            return checkPassword(user, password);
+        }
+
+        return checkPassword(login, password, user.getHash());
     }
 
     @Override

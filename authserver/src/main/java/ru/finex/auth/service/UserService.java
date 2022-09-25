@@ -21,17 +21,19 @@ public interface UserService {
     UserEntity getByLogin(String login);
 
     /**
-     * Check users password.
+     * Check user password.
+     * If user password stored as hashed, plain password will hash too (with specified algorithm)
+     *  before equality check.
      *
      * @param login user login
-     * @param password hashed password
+     * @param password password plain text
      * @return true if passwords equals
      * @exception UserNotFoundException user with specified login not found
      */
     boolean checkPassword(String login, String password) throws UserNotFoundException;
 
     /**
-     * Check users password.
+     * Check user password.
      *
      * @param login user login
      * @param password password, plain text
