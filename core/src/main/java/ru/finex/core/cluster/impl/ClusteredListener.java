@@ -13,6 +13,7 @@ import org.redisson.api.RObject;
 import org.redisson.api.RedissonClient;
 import ru.finex.core.cluster.ClusterService;
 import ru.finex.core.cluster.impl.providers.ClusteredProvider;
+import ru.finex.core.placeholder.PlaceholderService;
 import ru.finex.core.utils.ParameterUtils;
 
 import java.lang.reflect.Field;
@@ -30,6 +31,7 @@ public class ClusteredListener implements TypeListener {
 
     private final Provider<ClusteredProviders> clusteredProvidersProvider;
     private final Provider<ClusterService> clusterServiceProvider;
+    private final Provider<PlaceholderService> placeholderServiceProvider;
 
     @Override
     public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter) {
@@ -122,6 +124,8 @@ public class ClusteredListener implements TypeListener {
         String name = clustered.value();
         if (StringUtils.isBlank(name)) {
             name = clusterService.getName(type, field.getName());
+        } else {
+            name = placeholderServiceProvider.get().evaluate(name, String.class);
         }
 
         return Pair.of(name, clustered.autoManagement());
@@ -132,6 +136,8 @@ public class ClusteredListener implements TypeListener {
         String name = clustered.value();
         if (StringUtils.isBlank(name)) {
             name = clusterService.getName(type, methodName, parameterName);
+        } else {
+            name = placeholderServiceProvider.get().evaluate(name, String.class);
         }
 
         return name;

@@ -38,6 +38,7 @@ public class WorldServerModule extends AbstractModule {
     protected void configure() {
         install(new DbModule());
         install(new HoconModule());
+        install(new PlaceholderJuelModule());
         install(new ClusterModule());
         install(new ClusteredUidModule());
         install(new PersistenceModule());

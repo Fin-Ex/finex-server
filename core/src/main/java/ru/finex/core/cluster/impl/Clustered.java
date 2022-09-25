@@ -23,10 +23,14 @@ public @interface Clustered {
 
     /**
      * Name of object.
+     * <p>
      * If empty name will generate from field name or method name.
+     * <p>
+     * Supports expressions.
      * @return name of object
      * @see ru.finex.core.cluster.ClusterService#getName(Class, String)
      * @see ru.finex.core.cluster.ClusterService#getName(Class, String, String)
+     * @see ru.finex.core.placeholder.PlaceholderService
      */
     String value() default "";
 

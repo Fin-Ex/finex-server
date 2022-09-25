@@ -1,6 +1,7 @@
 package ru.finex.core.inject.module;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.matcher.Matchers;
 import org.redisson.api.RedissonClient;
@@ -12,6 +13,7 @@ import ru.finex.core.cluster.impl.ClusteredProviders;
 import ru.finex.core.cluster.impl.ClusteredServiceListener;
 import ru.finex.core.cluster.impl.RedissonClientProvider;
 import ru.finex.core.cluster.impl.RedissonConfigProvider;
+import ru.finex.core.placeholder.PlaceholderService;
 
 /**
  * @author m0nster.mind
@@ -23,8 +25,14 @@ public class ClusterModule extends AbstractModule {
         bind(Config.class).toProvider(RedissonConfigProvider.class).in(Singleton.class);
         bind(RedissonClient.class).toProvider(RedissonClientProvider.class).in(Singleton.class);
         bind(ClusterService.class).to(ClusterServiceImpl.class);
-        bindListener(Matchers.any(), new ClusteredListener(getProvider(ClusteredProviders.class), getProvider(ClusterService.class)));
-        bindListener(Matchers.any(), new ClusteredServiceListener());
+
+        Provider<PlaceholderService> placeholderServiceProvider = getProvider(PlaceholderService.class);
+        bindListener(Matchers.any(), new ClusteredListener(
+            getProvider(ClusteredProviders.class),
+            getProvider(ClusterService.class),
+            placeholderServiceProvider
+        ));
+        bindListener(Matchers.any(), new ClusteredServiceListener(placeholderServiceProvider));
     }
 
 }

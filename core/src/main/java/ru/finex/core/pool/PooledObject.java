@@ -20,10 +20,20 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PooledObject {
 
-    /** Начальный размер пула. */
+    /**
+     * Начальный размер пула.
+     * <p>
+     * Supports expression.
+     * @see ru.finex.core.placeholder.PlaceholderService
+     */
     String minSize() default "0";
 
-    /** Максимальный размер пула, для хранения объектов. 0 - не ограничен. */
+    /**
+     * Максимальный размер пула, для хранения объектов. 0 - не ограничен.
+     * <p>
+     * Supports expression.
+     * @see ru.finex.core.placeholder.PlaceholderService
+     */
     String maxSize() default "0";
 
     Class<? extends PooledObjectFactory> factory() default SimplePooledObjectFactory.class;
