@@ -12,7 +12,7 @@
         <query>
             update UserEntity
             set secret = null
-            where userId = :userId
+            where persistenceId = :userId
         </query>
     </named-query>
     <named-query name="UserRepository.isSecretNotNull">
@@ -26,7 +26,7 @@
         <query>
             update UserEntity
             set authDate = CURRENT_TIMESTAMP
-            where userId = :userId
+            where persistenceId = :userId
         </query>
     </named-query>
 </entity-mappings>

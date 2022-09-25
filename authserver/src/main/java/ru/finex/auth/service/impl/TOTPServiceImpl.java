@@ -4,6 +4,7 @@ import dev.samstevens.totp.code.CodeGenerator;
 import dev.samstevens.totp.code.CodeVerifier;
 import dev.samstevens.totp.code.DefaultCodeGenerator;
 import dev.samstevens.totp.code.DefaultCodeVerifier;
+import dev.samstevens.totp.code.HashingAlgorithm;
 import dev.samstevens.totp.secret.SecretGenerator;
 import dev.samstevens.totp.time.NtpTimeProvider;
 import dev.samstevens.totp.time.SystemTimeProvider;
@@ -18,6 +19,7 @@ import ru.finex.auth.totp.TOTPConfig;
 
 import java.net.UnknownHostException;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -41,19 +43,33 @@ public class TOTPServiceImpl implements TOTPService {
 
     private TimeProvider createTimeProvider(TOTPConfig config) {
         return switch (config.getTimeProviderType()) {
-            case LOCAL -> new SystemTimeProvider();
-            case NTP -> {
+            case "LOCAL" -> new SystemTimeProvider();
+            case "NTP" -> {
                 try {
                     yield new NtpTimeProvider(config.getNtpHost(), config.getNtpRefreshTimeMillis());
                 } catch (UnknownHostException e) {
                     throw new RuntimeException(e);
                 }
             }
+            default -> throw new RuntimeException(String.format("Unknown time provider type: %s, available: LOCAL, NTP",
+                config.getTimeProviderType()));
         };
     }
 
     private CodeGenerator createCodeGenerator(TOTPConfig config) {
-        return new DefaultCodeGenerator(config.getCodeGeneratorHash(), config.getCodeLength());
+        HashingAlgorithm algorithm;
+        try {
+            algorithm = HashingAlgorithm.valueOf(config.getCodeGeneratorHash());
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException(String.format("Unknown code generator hash: %s, available: %s",
+                config.getCodeGeneratorHash(),
+                Stream.of(HashingAlgorithm.values())
+                    .map(Enum::name)
+                    .collect(Collectors.joining(", "))
+            ));
+        }
+
+        return new DefaultCodeGenerator(algorithm, config.getCodeLength());
     }
 
     @Override

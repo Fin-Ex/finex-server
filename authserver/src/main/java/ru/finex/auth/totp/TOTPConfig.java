@@ -1,6 +1,5 @@
 package ru.finex.auth.totp;
 
-import dev.samstevens.totp.code.HashingAlgorithm;
 import lombok.Data;
 import ru.finex.core.hocon.ConfigResource;
 
@@ -11,16 +10,12 @@ import ru.finex.core.hocon.ConfigResource;
 @ConfigResource
 public class TOTPConfig {
 
-    public enum TimeProviderType {
-        LOCAL,
-        NTP
-    }
-
-    private TimeProviderType timeProviderType;
+    private String timeProviderType;
+    @ConfigResource(nullable = true)
     private String ntpHost;
     private int ntpRefreshTimeMillis;
 
-    private HashingAlgorithm codeGeneratorHash;
+    private String codeGeneratorHash;
     private long codeTimeoutSecs;
     private int codeLength;
 

@@ -6,6 +6,8 @@ import ru.finex.core.inject.LoaderModule;
 import ru.finex.core.inject.module.ClusterModule;
 import ru.finex.core.inject.module.DbModule;
 import ru.finex.core.inject.module.HoconModule;
+import ru.finex.core.inject.module.ManagementModule;
+import ru.finex.core.inject.module.NetworkModule;
 import ru.finex.core.inject.module.PlaceholderJuelModule;
 import ru.finex.core.inject.module.PoolModule;
 
@@ -23,6 +25,8 @@ public class AuthServerModule extends AbstractModule {
         install(new PlaceholderJuelModule());
         install(new ClusterModule());
         install(new PoolModule());
+        install(new NetworkModule());
+        install(new ManagementModule());
     }
 
 }

@@ -50,7 +50,7 @@ comment on column user_restore_password_codes.id is 'ID';
 comment on column user_restore_password_codes.user_id is 'Reference to specified user what requested password restore';
 comment on column user_restore_password_codes.code is 'Secret code to approve change password operation';
 
-create table if exists user_totp_recovery_codes(
+create table if not exists user_totp_recovery_codes(
     id bigserial primary key,
     user_id bigint not null references users(id) on delete cascade on update cascade,
     code varchar(16) not null,
