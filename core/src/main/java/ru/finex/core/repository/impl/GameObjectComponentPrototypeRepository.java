@@ -47,7 +47,7 @@ public class GameObjectComponentPrototypeRepository extends DefaultCrudRepositor
             ).setParameter("prototypeName", prototypeName);
             return query.getResultList();
         } catch (Exception e) {
-            ctx.rollback(session);
+            ctx.rollback();
             throw new RuntimeException(e);
         }
     }

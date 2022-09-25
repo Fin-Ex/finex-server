@@ -69,10 +69,10 @@ public class RepositoryProxy<E extends EntityObject<ID>, ID extends Serializable
             Query query = getQuery(method, session);
             passParameters(method, query, args);
             Object result = query.getResultList();
-            ctx.commit(session);
+            ctx.commit();
             return result;
         } catch (Exception e) {
-            ctx.rollback(session);
+            ctx.rollback();
             throw new RuntimeException(e);
         }
     }
@@ -83,11 +83,16 @@ public class RepositoryProxy<E extends EntityObject<ID>, ID extends Serializable
         try {
             Query query = getQuery(method, session);
             passParameters(method, query, args);
-            Object result = query.getSingleResult();
-            ctx.commit(session);
+            Object result;
+            if (method.getReturnType() == void.class) {
+                result = query.executeUpdate();
+            } else {
+                result = query.getSingleResult();
+            }
+            ctx.commit();
             return result;
         } catch (Exception e) {
-            ctx.rollback(session);
+            ctx.rollback();
             throw new RuntimeException(e);
         }
     }

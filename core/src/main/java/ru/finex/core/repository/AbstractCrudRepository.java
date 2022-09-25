@@ -40,11 +40,11 @@ public abstract class AbstractCrudRepository<T extends EntityObject<ID>, ID exte
         Session session = ctx.session();
         try {
             ID persistenceId = (ID) session.save(entity);
-            ctx.commit(session);
+            ctx.commit();
             entity.setPersistenceId(persistenceId);
             return entity;
         } catch (Exception e) {
-            ctx.rollback(session);
+            ctx.rollback();
             throw new RuntimeException(e);
         }
     }
@@ -60,9 +60,9 @@ public abstract class AbstractCrudRepository<T extends EntityObject<ID>, ID exte
         Session session = ctx.session();
         try {
             session.update(entity);
-            ctx.commit(session);
+            ctx.commit();
         } catch (Exception e) {
-            ctx.rollback(session);
+            ctx.rollback();
             throw new RuntimeException(e);
         }
         return null;
@@ -79,10 +79,10 @@ public abstract class AbstractCrudRepository<T extends EntityObject<ID>, ID exte
         Session session = ctx.session();
         try {
             session.load(entity, entity.getPersistenceId());
-            ctx.commit(session);
+            ctx.commit();
             return entity;
         } catch (Exception e) {
-            ctx.rollback(session);
+            ctx.rollback();
             throw new RuntimeException(e);
         }
     }
@@ -97,10 +97,10 @@ public abstract class AbstractCrudRepository<T extends EntityObject<ID>, ID exte
         TransactionalContext ctx = TransactionalContext.get();
         Session session = ctx.session();
         try {
-            session.delete(entity);
-            ctx.commit(session);
+            session.remove(entity);
+            ctx.commit();
         } catch (Exception e) {
-            ctx.rollback(session);
+            ctx.rollback();
             throw new RuntimeException(e);
         }
         return null;
@@ -118,10 +118,10 @@ public abstract class AbstractCrudRepository<T extends EntityObject<ID>, ID exte
         try {
             Query<T> query = session.createQuery("SELECT t FROM " + entityClass.getSimpleName() + " t", entityClass);
             List<T> entities = query.getResultList();
-            ctx.commit(session);
+            ctx.commit();
             return entities;
         } catch (Exception e) {
-            ctx.rollback(session);
+            ctx.rollback();
             throw new RuntimeException(e);
         }
     }
@@ -137,10 +137,10 @@ public abstract class AbstractCrudRepository<T extends EntityObject<ID>, ID exte
         Session session = ctx.session();
         try {
             T entity = session.find(entityClass, id);
-            ctx.commit(session);
+            ctx.commit();
             return entity;
         } catch (Exception e) {
-            ctx.rollback(session);
+            ctx.rollback();
             throw new RuntimeException(e);
         }
     }

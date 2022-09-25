@@ -33,7 +33,7 @@ public class RawJsonUserType implements UserType<String> {
 
     @Override
     public int hashCode(String x) throws HibernateException {
-        return x.hashCode();
+        return Objects.hashCode(x);
     }
 
     @Override

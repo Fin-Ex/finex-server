@@ -8,6 +8,7 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.resource.transaction.spi.TransactionStatus;
 
 import java.util.stream.Stream;
 
@@ -28,54 +29,53 @@ public class TransactionalMethodInterceptor implements MethodInterceptor {
         Transactional transactional = invocation.getMethod().getAnnotation(Transactional.class);
         TxType strategy = transactional.value();
 
-        Session session;
-        Transaction trx;
+        Session session = session(context, strategy);
+        Transaction trx = session.getTransaction();
+        Object result;
+        try {
+            try {
+                result = invocation.proceed();
+            } catch (Exception e) {
+                if (canRollback(transactional, e)) {
+                    trx.rollback();
+                }
 
+                context.close();
+                throw e;
+            }
+
+            commitOrRollback(trx);
+        } finally {
+            context.close();
+        }
+
+        return result;
+    }
+
+    private static Session session(TransactionalContext context, TxType strategy)
+        throws InvalidTransactionException, TransactionRequiredException {
+        Session session;
         if (strategy == TxType.REQUIRED || strategy == TxType.SUPPORTS) {
-            session = context.session();
-            trx = session.getTransaction();
+            session = context.session(true);
         } else if (strategy == TxType.MANDATORY) {
             if (!context.hasSessions()) {
                 throw new TransactionRequiredException("Exists transaction not found!");
             }
 
-            session = context.session();
-            trx = session.getTransaction();
+            session = context.session(true);
         } else if (strategy == TxType.REQUIRES_NEW || strategy == TxType.NOT_SUPPORTED) {
-            session = context.getSessionFactory().openSession();
-            trx = session.beginTransaction();
+            session = context.newSession(true);
         } else if (strategy == TxType.NEVER) {
             if (context.hasSessions()) {
                 throw new InvalidTransactionException("Transaction is exists for NEVER transaction type!");
             }
 
-            session = context.getSessionFactory().openSession();
-            trx = session.beginTransaction();
+            session = context.newSession(true);
         } else {
             throw new InvalidTransactionException("Invalid transactional type: " + strategy);
         }
-        context.putSession(session);
 
-        Object result;
-        try {
-            result = invocation.proceed();
-        } catch (Exception e) {
-            if (canRollback(transactional, e)) {
-                trx.rollback();
-            }
-
-            closeSession(context, strategy);
-            throw e;
-        }
-
-        if (trx.getRollbackOnly()) {
-            trx.rollback();
-        } else {
-            trx.commit();
-        }
-
-        closeSession(context, strategy);
-        return result;
+        return session;
     }
 
     private static boolean canRollback(Transactional transactional, Exception e) {
@@ -84,10 +84,15 @@ public class TransactionalMethodInterceptor implements MethodInterceptor {
             (Stream.of(rollbackOn).anyMatch(exception -> exception.isInstance(e)) || rollbackOn.length == 0);
     }
 
-    private static void closeSession(TransactionalContext context, TxType strategy) {
-        Session session = context.retrieveSession();
-        if (strategy == TxType.REQUIRES_NEW || strategy == TxType.NOT_SUPPORTED) {
-            session.close();
+    private static void commitOrRollback(Transaction trx) {
+        if (trx.getStatus() != TransactionStatus.ACTIVE) {
+            return;
+        }
+
+        if (trx.getRollbackOnly()) {
+            trx.rollback();
+        } else {
+            trx.commit();
         }
     }
 
