@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import ru.finex.auth.model.AuthState;
 import ru.finex.auth.model.UserDto;
 import ru.finex.auth.model.exception.TOTPException;
+import ru.finex.auth.model.exception.UserAlreadyAuthorizedException;
 import ru.finex.auth.model.exception.UserNotFoundException;
 import ru.finex.auth.service.AuthService;
 import ru.finex.auth.service.UserService;
@@ -26,10 +27,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional
     @Override
-    public AuthState authUser(String login, String password) {
+    public AuthState authUser(String login, String password) throws UserAlreadyAuthorizedException {
         UserDto user = startUserAuth(login);
         if (!user.getState().compareAndSet(AuthState.NONE, AuthState.CHECK_PASSWORD)) {
-            throw new RuntimeException();
+            throw new UserAlreadyAuthorizedException(String.format(
+                "User with login '%s' already authorized", login
+            ));
         }
 
         if (!checkUserPassword(login, password, user)) {
@@ -56,6 +59,7 @@ public class AuthServiceImpl implements AuthService {
 
         if (!result || !user.getState().compareAndSet(AuthState.CHECK_2FA, AuthState.AUTHED)) {
             failUserAuth(login, user);
+            return AuthState.NONE;
         }
 
         return AuthState.AUTHED;

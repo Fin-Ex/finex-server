@@ -2,6 +2,7 @@ package ru.finex.auth.service;
 
 import com.google.inject.ImplementedBy;
 import ru.finex.auth.model.AuthState;
+import ru.finex.auth.model.exception.UserAlreadyAuthorizedException;
 import ru.finex.auth.service.impl.AuthServiceImpl;
 
 /**
@@ -16,7 +17,7 @@ public interface AuthService {
      * @param password hashed password
      * @return user auth state
      */
-    AuthState authUser(String login, String password);
+    AuthState authUser(String login, String password) throws UserAlreadyAuthorizedException;
 
     /**
      * 2FA auth. FIXME write a doc!
