@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
@@ -23,21 +24,21 @@ import ru.finex.core.db.impl.RawJsonUserType;
 @Entity
 @Table(name = "game_object_component_prototypes")
 @NoArgsConstructor
+@SequenceGenerator(name = "game_object_component_prototypes_id_seq", sequenceName = "game_object_component_prototypes_id_seq", allocationSize = 1)
 public class GameObjectComponentPrototype implements EntityObject<Integer> {
     @Id
     @Column(name = "id")
-    @SequenceGenerator(name = "game_object_component_prototypes_id_seq", sequenceName = "game_object_component_prototypes_id_seq", allocationSize = 1)
     @GeneratedValue(generator = "game_object_component_prototypes_id_seq", strategy = GenerationType.SEQUENCE)
     private Integer persistenceId;
 
-    @Column(nullable = false)
+    @NotNull
     private String component;
 
     @JoinColumn(name = "prototype_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private GameObjectPrototype gameObjectPrototype;
 
-    @Column(nullable = false)
+    @NotNull
     @Type(RawJsonUserType.class)
     private String data;
 

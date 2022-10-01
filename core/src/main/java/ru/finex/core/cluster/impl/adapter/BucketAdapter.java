@@ -1,4 +1,4 @@
-package ru.finex.core.cluster.impl;
+package ru.finex.core.cluster.impl.adapter;
 
 import org.redisson.api.RBucket;
 import ru.finex.core.utils.Holder;

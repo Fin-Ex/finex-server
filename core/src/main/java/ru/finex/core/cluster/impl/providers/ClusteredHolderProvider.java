@@ -1,7 +1,7 @@
 package ru.finex.core.cluster.impl.providers;
 
 import org.redisson.api.RedissonClient;
-import ru.finex.core.cluster.impl.BucketAdapter;
+import ru.finex.core.cluster.impl.adapter.BucketAdapter;
 import ru.finex.core.utils.Holder;
 
 import java.lang.reflect.Type;
