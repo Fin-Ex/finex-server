@@ -61,4 +61,19 @@ public class AtomicIntegerAdapter implements AtomicInteger {
     public void set(int newValue) {
         value.set(newValue);
     }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return value.equals(obj);
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
+    }
 }

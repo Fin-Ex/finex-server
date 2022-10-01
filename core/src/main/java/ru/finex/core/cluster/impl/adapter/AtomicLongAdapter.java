@@ -14,4 +14,18 @@ public class AtomicLongAdapter implements AtomicLong {
     @Delegate(types = AtomicLong.class)
     private final RAtomicLong value;
 
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return value.equals(obj);
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
+    }
 }
