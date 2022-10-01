@@ -12,7 +12,6 @@ import ru.finex.network.netty.model.NetworkDto;
 import ru.finex.network.netty.serial.OpcodeCodec;
 import ru.finex.network.netty.serial.PacketDeserializer;
 
-import java.util.Arrays;
 import java.util.List;
 import javax.inject.Inject;
 
@@ -36,7 +35,8 @@ public class NetworkDtoDecoder extends ByteToMessageDecoder {
         int[] opcodes = opcodeCodec.decode(in);
         PacketMetadata<PacketDeserializer<?>> metadata = packetService.getIncomePacketMetadata(opcodes);
         if (metadata == null) {
-            log.warn("PacketMetadata not found for opcodes: {}", Arrays.toString(opcodes));
+            log.warn("PacketMetadata not found for opcodes: {}", toStringOpcodes(opcodes));
+            in.readerIndex(in.writerIndex());
             return;
         }
 
@@ -46,11 +46,30 @@ public class NetworkDtoDecoder extends ByteToMessageDecoder {
             dto = serial.deserialize(in);
         }
 
-        if (in.readableBytes() > 0) {
-            log.debug("Serializer {} is not fully read payload!", metadata.getSerial().getClass().getCanonicalName());
+        if (in.isReadable()) {
+            log.debug("Serializer '{}' is not fully read payload!", metadata.getSerial().getClass().getCanonicalName());
             in.readerIndex(in.writerIndex());
         }
 
         out.add(Pair.of(metadata, dto));
+    }
+
+    private static String toStringOpcodes(int[] opcodes) {
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < opcodes.length; i++) {
+            if (i != 0) {
+                sb.append(", ");
+            }
+
+            String hex = Integer.toHexString(opcodes[i]);
+            sb.append("0x");
+            if (hex.length() % 2 != 0) {
+                sb.append("0");
+            }
+            sb.append(hex);
+        }
+
+        return sb.append("]")
+            .toString();
     }
 }
