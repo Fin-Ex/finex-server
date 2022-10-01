@@ -35,7 +35,7 @@ public abstract class AbstractClientSession
     private String login;
 
     @Getter
-    private boolean isDetached;
+    private volatile boolean isDetached;
 
     @Getter(AccessLevel.PROTECTED)
     private Channel channel;
@@ -81,7 +81,11 @@ public abstract class AbstractClientSession
     @Override
     public void close(NetworkDto dto) {
         isDetached = true;
-        channel.writeAndFlush(dto);
+        if (dto != null) {
+            channel.writeAndFlush(dto);
+        } else {
+            channel.flush();
+        }
         channel.close();
     }
 
