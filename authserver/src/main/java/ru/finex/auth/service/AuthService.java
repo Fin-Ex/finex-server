@@ -27,10 +27,10 @@ public interface AuthService {
     AuthState authUserTOTP(String login, String totpCode);
 
     /**
-     * Exit user. FIXME write a doc!
+     * Logout user. FIXME write a doc!
      * @param login user login
      * @return previous user status
      */
-    AuthState deauthUser(String login);
+    AuthState logoutUser(String login);
 
 }

@@ -62,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthState deauthUser(String login) {
+    public AuthState logoutUser(String login) {
         UserDto user = users.remove(login);
         if (user == null) {
             return AuthState.NONE;
