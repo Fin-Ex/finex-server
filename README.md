@@ -1,4 +1,5 @@
 # FinEx Server
+
 Abstract MMO server written in Java.
 
 Our short MVP:
@@ -12,6 +13,9 @@ There is a third generation of FinEx MMO servers.
  - KT Server (second generation, abandoned)
  - WGP Server (first generation)
 
-# Requirements
+## Requirements
  - Java 17+
- - PostgreSQL
+ - PostgreSQL 12+
+
+## Links
+ - [Trello](https://trello.com/b/MCEIOoTQ/finex-server)
