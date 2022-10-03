@@ -1,5 +1,6 @@
 package ru.finex.core.repository;
 
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.concurrent.Future;
 
 /**
@@ -58,7 +61,7 @@ public class RepositoryProxy<E extends EntityObject<ID>, ID extends Serializable
         } else if (Collection.class.isAssignableFrom(returnType)) {
             return listObject(method, args);
         } else {
-            return singleObject(method, args);
+            return singleObject(method, args, returnType);
         }
     }
 
@@ -71,26 +74,38 @@ public class RepositoryProxy<E extends EntityObject<ID>, ID extends Serializable
             Object result = query.getResultList();
             ctx.commit();
             return result;
+        } catch (NoResultException e) {
+            return Collections.emptyList();
         } catch (Exception e) {
             ctx.rollback();
             throw new RuntimeException(e);
         }
     }
 
-    private Object singleObject(Method method, Object[] args) {
+    private Object singleObject(Method method, Object[] args, Class<?> returnType) {
         TransactionalContext ctx = TransactionalContext.get();
         Session session = ctx.session();
+        boolean isModifyQuery = returnType == void.class;
+        boolean isOptional = returnType == Optional.class;
         try {
             Query query = getQuery(method, session);
             passParameters(method, query, args);
             Object result;
-            if (method.getReturnType() == void.class) {
+            if (isModifyQuery) {
                 result = query.executeUpdate();
+            } else if (isOptional) {
+                result = Optional.of(query.getSingleResult());
             } else {
                 result = query.getSingleResult();
             }
             ctx.commit();
             return result;
+        } catch (NoResultException e) {
+            if (isOptional) {
+                return Optional.empty();
+            }
+            ctx.rollback();
+            throw e;
         } catch (Exception e) {
             ctx.rollback();
             throw new RuntimeException(e);

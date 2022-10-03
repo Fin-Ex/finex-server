@@ -36,6 +36,11 @@ public @interface PooledObject {
      */
     String maxSize() default "0";
 
+    /**
+     * Автоматическое создание элементов в пуле.
+     */
+    boolean autoCreate() default true;
+
     Class<? extends PooledObjectFactory> factory() default SimplePooledObjectFactory.class;
 
 }

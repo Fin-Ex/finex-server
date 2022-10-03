@@ -1,5 +1,7 @@
 package ru.finex.core.persistence.impl;
 
+import jakarta.transaction.Transactional;
+import jakarta.transaction.Transactional.TxType;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import ru.finex.core.GlobalContext;
 import ru.finex.core.model.entity.EntityObject;
@@ -17,6 +19,7 @@ import javax.inject.Singleton;
 @Singleton
 public class ObjectPersistenceServiceImpl implements ObjectPersistenceService {
 
+    @Transactional(TxType.REQUIRES_NEW)
     @Override
     public void persist(PersistenceObject object) {
         FieldUtils.getFieldsListWithAnnotation(object.getClass(), PersistenceField.class)

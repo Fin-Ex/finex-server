@@ -13,8 +13,6 @@ import ru.finex.core.prototype.ComponentPrototype;
 import ru.finex.core.prototype.ComponentPrototypeMapper;
 import ru.finex.core.prototype.GameObjectPrototypeService;
 import ru.finex.ws.model.GameObjectComponents;
-import ru.finex.ws.model.event.component.OnComponentAttached;
-import ru.finex.ws.model.event.component.OnComponentDeattached;
 import ru.finex.ws.service.GameObjectInjectorService;
 
 import java.util.ArrayList;
@@ -41,6 +39,7 @@ public class ComponentServiceImpl implements ComponentService {
     @Clustered(GameObjectEvent.CHANNEL)
     private ClusterEventBus<GameObjectEvent> eventBus;
 
+    @Inject
     @Named("ComponentMappers")
     private Map<Class<? extends ComponentPrototype>, ComponentPrototypeMapper> mappers;
 
@@ -96,10 +95,10 @@ public class ComponentServiceImpl implements ComponentService {
     }
 
     private void notifyOnAttachComponent(GameObject gameObject, Component component) {
-        OnComponentAttached event = poolService.getObject(OnComponentAttached.class);
-        event.setGameObject(gameObject);
-        event.setComponent(component);
-        eventBus.notify(event);
+//        OnComponentAttached event = poolService.getObject(OnComponentAttached.class);
+//        event.setGameObject(gameObject);
+//        event.setComponent(component);
+//        eventBus.notify(event);
         // m0nster.mind: didnt return object to pool, event bus notify is async
         //poolService.returnObject(event);
     }
@@ -162,10 +161,10 @@ public class ComponentServiceImpl implements ComponentService {
     }
 
     private void notifyOnDeattachComponent(GameObject gameObject, Component component) {
-        OnComponentDeattached event = poolService.getObject(OnComponentDeattached.class);
-        event.setGameObject(gameObject);
-        event.setComponent(component);
-        eventBus.notify(event);
+//        OnComponentDeattached event = poolService.getObject(OnComponentDeattached.class);
+//        event.setGameObject(gameObject);
+//        event.setComponent(component);
+//        eventBus.notify(event);
         // m0nster.mind: didnt return object to pool, event bus notify is async
         //poolService.returnObject(event);
     }

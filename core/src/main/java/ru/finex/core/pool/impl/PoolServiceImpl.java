@@ -86,7 +86,8 @@ public class PoolServiceImpl implements PoolService {
 
         int maxSize = placeholderService.evaluate(pooledObject.maxSize(), int.class);
         int minSize = placeholderService.evaluate(pooledObject.minSize(), int.class);
-        ArrayDequePool<?> pool = new ArrayDequePool(pooledObjectFactory, maxSize);
+        boolean autoCreate = pooledObject.autoCreate();
+        ArrayDequePool<?> pool = new ArrayDequePool(pooledObjectFactory, maxSize, autoCreate);
         try {
             for (int i = 0; i < minSize; i++) {
                 pool.addObject();
