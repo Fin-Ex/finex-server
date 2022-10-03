@@ -6,7 +6,8 @@ import com.google.inject.matcher.Matchers;
 import com.google.inject.multibindings.MapBinder;
 import com.google.inject.name.Names;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.tuple.Pair;
+import lombok.SneakyThrows;
+import org.apache.commons.lang3.reflect.ConstructorUtils;
 import ru.finex.core.GlobalContext;
 import ru.finex.core.component.ComponentService;
 import ru.finex.core.inject.LoaderModule;
@@ -26,6 +27,8 @@ import ru.finex.ws.service.impl.ComponentServiceImpl;
 import ru.finex.ws.tick.TickService;
 import ru.finex.ws.tick.impl.RegisterTickListener;
 import ru.finex.ws.tick.impl.TickServiceImpl;
+
+import java.util.Objects;
 
 /**
  * @author m0nster.mind
@@ -62,10 +65,33 @@ public class WorldServerModule extends AbstractModule {
 
         GlobalContext.reflections.getSubTypesOf(ComponentPrototypeMapper.class)
             .stream()
-            .map(type -> Pair.of(
-                GenericUtils.<ComponentPrototype>getInterfaceGenericType(type, ComponentPrototypeMapper.class, 0),
-                type
-            )).forEach(pair -> mapperBinder.addBinding(pair.getLeft()).to(pair.getRight()));
+            .filter(mapper -> !mapper.isAnnotationPresent(ComponentPrototypeMapper.Ignore.class))
+            .forEach(mapper -> registerMapper(mapper, mapperBinder));
+    }
+
+    @SneakyThrows
+    private void registerMapper(
+        Class<? extends ComponentPrototypeMapper> mapperType,
+        MapBinder<Class<? extends ComponentPrototype>, ComponentPrototypeMapper> mapperBinder) {
+        var registrations = mapperType.getAnnotationsByType(ComponentPrototypeMapper.Register.class);
+        if (registrations.isEmpty()) {
+            mapperBinder.addBinding(GenericUtils.getInterfaceGenericType(mapperType, ComponentPrototypeMapper.class, 0))
+                .to(mapperType);
+        } else {
+            var ctor = ConstructorUtils.getAccessibleConstructor(mapperType, Class.class);
+            if (ctor == null) {
+                ctor = ConstructorUtils.getAccessibleConstructor(mapperType);
+                Objects.requireNonNull(ctor, String.format(
+                    "Not found usable constructor for class '%s' marked as @Register",
+                    mapperType.getCanonicalName()
+                ));
+            }
+            for (var registration : registrations) {
+                ComponentPrototypeMapper mapper = ctor.newInstance(registration.component());
+                requestInjection(mapper);
+                mapperBinder.addBinding(registration.prototype()).toInstance(mapper);
+            }
+        }
     }
 
 }

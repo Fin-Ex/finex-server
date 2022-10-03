@@ -19,9 +19,21 @@ public interface CrudRepository<T extends EntityObject<ID>, ID extends Serializa
 
     T restore(T entity);
 
-    RepositoryFuture<Void> updateAsync(T entity);
+    /**
+     * Update exists the entity.
+     * @param entity the entity
+     * @return copy of the entity in persistent context, all entity changes within current
+     *      transaction will be saved when transaction is flushed.
+     */
+    RepositoryFuture<T> updateAsync(T entity);
 
-    Void update(T entity);
+    /**
+     * Update exists the entity.
+     * @param entity the entity
+     * @return copy of the entity in persistent context, all entity changes within current
+     *      transaction will be saved when transaction is flushed.
+     */
+    T update(T entity);
 
     RepositoryFuture<Void> deleteAsync(T entity);
 

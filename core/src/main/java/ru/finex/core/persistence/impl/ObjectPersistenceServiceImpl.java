@@ -44,8 +44,11 @@ public class ObjectPersistenceServiceImpl implements ObjectPersistenceService {
     private void restore(PersistenceObject object, Field field, Class<? extends PersistenceService> persistenceServiceType) {
         PersistenceService persistenceService = GlobalContext.injector.getInstance(persistenceServiceType);
         try {
-            EntityObject entity = persistenceService.restore(object.getPersistenceId());
-            FieldUtils.writeField(field, object, entity, true);
+            EntityObject reference = (EntityObject) FieldUtils.readField(field, object);
+            EntityObject entity = persistenceService.restore(object.getPersistenceId(), reference);
+            if (entity != null) {
+                FieldUtils.writeField(field, object, entity, true);
+            }
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }

@@ -50,22 +50,23 @@ public abstract class AbstractCrudRepository<T extends EntityObject<ID>, ID exte
     }
 
     @Override
-    public RepositoryFuture<Void> updateAsync(T entity) {
+    public RepositoryFuture<T> updateAsync(T entity) {
         return asyncOperation(() -> update(entity));
     }
 
     @Override
-    public Void update(T entity) {
+    public T update(T entity) {
         TransactionalContext ctx = TransactionalContext.get();
         Session session = ctx.session();
+        T attachedEntity;
         try {
-            session.update(entity);
+            attachedEntity = session.merge(entity);
             ctx.commit();
         } catch (Exception e) {
             ctx.rollback();
             throw new RuntimeException(e);
         }
-        return null;
+        return attachedEntity;
     }
 
     @Override
