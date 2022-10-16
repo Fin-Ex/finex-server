@@ -1,19 +1,19 @@
-package ru.finex.ws.service.impl;
+package ru.finex.core.component.impl;
 
 import com.google.inject.Injector;
 import lombok.RequiredArgsConstructor;
+import ru.finex.core.GlobalContext;
 import ru.finex.core.cluster.impl.Clustered;
 import ru.finex.core.component.Component;
 import ru.finex.core.component.ComponentService;
 import ru.finex.core.events.cluster.ClusterEventBus;
-import ru.finex.core.model.GameObject;
-import ru.finex.core.model.GameObjectEvent;
+import ru.finex.core.model.event.GameObjectEvent;
+import ru.finex.core.object.GameObject;
+import ru.finex.core.object.impl.GameObjectScope;
 import ru.finex.core.pool.PoolService;
 import ru.finex.core.prototype.ComponentPrototype;
 import ru.finex.core.prototype.ComponentPrototypeMapper;
 import ru.finex.core.prototype.GameObjectPrototypeService;
-import ru.finex.ws.model.GameObjectComponents;
-import ru.finex.ws.service.GameObjectInjectorService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +34,7 @@ public class ComponentServiceImpl implements ComponentService {
     private final Map<Integer, GameObjectComponents> goComponents = new HashMap<>();
     private final PoolService poolService;
     private final GameObjectPrototypeService prototypeService;
-    private final GameObjectInjectorService injectorService;
+    private final GameObjectScope gameObjectScope;
 
     @Clustered(GameObjectEvent.CHANNEL)
     private ClusterEventBus<GameObjectEvent> eventBus;
@@ -71,12 +71,16 @@ public class ComponentServiceImpl implements ComponentService {
         }
 
         GameObjectComponents gameObjectComponents = goComponents.computeIfAbsent(gameObject.getRuntimeId(), GameObjectComponents::new);
-        Injector injector = injectorService.getOrCreate(gameObject);
+        Injector injector = GlobalContext.injector;
         ArrayList<Component> components = gameObjectComponents.getComponents();
 
-        component.setGameObject(gameObject);
-        injector.injectMembers(component);
-        components.add(component);
+        gameObjectScope.enterScope(gameObject);
+        try {
+            injector.injectMembers(component);
+            components.add(component);
+        } finally {
+            gameObjectScope.exitScope();
+        }
 
         notifyOnAttachComponent(gameObject, component);
     }
@@ -84,12 +88,17 @@ public class ComponentServiceImpl implements ComponentService {
     @Override
     public void addComponent(GameObject gameObject, Class<? extends Component> componentType) {
         GameObjectComponents gameObjectComponents = goComponents.computeIfAbsent(gameObject.getRuntimeId(), GameObjectComponents::new);
-        Injector injector = injectorService.getOrCreate(gameObject);
+        Injector injector = GlobalContext.injector;
         ArrayList<Component> components = gameObjectComponents.getComponents();
 
-        Component component = injector.getInstance(componentType);
-        component.setGameObject(gameObject);
-        components.add(component);
+        Component component;
+        gameObjectScope.enterScope(gameObject);
+        try {
+            component = injector.getInstance(componentType);
+            components.add(component);
+        } finally {
+            gameObjectScope.exitScope();
+        }
 
         notifyOnAttachComponent(gameObject, component);
     }

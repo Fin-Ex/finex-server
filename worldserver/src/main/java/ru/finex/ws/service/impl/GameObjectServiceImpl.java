@@ -5,11 +5,12 @@ import lombok.RequiredArgsConstructor;
 import ru.finex.core.cluster.Map;
 import ru.finex.core.cluster.impl.Clustered;
 import ru.finex.core.events.cluster.ClusterEventBus;
-import ru.finex.core.model.GameObject;
-import ru.finex.core.model.GameObjectEvent;
+import ru.finex.core.model.event.GameObjectEvent;
+import ru.finex.core.object.GameObject;
+import ru.finex.core.object.GameObjectFactory;
 import ru.finex.core.pool.PoolService;
+import ru.finex.ws.model.event.GameObjectCreated;
 import ru.finex.ws.model.event.GameObjectDestroyed;
-import ru.finex.ws.object.GameObjectFactory;
 import ru.finex.ws.service.GameObjectService;
 
 import java.util.Objects;
@@ -38,6 +39,12 @@ public class GameObjectServiceImpl implements GameObjectService {
         GameObject gameObject = gameObjectFactory.createGameObject(template, persistenceId);
         Objects.requireNonNull(gameObject, "Game object is null");
         gameObjects.fastPut(gameObject.getRuntimeId(), gameObject);
+
+        GameObjectCreated event = poolService.getObject(GameObjectCreated.class);
+        event.setRuntimeId(gameObject.getRuntimeId());
+        eventBus.notify(event);
+        poolService.returnObject(event);
+
         return gameObject;
     }
 
@@ -49,8 +56,10 @@ public class GameObjectServiceImpl implements GameObjectService {
     @Override
     public void destroyObject(GameObject gameObject) {
         GameObjectDestroyed event = poolService.getObject(GameObjectDestroyed.class);
-        event.setGameObject(gameObject);
-        eventBus.notify(event); // m0nster.mind: didnt return object to pool, notify is async
+        event.setRuntimeId(gameObject.getRuntimeId());
+        eventBus.notify(event);
+        poolService.returnObject(event);
+
         gameObjects.fastRemove(gameObject.getRuntimeId());
     }
 

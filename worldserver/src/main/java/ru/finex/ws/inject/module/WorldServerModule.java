@@ -1,4 +1,4 @@
-package ru.finex.ws.inject.module.loader;
+package ru.finex.ws.inject.module;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
@@ -10,6 +10,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import ru.finex.core.GlobalContext;
 import ru.finex.core.component.ComponentService;
+import ru.finex.core.component.impl.ComponentServiceImpl;
 import ru.finex.core.inject.LoaderModule;
 import ru.finex.core.inject.module.ClusterModule;
 import ru.finex.core.inject.module.ClusteredUidModule;
@@ -23,7 +24,6 @@ import ru.finex.core.inject.module.PoolModule;
 import ru.finex.core.prototype.ComponentPrototype;
 import ru.finex.core.prototype.ComponentPrototypeMapper;
 import ru.finex.core.utils.GenericUtils;
-import ru.finex.ws.service.impl.ComponentServiceImpl;
 import ru.finex.ws.tick.TickService;
 import ru.finex.ws.tick.impl.RegisterTickListener;
 import ru.finex.ws.tick.impl.TickServiceImpl;
@@ -34,7 +34,7 @@ import java.util.Objects;
  * @author m0nster.mind
  */
 @LoaderModule
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class WorldServerModule extends AbstractModule {
 
     @Override

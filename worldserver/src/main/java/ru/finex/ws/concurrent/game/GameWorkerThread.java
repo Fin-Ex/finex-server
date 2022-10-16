@@ -3,7 +3,7 @@ package ru.finex.ws.concurrent.game;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import ru.finex.core.model.GameObject;
+import ru.finex.core.object.GameObject;
 import ru.finex.ws.model.ClientSession;
 
 /**

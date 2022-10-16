@@ -2,7 +2,7 @@ package ru.finex.core.persistence.impl;
 
 import lombok.RequiredArgsConstructor;
 import ru.finex.core.component.ComponentService;
-import ru.finex.core.model.GameObject;
+import ru.finex.core.object.GameObject;
 import ru.finex.core.persistence.GameObjectPersistenceService;
 import ru.finex.core.persistence.ObjectPersistenceService;
 

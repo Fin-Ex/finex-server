@@ -1,4 +1,4 @@
-package ru.finex.ws.inject.module.loader;
+package ru.finex.ws.inject.module;
 
 import com.google.inject.AbstractModule;
 import ru.finex.ws.command.PhysicsCommandQueue;

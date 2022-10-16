@@ -1,7 +1,7 @@
-package ru.finex.ws.model.event.component;
+package ru.finex.core.model.event.component;
 
 import ru.finex.core.component.Component;
-import ru.finex.core.model.GameObjectEvent;
+import ru.finex.core.model.event.GameObjectEvent;
 
 /**
  * @author m0nster.mind

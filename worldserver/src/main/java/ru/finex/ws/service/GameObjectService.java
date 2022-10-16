@@ -2,8 +2,8 @@ package ru.finex.ws.service;
 
 import com.google.inject.ImplementedBy;
 import ru.finex.core.events.cluster.ClusterEventBus;
-import ru.finex.core.model.GameObject;
-import ru.finex.core.model.GameObjectEvent;
+import ru.finex.core.model.event.GameObjectEvent;
+import ru.finex.core.object.GameObject;
 import ru.finex.ws.service.impl.GameObjectServiceImpl;
 
 /**

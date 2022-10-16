@@ -1,6 +1,6 @@
 package ru.finex.ws.model;
 
-import ru.finex.core.model.GameObject;
+import ru.finex.core.object.GameObject;
 
 /**
  * @author m0nster.mind

@@ -1,4 +1,4 @@
-package ru.finex.ws.model;
+package ru.finex.core.component.impl;
 
 import lombok.Data;
 import ru.finex.core.component.Component;

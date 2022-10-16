@@ -1,12 +1,8 @@
-package ru.finex.ws.object;
-
-import com.google.inject.ImplementedBy;
-import ru.finex.core.model.GameObject;
+package ru.finex.core.object;
 
 /**
  * @author finfan
  */
-@ImplementedBy(GameObjectFactoryImpl.class)
 public interface GameObjectFactory {
 
     /**

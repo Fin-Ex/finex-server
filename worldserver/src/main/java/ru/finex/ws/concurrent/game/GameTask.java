@@ -1,6 +1,6 @@
 package ru.finex.ws.concurrent.game;
 
-import ru.finex.core.model.GameObject;
+import ru.finex.core.object.GameObject;
 import ru.finex.ws.model.ClientSession;
 
 /**

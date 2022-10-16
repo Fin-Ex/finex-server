@@ -1,9 +1,8 @@
-package ru.finex.ws.model.event.component;
+package ru.finex.core.model.event.component;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.finex.core.component.Component;
-import ru.finex.core.model.GameObject;
 import ru.finex.core.pool.PooledObject;
 
 /**
@@ -16,12 +15,11 @@ import ru.finex.core.pool.PooledObject;
 @PooledObject(maxSize = "1024")
 public class OnComponentAttached implements ComponentEvent {
 
-    private GameObject gameObject;
+    private int runtimeId;
     private Component component;
 
     @Override
     public void clear() {
-        gameObject = null;
         component = null;
     }
 }
