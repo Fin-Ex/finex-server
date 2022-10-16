@@ -12,14 +12,22 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
-@Singleton
 @RequiredArgsConstructor(onConstructor_ = { @Inject })
 public class GameObjectScope implements Scope {
 
+    /**
+     * Named scope of game object runtime ID.
+     */
+    public static final String RUNTIME_ID = "RuntimeID";
+
+    /**
+     * Named scope of game object persistence ID.
+     */
+    public static final String PERSISTENCE_ID = "PersistenceID";
+
     private final ThreadLocal<GameObject> localGameObject = new ThreadLocal<>();
-    private final ComponentService componentService;
+    private final Provider<ComponentService> componentServiceProvider;
 
     /**
      * Enter to game object scope.
@@ -56,6 +64,7 @@ public class GameObjectScope implements Scope {
                 if (GameObject.class.isAssignableFrom(type)) {
                     result = (T) gameObject;
                 } else if (Component.class.isAssignableFrom(type)) {
+                    ComponentService componentService = componentServiceProvider.get();
                     result = (T) componentService.getComponent(gameObject, type);
                 } else if (annotation != null) {
                     if (annotation instanceof Named || annotation instanceof com.google.inject.name.Named) {
@@ -85,14 +94,14 @@ public class GameObjectScope implements Scope {
         }
 
         T result = null;
-        if ("RuntimeID".equalsIgnoreCase(name)) {
+        if (RUNTIME_ID.equalsIgnoreCase(name)) {
             if (int.class.isAssignableFrom(type)) {
                 Object reference = gameObject.getRuntimeId();
                 result = (T) reference;
             } else if (Integer.class.isAssignableFrom(type)) {
                 result = (T) Integer.valueOf(gameObject.getRuntimeId());
             }
-        } else if ("PersistenceID".equalsIgnoreCase(name)) {
+        } else if (PERSISTENCE_ID.equalsIgnoreCase(name)) {
             if (int.class.isAssignableFrom(type)) {
                 Object reference = gameObject.getPersistenceId();
                 result = (T) reference;
