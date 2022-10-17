@@ -9,6 +9,7 @@ import org.apache.commons.lang3.reflect.ConstructorUtils;
 import ru.finex.core.GlobalContext;
 import ru.finex.core.component.ComponentService;
 import ru.finex.core.component.impl.ComponentServiceImpl;
+import ru.finex.core.object.GameObject;
 import ru.finex.core.object.GameObjectFactory;
 import ru.finex.core.object.GameObjectScoped;
 import ru.finex.core.object.impl.GameObjectFactoryImpl;
@@ -26,12 +27,18 @@ public class GameObjectModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        bind(GameObjectFactory.class).to(GameObjectFactoryImpl.class);
         bind(ComponentService.class).to(ComponentServiceImpl.class);
         bindPrototypeMappers();
-        bind(GameObjectFactory.class).to(GameObjectFactoryImpl.class);
+
         var gameObjectScope = new GameObjectScope(getProvider(ComponentService.class));
         bindScope(GameObjectScoped.class, gameObjectScope);
         bind(GameObjectScope.class).toInstance(gameObjectScope);
+        bind(GameObject.class).toProvider(gameObjectScope.gameObjectProvider()).in(GameObjectScoped.class);
+        bind(Integer.class).annotatedWith(Names.named(GameObjectScope.RUNTIME_ID))
+                .toProvider(gameObjectScope.runtimeIdProvider()).in(GameObjectScoped.class);
+        bind(Integer.class).annotatedWith(Names.named(GameObjectScope.PERSISTENCE_ID))
+                .toProvider(gameObjectScope.persistenceIdProvider()).in(GameObjectScoped.class);
     }
 
     private void bindPrototypeMappers() {

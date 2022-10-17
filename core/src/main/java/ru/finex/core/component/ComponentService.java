@@ -33,8 +33,10 @@ public interface ComponentService {
      *
      * @param gameObject игровой объект
      * @param componentType добавляемый тип компонента
+     * @param <T> component type
+     * @return added component
      */
-    void addComponent(GameObject gameObject, Class<? extends Component> componentType);
+    <T extends Component> T addComponent(GameObject gameObject, Class<T> componentType);
 
     /**
      * Удаляет компонент у игрового объекта.

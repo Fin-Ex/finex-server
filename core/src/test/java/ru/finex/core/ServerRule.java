@@ -8,6 +8,7 @@ import org.junit.runners.model.Statement;
 import ru.finex.core.hocon.ApplicationConfigProvider;
 import ru.finex.core.inject.module.ClusterModule;
 import ru.finex.core.inject.module.DbModule;
+import ru.finex.core.inject.module.GameObjectModule;
 import ru.finex.core.inject.module.HoconModule;
 import ru.finex.core.inject.module.JacksonModule;
 
@@ -115,6 +116,11 @@ public class ServerRule implements TestRule {
 
         public ServerRuleBuilder jsonModule() {
             modules.add(Module.of(JacksonModule.class));
+            return this;
+        }
+
+        public ServerRuleBuilder gameObjectModule() {
+            modules.add(Module.of(GameObjectModule.class));
             return this;
         }
 

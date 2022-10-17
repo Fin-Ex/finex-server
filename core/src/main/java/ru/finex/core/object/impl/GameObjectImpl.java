@@ -3,13 +3,11 @@ package ru.finex.core.object.impl;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ru.finex.core.object.GameObject;
-import ru.finex.core.object.GameObjectScoped;
 
 /**
  * @author m0nster.mind
  */
 @Getter
-@GameObjectScoped
 @RequiredArgsConstructor
 public class GameObjectImpl implements GameObject {
 

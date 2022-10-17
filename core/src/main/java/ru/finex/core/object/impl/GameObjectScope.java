@@ -26,7 +26,7 @@ public class GameObjectScope implements Scope {
      */
     public static final String PERSISTENCE_ID = "PersistenceID";
 
-    private final ThreadLocal<GameObject> localGameObject = new ThreadLocal<>();
+    private final ThreadLocal<ScopeContext> localGameObject = ThreadLocal.withInitial(ScopeContext::new);
     private final Provider<ComponentService> componentServiceProvider;
 
     /**
@@ -35,24 +35,46 @@ public class GameObjectScope implements Scope {
      * @param gameObject the game object
      */
     public void enterScope(GameObject gameObject) {
-        if (localGameObject.get() != null) {
-            throw new RuntimeException("Already in GameObject scope!");
-        }
-        localGameObject.set(gameObject);
+        localGameObject.get().enterScope(gameObject);
     }
 
     /**
      * Exit from game object scope.
-     * Delete the game object from thread local.
+     * <p>Delete the game object from thread local.
+     * @param gameObject the game object
      */
-    public void exitScope() {
-        localGameObject.remove();
+    public void exitScope(GameObject gameObject) {
+        localGameObject.get().exitScope(gameObject);
+    }
+
+    /**
+     * Create new scoped game object provider.
+     * @return game object provider
+     */
+    public Provider<GameObject> gameObjectProvider() {
+        return () -> localGameObject.get().getScopedObject();
+    }
+
+    /**
+     * Create new scoped runtime ID provider.
+     * @return runtime ID provider
+     */
+    public Provider<Integer> runtimeIdProvider() {
+        return () -> localGameObject.get().getScopedObject().getRuntimeId();
+    }
+
+    /**
+     * Create new scoped persistence ID provider.
+     * @return persistence ID provider
+     */
+    public Provider<Integer> persistenceIdProvider() {
+        return () -> localGameObject.get().getScopedObject().getPersistenceId();
     }
 
     @Override
     public <T> Provider<T> scope(Key<T> key, Provider<T> provider) {
         return () -> {
-            GameObject gameObject = localGameObject.get();
+            GameObject gameObject = localGameObject.get().getScopedObject();
             if (gameObject == null) {
                 return provider.get();
             }

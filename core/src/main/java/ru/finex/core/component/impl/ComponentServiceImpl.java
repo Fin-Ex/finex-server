@@ -79,28 +79,30 @@ public class ComponentServiceImpl implements ComponentService {
             injector.injectMembers(component);
             components.add(component);
         } finally {
-            gameObjectScope.exitScope();
+            gameObjectScope.exitScope(gameObject);
         }
 
         notifyOnAttachComponent(gameObject, component);
     }
 
     @Override
-    public void addComponent(GameObject gameObject, Class<? extends Component> componentType) {
+    public <T extends Component> T addComponent(GameObject gameObject, Class<T> componentType) {
         GameObjectComponents gameObjectComponents = goComponents.computeIfAbsent(gameObject.getRuntimeId(), GameObjectComponents::new);
         Injector injector = GlobalContext.injector;
         ArrayList<Component> components = gameObjectComponents.getComponents();
 
-        Component component;
+        T component;
         gameObjectScope.enterScope(gameObject);
         try {
             component = injector.getInstance(componentType);
             components.add(component);
         } finally {
-            gameObjectScope.exitScope();
+            gameObjectScope.exitScope(gameObject);
         }
 
         notifyOnAttachComponent(gameObject, component);
+
+        return (T) component;
     }
 
     private void notifyOnAttachComponent(GameObject gameObject, Component component) {
