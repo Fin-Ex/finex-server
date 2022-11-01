@@ -3,7 +3,7 @@ package ru.finex.core.component;
 import lombok.Data;
 import ru.finex.core.object.GameObject;
 import ru.finex.core.object.GameObjectScoped;
-import ru.finex.core.prototype.EquipPrototype;
+import ru.finex.core.component.prototype.EquipPrototype;
 
 import javax.inject.Inject;
 

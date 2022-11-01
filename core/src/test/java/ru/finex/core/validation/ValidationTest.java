@@ -3,40 +3,37 @@ package ru.finex.core.validation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Range;
-import org.junit.ClassRule;
-import org.junit.Test;
-import ru.finex.core.ContainerRule;
-import ru.finex.core.ContainerRule.Type;
-import ru.finex.core.GlobalContext;
-import ru.finex.core.ServerRule;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import ru.finex.core.inject.module.DbModule;
+import ru.finex.core.inject.module.HoconModule;
+import ru.finex.testing.container.Container;
+import ru.finex.testing.container.ContainerType;
+import ru.finex.testing.server.Server;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
  * @author m0nster.mind
  */
+@Container(ContainerType.Database)
+@Server(config = "database-test.conf", modules = {
+        HoconModule.class,
+        DbModule.class
+})
 public class ValidationTest {
 
-    @ClassRule(order = 0)
-    public static ContainerRule containers = new ContainerRule(Type.Database);
+    @Inject
+    private SomeService service;
 
-    @ClassRule(order = 1)
-    public static ServerRule server = ServerRule.builder()
-        .configPath("database-test.conf")
-        .configModule()
-        .databaseModule()
-        .build();
-
-
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void failConstraintTest() {
-        SomeService service = GlobalContext.injector.getInstance(SomeService.class);
-        service.rangeValue("5");
+        Assertions.assertThrowsExactly(ConstraintViolationException.class, () -> service.rangeValue("5"));
     }
 
     @Test
     public void successConstraintTest() {
-        SomeService service = GlobalContext.injector.getInstance(SomeService.class);
         service.rangeValue("20");
     }
 

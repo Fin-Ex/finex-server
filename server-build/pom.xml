@@ -17,6 +17,7 @@
         <module>../authserver</module>
         <module>../worldserver</module>
         <module>../netty-network</module>
+        <module>../testing</module>
     </modules>
 
     <properties>

@@ -1,30 +1,27 @@
 package ru.finex.core.cluster;
 
-import org.junit.ClassRule;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import ru.finex.core.ContainerRule;
-import ru.finex.core.ContainerRule.Type;
-import ru.finex.core.GlobalContext;
-import ru.finex.core.ServerRule;
-import ru.finex.core.ServerRule.Module;
+import org.junit.jupiter.api.Test;
 import ru.finex.core.uid.impl.ClusteredRuntimeIdService;
+import ru.finex.testing.container.Container;
+import ru.finex.testing.container.ContainerType;
+import ru.finex.testing.server.Server;
 
 import java.util.concurrent.ThreadLocalRandom;
+import javax.inject.Inject;
 
 /**
  * @author m0nster.mind
  */
+@Container(ContainerType.Redis)
+@Server(config = "cluster-test.conf", modules = ClusterModule.class)
 public class ClusteredRuntimeIdServiceTest {
 
     private static final int MAX_IDS = 5_000;
     private static final int REPEATS = 5;
 
-    @ClassRule(order = 0)
-    public static ContainerRule containers = new ContainerRule(Type.Redis);
-
-    @ClassRule(order = 1)
-    public static ServerRule server = new ServerRule("cluster-test.conf", Module.of(ClusterModule.class));
+    @Inject
+    private ClusteredRuntimeIdService service;
 
     @Test
     public void repeatableGenerateId() {
@@ -35,7 +32,6 @@ public class ClusteredRuntimeIdServiceTest {
     }
 
     private void generateIdTest() {
-        var service = GlobalContext.injector.getInstance(ClusteredRuntimeIdService.class);
         int maxIterations = ThreadLocalRandom.current().nextInt(MAX_IDS);
         for (int i = 0; i < maxIterations; i++) {
             int id = service.generateId();
@@ -48,7 +44,6 @@ public class ClusteredRuntimeIdServiceTest {
 
     @Test
     public void outOfIndexTest() {
-        var service = GlobalContext.injector.getInstance(ClusteredRuntimeIdService.class);
         long position = 0xffffffffL;
 
         service.reset(position);

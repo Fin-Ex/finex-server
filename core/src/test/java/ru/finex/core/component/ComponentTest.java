@@ -1,46 +1,49 @@
 package ru.finex.core.component;
 
-import org.junit.ClassRule;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import ru.finex.core.ContainerRule;
+import org.junit.jupiter.api.Test;
 import ru.finex.core.GlobalContext;
-import ru.finex.core.ServerRule;
 import ru.finex.core.component.mapper.MapperModule;
+import ru.finex.core.component.prototype.AppearancePrototype;
+import ru.finex.core.component.prototype.EquipPrototype;
+import ru.finex.core.inject.module.DbModule;
+import ru.finex.core.inject.module.GameObjectModule;
+import ru.finex.core.inject.module.HoconModule;
 import ru.finex.core.object.GameObject;
 import ru.finex.core.object.GameObjectFactory;
-import ru.finex.core.prototype.AppearancePrototype;
 import ru.finex.core.prototype.ComponentPrototype;
-import ru.finex.core.prototype.EquipPrototype;
 import ru.finex.core.prototype.GameObjectPrototypeService;
+import ru.finex.testing.container.Container;
+import ru.finex.testing.container.ContainerType;
+import ru.finex.testing.server.Server;
 
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import javax.inject.Inject;
 
 /**
  * @author m0nster.mind
  */
+@Container(ContainerType.Database)
+@Server(config = "database-test.conf", modules = {
+        HoconModule.class,
+        DbModule.class,
+        GameObjectModule.class,
+        MapperModule.class
+})
 public class ComponentTest {
 
-    @ClassRule(order = 0)
-    public static ContainerRule containers = new ContainerRule(ContainerRule.Type.Database);
+    @Inject
+    private GameObjectFactory gameObjectFactory;
 
-    @ClassRule(order = 1)
-    public static ServerRule server = ServerRule.builder()
-            .configPath("database-test.conf")
-            .configModule()
-            .databaseModule()
-            .gameObjectModule()
-            .module(ServerRule.Module.of(MapperModule.class))
-            .build();
+    @Inject
+    private ComponentService componentService;
 
     @Test
     public void testGameObjectInject() {
-        var gameObjectFactory = GlobalContext.injector.getInstance(GameObjectFactory.class);
         GameObject gameObject = gameObjectFactory.createGameObject("Goblin Warrior", 3);
         Assertions.assertNotNull(gameObject);
 
-        var componentService = GlobalContext.injector.getInstance(ComponentService.class);
         var components = componentService.getComponents(gameObject);
         Assertions.assertEquals(2, components.size());
 

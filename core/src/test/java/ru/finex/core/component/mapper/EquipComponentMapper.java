@@ -2,7 +2,7 @@ package ru.finex.core.component.mapper;
 
 import ru.finex.core.component.EquipComponent;
 import ru.finex.core.prototype.ComponentPrototypeMapper;
-import ru.finex.core.prototype.EquipPrototype;
+import ru.finex.core.component.prototype.EquipPrototype;
 
 /**
  * @author m0nster.mind

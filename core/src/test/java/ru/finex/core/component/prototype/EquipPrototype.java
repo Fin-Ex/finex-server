@@ -1,6 +1,7 @@
-package ru.finex.core.prototype;
+package ru.finex.core.component.prototype;
 
 import lombok.Data;
+import ru.finex.core.prototype.ComponentPrototype;
 
 /**
  * @author m0nster.mind

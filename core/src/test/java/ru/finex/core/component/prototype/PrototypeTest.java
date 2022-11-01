@@ -1,34 +1,34 @@
-package ru.finex.core.prototype;
+package ru.finex.core.component.prototype;
 
-import org.junit.ClassRule;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import ru.finex.core.ContainerRule;
-import ru.finex.core.ContainerRule.Type;
-import ru.finex.core.GlobalContext;
-import ru.finex.core.ServerRule;
-import ru.finex.core.prototype.EquipPrototype.WeaponType;
+import org.junit.jupiter.api.Test;
+import ru.finex.core.component.prototype.EquipPrototype.WeaponType;
+import ru.finex.core.inject.module.DbModule;
+import ru.finex.core.inject.module.HoconModule;
+import ru.finex.core.prototype.ComponentPrototype;
+import ru.finex.core.prototype.GameObjectPrototypeService;
+import ru.finex.testing.container.Container;
+import ru.finex.testing.container.ContainerType;
+import ru.finex.testing.server.Server;
 
 import java.util.List;
+import javax.inject.Inject;
 
 /**
  * @author m0nster.mind
  */
+@Container(ContainerType.Database)
+@Server(config = "database-test.conf", modules = {
+        HoconModule.class,
+        DbModule.class
+})
 public class PrototypeTest {
 
-    @ClassRule(order = 0)
-    public static ContainerRule containers = new ContainerRule(Type.Database);
-
-    @ClassRule(order = 1)
-    public static ServerRule server = ServerRule.builder()
-        .configPath("database-test.conf")
-        .configModule()
-        .databaseModule()
-        .build();
+    @Inject
+    private GameObjectPrototypeService prototypeService;
 
     @Test
     public void testGoblinWarrior() {
-        GameObjectPrototypeService prototypeService = GlobalContext.injector.getInstance(GameObjectPrototypeService.class);
         List<ComponentPrototype> prototypes = prototypeService.getPrototypesByName("Goblin Warrior");
         Assertions.assertEquals(2, prototypes.size());
         for (ComponentPrototype prototype : prototypes) {

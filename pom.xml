@@ -12,7 +12,7 @@
 
 	<modules>
 		<module>server-build</module>
-	</modules>
+    </modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,6 +24,7 @@
 		<finex-core.version>1.0.0-SNAPSHOT</finex-core.version>
 		<finex-worldserver.version>1.0.0-SNAPSHOT</finex-worldserver.version>
 		<finex-netty-network.version>1.0.0-SNAPSHOT</finex-netty-network.version>
+		<finex-server-testing.version>1.0.0-SNAPSHOT</finex-server-testing.version>
 	</properties>
 
 	<dependencyManagement>
@@ -47,6 +48,12 @@
 				<groupId>ru.finex</groupId>
 				<artifactId>finex-netty-network</artifactId>
 				<version>${finex-netty-network.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ru.finex</groupId>
+				<artifactId>finex-server-testing</artifactId>
+				<version>${finex-server-testing.version}</version>
+				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

@@ -1,7 +1,7 @@
 package ru.finex.core.component.mapper;
 
 import ru.finex.core.component.AppearanceComponent;
-import ru.finex.core.prototype.AppearancePrototype;
+import ru.finex.core.component.prototype.AppearancePrototype;
 import ru.finex.core.prototype.ComponentPrototypeMapper;
 
 /**
