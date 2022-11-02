@@ -5,6 +5,7 @@ import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.junit.jupiter.api.extension.AfterAllCallback;
@@ -58,6 +59,7 @@ public class ServerExtension implements BeforeAllCallback, BeforeEachCallback, A
                 .map(server ->
                     Stream.of(
                         Optional.ofNullable(server.config())
+                            .filter(StringUtils::isNotBlank)
                             .map(e -> String.join("=", CONFIG_ARG, e))
                             .orElse(null),
                         Stream.of(server.modules())
