@@ -22,8 +22,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
+            <groupId>ru.finex</groupId>
+            <artifactId>finex-server-testing</artifactId>
             <scope>test</scope>
         </dependency>
 
