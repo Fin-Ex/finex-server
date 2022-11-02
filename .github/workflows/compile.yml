@@ -3,8 +3,10 @@
 
 name: Compile Pipeline
 
-on.push.branches:
-  - !master
+on:
+  push:
+    branches:
+      - '!master'
 
 jobs:
   build:
