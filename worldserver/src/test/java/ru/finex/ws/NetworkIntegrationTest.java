@@ -1,6 +1,5 @@
 package ru.finex.ws;
 
-import com.google.inject.Injector;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
@@ -8,7 +7,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.Timeout;
-import ru.finex.core.GlobalContext;
 import ru.finex.core.Version;
 import ru.finex.testing.container.Container;
 import ru.finex.testing.container.ContainerType;
@@ -22,6 +20,7 @@ import java.nio.ByteOrder;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 
 /**
  * @author m0nster.mind
@@ -32,12 +31,12 @@ import java.util.concurrent.TimeUnit;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class NetworkIntegrationTest {
 
+    @Inject
+    private NetworkConfiguration networkConfiguration;
+
     @Order(0)
     @Test
     public void testConnection() throws Exception {
-        Injector injector = GlobalContext.injector;
-        NetworkConfiguration networkConfiguration = injector.getInstance(NetworkConfiguration.class);
-
         try (Socket socket = new Socket()) {
             socket.connect(
                 new InetSocketAddress(networkConfiguration.getHost(), networkConfiguration.getPort()),
@@ -49,9 +48,6 @@ public class NetworkIntegrationTest {
     @Test
     @Timeout(10)
     public void testPingPong() throws Exception {
-        Injector injector = GlobalContext.injector;
-        NetworkConfiguration networkConfiguration = injector.getInstance(NetworkConfiguration.class);
-
         try (SocketChannel socket = socketChannel(networkConfiguration)) {
             socket.write(inputTestDto());
 
