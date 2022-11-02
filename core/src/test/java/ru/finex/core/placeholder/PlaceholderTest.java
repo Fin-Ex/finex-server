@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.finex.core.inject.module.HoconModule;
+import ru.finex.core.inject.module.PlaceholderJuelModule;
 import ru.finex.testing.server.Server;
 
 import javax.inject.Inject;
@@ -15,7 +16,7 @@ import javax.inject.Inject;
  */
 @Server(config = "placeholder-test.conf", modules = {
         HoconModule.class,
-        PlaceholderModule.class
+        PlaceholderJuelModule.class
 })
 public class PlaceholderTest {
 

@@ -7,7 +7,9 @@ import org.apache.commons.pool2.ObjectPool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import ru.finex.core.math.bvh.aabb.Box2Tree;
 import ru.finex.core.math.bvh.aabb.Box2Tree.Node;
 import ru.finex.core.math.bvh.aabb.Box2TreeElement;
@@ -32,6 +34,7 @@ import static org.mockito.Mockito.when;
  * @author m0nster.mind
  */
 @Slf4j
+@ExtendWith(MockitoExtension.class)
 public class Box2TreeTest {
 
     private Box2Tree worldTree;
