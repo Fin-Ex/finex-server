@@ -8,6 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Starts before all tests specified containers and down its after all tests.
  * @author m0nster.mind
  */
 @ExtendWith(ContainerExtension.class)

@@ -8,6 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Starts server core with specified parameters.
  * @author m0nster.mind
  */
 @ExtendWith(ServerExtension.class)
@@ -15,7 +16,16 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Server {
 
+    /**
+     * Path to configuration file.
+     * @return configuration file path
+     */
     String config() default "";
+
+    /**
+     * Injector modules for server.
+     * @return injector modules
+     */
     Class[] modules() default {};
 
 }
