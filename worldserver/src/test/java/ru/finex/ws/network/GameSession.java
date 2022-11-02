@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.finex.core.command.NetworkCommandQueue;
 import ru.finex.core.events.EventBus;
-import ru.finex.core.model.GameObject;
+import ru.finex.core.object.GameObject;
 import ru.finex.core.network.AbstractClientSession;
 import ru.finex.core.network.NetworkCommandScoped;
 import ru.finex.ws.model.ClientSession;

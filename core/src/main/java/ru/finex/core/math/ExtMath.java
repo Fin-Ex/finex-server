@@ -110,7 +110,7 @@ public class ExtMath {
     }
 
     /**
-     * Return 1/sqrt(value)
+     * Return 1/sqrt(value).
      *
      * @param value The value to process.
      * @return 1 /sqrt(value)

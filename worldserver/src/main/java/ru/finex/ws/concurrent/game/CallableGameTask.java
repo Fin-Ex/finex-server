@@ -2,7 +2,7 @@ package ru.finex.ws.concurrent.game;
 
 import lombok.Getter;
 import ru.finex.core.concurrent.CallableServerTask;
-import ru.finex.core.model.GameObject;
+import ru.finex.core.object.GameObject;
 import ru.finex.ws.model.ClientSession;
 
 import java.util.concurrent.Callable;

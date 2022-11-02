@@ -1,7 +1,7 @@
 package ru.finex.core.persistence;
 
-import ru.finex.core.model.GameObject;
 import ru.finex.core.model.entity.EntityObject;
+import ru.finex.core.object.GameObject;
 
 /**
  * @param <T> entity type

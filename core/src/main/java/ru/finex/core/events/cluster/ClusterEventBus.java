@@ -23,8 +23,12 @@ public class ClusterEventBus<E> {
         this.genericType = genericType;
     }
 
-    public void notify(E object) {
+    public void notifyAsync(E object) {
         topic.publishAsync(object);
+    }
+
+    public void notify(E object) {
+        topic.publish(object);
     }
 
     public ClusterSubscription<E> subscribe() {

@@ -2,7 +2,7 @@ package ru.finex.core.command;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.finex.core.model.GameObject;
+import ru.finex.core.object.GameObject;
 
 /**
  * Абстрактная команда игровой логики.

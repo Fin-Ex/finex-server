@@ -15,7 +15,7 @@ import ru.finex.core.inject.module.PoolModule;
  * @author m0nster.mind
  */
 @LoaderModule
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class AuthServerModule extends AbstractModule {
 
     @Override

@@ -5,6 +5,7 @@ import java.util.Random;
 /**
  * @author m0nster.mind
  */
+@SuppressWarnings("checkstyle:MagicNumber")
 public class UnsafeRandomGenerator extends Random implements RandomGenerator {
 
     private static final long MULTIPLIER = 0x5DEECE66DL;

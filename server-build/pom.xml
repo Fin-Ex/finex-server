@@ -17,6 +17,7 @@
         <module>../authserver</module>
         <module>../worldserver</module>
         <module>../netty-network</module>
+        <module>../testing</module>
     </modules>
 
     <properties>
@@ -30,7 +31,7 @@
         <junit.version>5.8.2</junit.version>
         <junit-jupiter.version>5.8.2</junit-jupiter.version>
         <mockito.version>4.3.1</mockito.version>
-        <testcontainers.version>1.16.3</testcontainers.version>
+        <testcontainers.version>1.17.4</testcontainers.version>
         <slf4j-api.version>1.7.30</slf4j-api.version>
         <logback.version>1.2.3</logback.version>
         <lombok.version>1.18.20</lombok.version>
@@ -432,6 +433,7 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.1</version>
                     <configuration>
+                        <fork>true</fork>
                         <debug>true</debug>
                         <debuglevel>lines,vars,source</debuglevel>
                         <parameters>true</parameters>
@@ -469,6 +471,8 @@
                     <version>2.22.2</version>
                     <configuration>
                         <argLine>--add-modules jdk.incubator.vector --add-modules jdk.incubator.foreign</argLine>
+                        <forkCount>1</forkCount>
+                        <reuseForks>false</reuseForks>
                     </configuration>
                 </plugin>
                 <plugin>

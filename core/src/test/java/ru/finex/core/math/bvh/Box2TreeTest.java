@@ -7,6 +7,9 @@ import org.apache.commons.pool2.ObjectPool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import ru.finex.core.math.bvh.aabb.Box2Tree;
 import ru.finex.core.math.bvh.aabb.Box2Tree.Node;
 import ru.finex.core.math.bvh.aabb.Box2TreeElement;
@@ -25,25 +28,23 @@ import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
  * @author m0nster.mind
  */
 @Slf4j
+@ExtendWith(MockitoExtension.class)
 public class Box2TreeTest {
 
-    private PoolService poolService;
     private Box2Tree worldTree;
 
-    public Box2TreeTest() throws Exception {
+    public Box2TreeTest(@Mock PoolService poolService) throws Exception {
         ObjectPool<Node> pool = new ArrayDequePool<>(new SimplePooledObjectFactory<>(Node.class), 0, true);
         for (int i = 0; i < 2000; i++) {
             pool.addObject();
         }
 
-        poolService = mock(PoolService.class);
         when(poolService.createDynamicPool(eq(Node.class), any()))
             .thenReturn(pool);
 
