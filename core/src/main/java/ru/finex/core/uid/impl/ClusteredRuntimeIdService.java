@@ -15,7 +15,7 @@ public class ClusteredRuntimeIdService implements RuntimeIdService {
 
     private static final long MAX_BITS = 4_294_967_295L; // 0xffff_ffff
     private final RBitSet bitset;
-    private long position;
+    private long position = 1;
 
     @Inject
     public ClusteredRuntimeIdService(ClusterService clusterService) {
@@ -28,7 +28,7 @@ public class ClusteredRuntimeIdService implements RuntimeIdService {
         bitset.set(position);
         long nextPosition = nextClearBit(position);
         if (nextPosition == MAX_BITS) {
-            nextPosition = nextClearBit(0);
+            nextPosition = nextClearBit(1);
         }
 
         if (nextPosition == MAX_BITS) {
@@ -50,7 +50,7 @@ public class ClusteredRuntimeIdService implements RuntimeIdService {
      * Reset bitset index.
      */
     public void reset() {
-        position = nextClearBit(0);
+        position = nextClearBit(1);
     }
 
     /**
