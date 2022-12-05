@@ -26,16 +26,20 @@ public class ObjectPersistenceServiceImpl implements ObjectPersistenceService {
             .forEach(e -> persist(object, e, e.getAnnotation(PersistenceField.class).value()));
     }
 
-    private void persist(PersistenceObject object, Field field, Class<? extends PersistenceService> persistenceServiceType) {
+    protected void persist(PersistenceObject object, Field field, Class<? extends PersistenceService> persistenceServiceType) {
         PersistenceService persistenceService = GlobalContext.injector.getInstance(persistenceServiceType);
         try {
             EntityObject entity = (EntityObject) FieldUtils.readField(field, object, true);
             if (entity != null) {
-                persistenceService.persist(entity);
+                persist(entity, persistenceService);
             }
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected void persist(EntityObject entity, PersistenceService persistenceService) {
+        persistenceService.persist(entity);
     }
 
     @Override
@@ -44,7 +48,7 @@ public class ObjectPersistenceServiceImpl implements ObjectPersistenceService {
             .forEach(e -> restore(object, e, e.getAnnotation(PersistenceField.class).value()));
     }
 
-    private void restore(PersistenceObject object, Field field, Class<? extends PersistenceService> persistenceServiceType) {
+    protected void restore(PersistenceObject object, Field field, Class<? extends PersistenceService> persistenceServiceType) {
         PersistenceService persistenceService = GlobalContext.injector.getInstance(persistenceServiceType);
         try {
             EntityObject reference = (EntityObject) FieldUtils.readField(field, object, true);
