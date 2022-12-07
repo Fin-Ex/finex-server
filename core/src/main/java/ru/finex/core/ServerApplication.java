@@ -2,28 +2,19 @@ package ru.finex.core;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Module;
 import com.google.inject.Stage;
-import com.mycila.guice.ext.closeable.CloseableModule;
-import com.mycila.guice.ext.jsr250.Jsr250Module;
-import com.mycila.jmx.JmxModule;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.LoggerFactory;
-import ru.finex.core.inject.LoaderModule;
+import ru.finex.core.inject.ModuleService;
 import ru.finex.core.logback.LogbackConfiguration;
-import ru.finex.core.utils.InjectorUtils;
 import ru.finex.evolution.Evolution;
-import ru.vyarus.guice.validator.ValidationModule;
 
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
 /**
  * Производит инициализацию ядра.
@@ -72,8 +63,9 @@ public class ServerApplication {
         LoggerFactory.getLogger(ServerApplication.class)
             .info("Core version: {}", Version.getImplVersion());
 
-        Set<Module> modules = createModules();
-        Injector globalInjector = Guice.createInjector(Stage.PRODUCTION, modules);
+        ModuleService moduleService = new ModuleService();
+        moduleService.buildTree();
+        Injector globalInjector = Guice.createInjector(Stage.PRODUCTION, moduleService.findInjectableModules());
         GlobalContext.injector = globalInjector;
 
         SigtermListener sigtermListener = globalInjector.getInstance(SigtermListener.class);
@@ -97,22 +89,6 @@ public class ServerApplication {
             }
         }
         GlobalContext.arguments = arguments;
-    }
-
-    private static Set<Module> createModules() {
-        HashSet<Module> modules = new HashSet<>();
-        modules.add(new CloseableModule());
-        modules.add(new Jsr250Module());
-        modules.add(new JmxModule());
-        modules.add(new ValidationModule());
-        modules.addAll(InjectorUtils.collectModules(ServerApplication.class.getPackageName(), LoaderModule.class));
-        modules.addAll(InjectorUtils.collectModules(GlobalContext.rootPackage, LoaderModule.class));
-        Optional.ofNullable(GlobalContext.arguments.get(MODULES_ARG))
-            .map(e -> e.split("[,;]"))
-            .map(InjectorUtils::collectModules)
-            .ifPresent(modules::addAll);
-
-        return modules;
     }
 
 }
