@@ -70,7 +70,7 @@ public class RepositoryProxyTest {
 
         var query = mock(org.hibernate.query.Query.class);
         Session session = mock(Session.class);
-        when(session.createQuery(eq(queryJpql)))
+        when(session.createQuery(eq(queryJpql), eq(TestEntity.class)))
             .thenReturn(query);
 
         TransactionalContext ctx = mock(TransactionalContext.class);
@@ -85,7 +85,7 @@ public class RepositoryProxyTest {
 
         Long id = 11L;
         proxy.testOp(id);
-        verify(session).createQuery(eq(queryJpql));
+        verify(session).createQuery(eq(queryJpql), eq(TestEntity.class));
         verify(query).setParameter(eq("id"), eq(id));
         verify(query).getSingleResult();
     }
@@ -97,7 +97,7 @@ public class RepositoryProxyTest {
 
         var query = mock(org.hibernate.query.Query.class);
         Session session = mock(Session.class);
-        when(session.createQuery(eq(queryJpql)))
+        when(session.createQuery(eq(queryJpql), eq(TestEntity.class)))
             .thenReturn(query);
 
         TransactionalContext ctx = mock(TransactionalContext.class);
