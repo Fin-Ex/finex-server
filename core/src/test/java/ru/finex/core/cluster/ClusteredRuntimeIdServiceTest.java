@@ -33,7 +33,7 @@ public class ClusteredRuntimeIdServiceTest {
 
     private void generateIdTest() {
         int maxIterations = ThreadLocalRandom.current().nextInt(MAX_IDS);
-        for (int i = 0; i < maxIterations; i++) {
+        for (int i = 1; i < maxIterations; i++) {
             int id = service.generateId();
             service.free(id);
             Assertions.assertEquals(i, id);
@@ -52,7 +52,7 @@ public class ClusteredRuntimeIdServiceTest {
         Assertions.assertEquals(-1, id, "Wrong ID: 0x" + Integer.toHexString(id));
 
         id = service.generateId();
-        Assertions.assertEquals(0, id, "Wrong ID: 0x" + Integer.toHexString(id));
+        Assertions.assertEquals(1, id, "Wrong ID: 0x" + Integer.toHexString(id));
     }
 
 }
