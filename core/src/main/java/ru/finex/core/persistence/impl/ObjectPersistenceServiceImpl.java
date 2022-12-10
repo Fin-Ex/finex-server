@@ -19,7 +19,7 @@ import javax.inject.Singleton;
 @Singleton
 public class ObjectPersistenceServiceImpl implements ObjectPersistenceService {
 
-    @Transactional(TxType.REQUIRES_NEW)
+    @Transactional(TxType.REQUIRED)
     @Override
     public void persist(PersistenceObject object) {
         FieldUtils.getFieldsListWithAnnotation(object.getClass(), PersistenceField.class)
