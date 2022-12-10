@@ -32,6 +32,7 @@ import javax.inject.Singleton;
 public class ComponentServiceImpl implements ComponentService {
 
     private final Map<Integer, GameObjectComponents> goComponents = new HashMap<>();
+    private final Map<Class<? extends Component>, ArrayList<Component>> components = new HashMap<>();
     private final PoolService poolService;
     private final GameObjectPrototypeService prototypeService;
     private final GameObjectScope gameObjectScope;
@@ -78,6 +79,7 @@ public class ComponentServiceImpl implements ComponentService {
         try {
             injector.injectMembers(component);
             components.add(component);
+
         } finally {
             gameObjectScope.exitScope(gameObject);
         }
@@ -89,12 +91,14 @@ public class ComponentServiceImpl implements ComponentService {
     public <T extends Component> T addComponent(GameObject gameObject, Class<T> componentType) {
         GameObjectComponents gameObjectComponents = goComponents.computeIfAbsent(gameObject.getRuntimeId(), GameObjectComponents::new);
         Injector injector = GlobalContext.injector;
-        ArrayList<Component> components = gameObjectComponents.getComponents();
+        ArrayList<Component> goComponents = gameObjectComponents.getComponents();
+        ArrayList<Component> components = this.components.computeIfAbsent(componentType, e -> new ArrayList<>());
 
         T component;
         gameObjectScope.enterScope(gameObject);
         try {
             component = injector.getInstance(componentType);
+            goComponents.add(component);
             components.add(component);
         } finally {
             gameObjectScope.exitScope(gameObject);
@@ -128,15 +132,20 @@ public class ComponentServiceImpl implements ComponentService {
             return false;
         }
 
-        ArrayList<Component> components = gameObjectComponents.getComponents();
-        if (!components.remove(component)) {
+        ArrayList<Component> components = this.components.get(component.getClass());
+        if (components != null) {
+            components.remove(component);
+        }
+
+        ArrayList<Component> goComponents = gameObjectComponents.getComponents();
+        if (!goComponents.remove(component)) {
             return false;
         }
 
         component.setGameObject(null);
 
-        if (components.isEmpty()) {
-            goComponents.remove(runtimeId);
+        if (goComponents.isEmpty()) {
+            this.goComponents.remove(runtimeId);
         }
 
         notifyOnDeattachComponent(gameObject, component);
@@ -153,17 +162,22 @@ public class ComponentServiceImpl implements ComponentService {
             return false;
         }
 
-        ArrayList<Component> components = gameObjectComponents.getComponents();
-        Component component = getComponent(components, componentType);
+        ArrayList<Component> goComponents = gameObjectComponents.getComponents();
+        Component component = getComponent(goComponents, componentType);
         if (component == null) {
             return false;
         }
 
-        components.remove(component);
+        ArrayList<Component> components = this.components.get(component.getClass());
+        if (components != null) {
+            components.remove(component);
+        }
+
+        goComponents.remove(component);
         component.setGameObject(null);
 
-        if (components.isEmpty()) {
-            goComponents.remove(runtimeId);
+        if (goComponents.isEmpty()) {
+            this.goComponents.remove(runtimeId);
         }
 
         notifyOnDeattachComponent(gameObject, component);
@@ -207,4 +221,8 @@ public class ComponentServiceImpl implements ComponentService {
         return new ArrayList<>(gameObjectComponents.getComponents());
     }
 
+    @Override
+    public <T extends Component> List<Component> getComponents(Class<T> componentType) {
+        return components.get(componentType);
+    }
 }

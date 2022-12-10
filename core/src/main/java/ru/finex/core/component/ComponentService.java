@@ -73,4 +73,12 @@ public interface ComponentService {
      */
     List<Component> getComponents(GameObject gameObject);
 
+    /**
+     * Get all components by specified type.
+     * @param componentType component type
+     * @param <T> component type generic
+     * @return all components
+     */
+    <T extends Component> List<Component> getComponents(Class<T> componentType);
+
 }
