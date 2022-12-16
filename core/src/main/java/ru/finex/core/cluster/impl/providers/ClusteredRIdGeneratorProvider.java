@@ -1,8 +1,9 @@
 package ru.finex.core.cluster.impl.providers;
 
-import java.lang.reflect.Type;
 import org.redisson.api.RIdGenerator;
 import org.redisson.api.RedissonClient;
+
+import java.lang.reflect.Type;
 
 /**
  * @author oracle
