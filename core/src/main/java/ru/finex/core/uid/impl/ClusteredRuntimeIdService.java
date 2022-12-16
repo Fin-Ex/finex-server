@@ -1,10 +1,9 @@
 package ru.finex.core.uid.impl;
 
 import org.redisson.api.RBitSet;
-import ru.finex.core.cluster.ClusterService;
+import ru.finex.core.cluster.impl.Clustered;
 import ru.finex.core.uid.RuntimeIdService;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
@@ -14,14 +13,9 @@ import javax.inject.Singleton;
 public class ClusteredRuntimeIdService implements RuntimeIdService {
 
     private static final long MAX_BITS = 4_294_967_295L; // 0xffff_ffff
-    private final RBitSet bitset;
+    @Clustered
+    private RBitSet bitset;
     private long position;
-
-    @Inject
-    public ClusteredRuntimeIdService(ClusterService clusterService) {
-        bitset = clusterService.getClient().getBitSet(clusterService.getName(getClass()));
-        clusterService.registerManagedResource(bitset);
-    }
 
     @Override
     public int generateId() {
