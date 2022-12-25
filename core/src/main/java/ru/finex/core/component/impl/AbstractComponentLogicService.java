@@ -68,7 +68,12 @@ public abstract class AbstractComponentLogicService<T extends Component> {
         }
     }
 
-    protected final void onTick() {
+    /**
+     * Execute tick on a components.
+     * <p>
+     * <b>Its method doesn't call manually.</b>
+     */
+    public final void onTick() {
         TickStage stage = tickService.getTickStage();
         List<T> components = this.components; // hold reference to current components list
         for (int i = 0; i < components.size(); i++) {
