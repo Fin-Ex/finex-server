@@ -14,6 +14,13 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface PersistenceField {
 
-    Class<? extends PersistenceService> value();
+    Class<? extends PersistenceService> value() default AutoPersistence.class;
+
+    /**
+     * Auto-detection persistence service by entity type.
+     */
+    interface AutoPersistence extends PersistenceService {
+        //
+    }
 
 }

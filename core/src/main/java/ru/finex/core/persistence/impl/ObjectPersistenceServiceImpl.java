@@ -11,6 +11,10 @@ import ru.finex.core.persistence.PersistenceObject;
 import ru.finex.core.persistence.PersistenceService;
 
 import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.Objects;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 /**
@@ -18,6 +22,10 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class ObjectPersistenceServiceImpl implements ObjectPersistenceService {
+
+    @Inject
+    @Named("PersistenceServices")
+    private Map<Class<? extends EntityObject>, PersistenceService> services;
 
     @Transactional(TxType.REQUIRED)
     @Override
@@ -27,7 +35,7 @@ public class ObjectPersistenceServiceImpl implements ObjectPersistenceService {
     }
 
     protected void persist(PersistenceObject object, Field field, Class<? extends PersistenceService> persistenceServiceType) {
-        PersistenceService persistenceService = GlobalContext.injector.getInstance(persistenceServiceType);
+        PersistenceService persistenceService = getPersistenceService((Class<? extends EntityObject>) field.getType(), persistenceServiceType);
         try {
             EntityObject entity = (EntityObject) FieldUtils.readField(field, object, true);
             if (entity != null) {
@@ -49,7 +57,7 @@ public class ObjectPersistenceServiceImpl implements ObjectPersistenceService {
     }
 
     protected void restore(PersistenceObject object, Field field, Class<? extends PersistenceService> persistenceServiceType) {
-        PersistenceService persistenceService = GlobalContext.injector.getInstance(persistenceServiceType);
+        PersistenceService persistenceService = getPersistenceService((Class<? extends EntityObject>) field.getType(), persistenceServiceType);
         try {
             EntityObject reference = (EntityObject) FieldUtils.readField(field, object, true);
             EntityObject entity = persistenceService.restore(object.getPersistenceId(), reference);
@@ -59,6 +67,22 @@ public class ObjectPersistenceServiceImpl implements ObjectPersistenceService {
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected PersistenceService getPersistenceService(Class<? extends EntityObject> entityType,
+        Class<? extends PersistenceService> persistenceServiceType) {
+        PersistenceService persistenceService;
+        if (persistenceServiceType == PersistenceField.AutoPersistence.class) {
+            persistenceService = services.get(entityType);
+        } else {
+            persistenceService = GlobalContext.injector.getInstance(persistenceServiceType);
+        }
+
+        Objects.requireNonNull(persistenceService,
+            String.format("Persistence service for entity: %s not found!", entityType.getCanonicalName())
+        );
+
+        return persistenceService;
     }
 
 }
