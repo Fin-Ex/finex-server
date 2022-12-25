@@ -32,13 +32,16 @@ import javax.inject.Singleton;
 public class ComponentServiceImpl implements ComponentService {
 
     private final Map<Integer, GameObjectComponents> goComponents = new HashMap<>();
-    private final Map<Class<? extends Component>, ArrayList<Component>> components = new HashMap<>();
     private final PoolService poolService;
     private final GameObjectPrototypeService prototypeService;
     private final GameObjectScope gameObjectScope;
 
     @Clustered(GameObjectEvent.CHANNEL)
     private ClusterEventBus<GameObjectEvent> eventBus;
+
+    @Inject
+    @Named("ComponentServices")
+    private Map<Class<? extends Component>, AbstractComponentLogicService> services;
 
     @Inject
     @Named("ComponentMappers")
@@ -92,14 +95,16 @@ public class ComponentServiceImpl implements ComponentService {
         GameObjectComponents gameObjectComponents = goComponents.computeIfAbsent(gameObject.getRuntimeId(), GameObjectComponents::new);
         Injector injector = GlobalContext.injector;
         ArrayList<Component> goComponents = gameObjectComponents.getComponents();
-        ArrayList<Component> components = this.components.computeIfAbsent(componentType, e -> new ArrayList<>());
+        AbstractComponentLogicService service = services.get(componentType);
 
         T component;
         gameObjectScope.enterScope(gameObject);
         try {
             component = injector.getInstance(componentType);
             goComponents.add(component);
-            components.add(component);
+            if (service != null) {
+                service.addComponent(component);
+            }
         } finally {
             gameObjectScope.exitScope(gameObject);
         }
@@ -132,9 +137,9 @@ public class ComponentServiceImpl implements ComponentService {
             return false;
         }
 
-        ArrayList<Component> components = this.components.get(component.getClass());
-        if (components != null) {
-            components.remove(component);
+        AbstractComponentLogicService service = services.get(component.getClass());
+        if (service != null) {
+            service.removeComponent(component);
         }
 
         ArrayList<Component> goComponents = gameObjectComponents.getComponents();
@@ -168,9 +173,9 @@ public class ComponentServiceImpl implements ComponentService {
             return false;
         }
 
-        ArrayList<Component> components = this.components.get(component.getClass());
-        if (components != null) {
-            components.remove(component);
+        AbstractComponentLogicService service = services.get(component.getClass());
+        if (service != null) {
+            service.removeComponent(component);
         }
 
         goComponents.remove(component);
@@ -222,7 +227,7 @@ public class ComponentServiceImpl implements ComponentService {
     }
 
     @Override
-    public <T extends Component> List<Component> getComponents(Class<T> componentType) {
-        return components.get(componentType);
+    public <T extends Component> AbstractComponentLogicService<T> getService(Class<T> componentType) {
+        return services.get(componentType);
     }
 }

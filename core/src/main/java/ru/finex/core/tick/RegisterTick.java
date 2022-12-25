@@ -1,4 +1,4 @@
-package ru.finex.ws.tick;
+package ru.finex.core.tick;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

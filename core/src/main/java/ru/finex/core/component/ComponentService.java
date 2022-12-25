@@ -1,5 +1,6 @@
 package ru.finex.core.component;
 
+import ru.finex.core.component.impl.AbstractComponentLogicService;
 import ru.finex.core.object.GameObject;
 
 import java.util.List;
@@ -74,11 +75,11 @@ public interface ComponentService {
     List<Component> getComponents(GameObject gameObject);
 
     /**
-     * Get all components by specified type.
+     * Get component service by specified component type type.
      * @param componentType component type
      * @param <T> component type generic
-     * @return all components
+     * @return service
      */
-    <T extends Component> List<Component> getComponents(Class<T> componentType);
+    <T extends Component> AbstractComponentLogicService<T> getService(Class<T> componentType);
 
 }

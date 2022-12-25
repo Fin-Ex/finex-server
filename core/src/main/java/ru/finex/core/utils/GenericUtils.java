@@ -20,9 +20,7 @@ public class GenericUtils {
      */
     @SuppressWarnings({"checkstyle:JavadocMethod", "checkstyle:ParameterAssignment"})
     public static <T> Class<T> getGenericType(Class<?> type, int order) throws IllegalArgumentException {
-        while (type.getCanonicalName().contains("EnhancerByGuice")) {
-            type = type.getSuperclass();
-        }
+        type = getProxyImplementation(type);
 
         Type[] generics = ((ParameterizedType) type.getGenericSuperclass()).getActualTypeArguments();
         if (order >= generics.length) {
@@ -46,9 +44,7 @@ public class GenericUtils {
      */
     @SuppressWarnings({"checkstyle:JavadocMethod", "checkstyle:ParameterAssignment"})
     public static <T> Class<T> getInterfaceGenericType(Class<?> type, Class<?> interfaceType, int order) throws IllegalArgumentException {
-        while (type.getCanonicalName().contains("EnhancerByGuice")) {
-            type = type.getSuperclass();
-        }
+        type = getProxyImplementation(type);
 
         ParameterizedType parameterizedType = null;
         for (Type genericInterface : type.getGenericInterfaces()) {
@@ -78,6 +74,15 @@ public class GenericUtils {
         } catch (ClassNotFoundException e) {
             return null;
         }
+    }
+
+    private static Class<?> getProxyImplementation(Class<?> clazz) {
+        Class<?> type = clazz;
+        while (type.getCanonicalName().contains("EnhancerByGuice")) {
+            type = type.getSuperclass();
+        }
+
+        return type;
     }
 
 }

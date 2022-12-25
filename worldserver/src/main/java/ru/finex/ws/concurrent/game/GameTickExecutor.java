@@ -1,6 +1,6 @@
 package ru.finex.ws.concurrent.game;
 
-import ru.finex.ws.tick.TickService;
+import ru.finex.core.tick.TickService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

@@ -1,7 +1,7 @@
 package ru.finex.ws.tick.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.finex.ws.tick.TickInvokeDecorator;
+import ru.finex.core.tick.TickInvokeDecorator;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package ru.finex.ws.tick;
+package ru.finex.core.tick;
 
 import lombok.experimental.UtilityClass;
 

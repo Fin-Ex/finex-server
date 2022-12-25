@@ -1,13 +1,16 @@
 package ru.finex.core.inject.module;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
 import com.google.inject.name.Names;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import ru.finex.core.GlobalContext;
+import ru.finex.core.component.Component;
 import ru.finex.core.component.ComponentService;
+import ru.finex.core.component.impl.AbstractComponentLogicService;
 import ru.finex.core.component.impl.ComponentServiceImpl;
 import ru.finex.core.object.GameObject;
 import ru.finex.core.object.GameObjectFactory;
@@ -18,6 +21,7 @@ import ru.finex.core.prototype.ComponentPrototype;
 import ru.finex.core.prototype.ComponentPrototypeMapper;
 import ru.finex.core.utils.GenericUtils;
 
+import java.lang.reflect.Modifier;
 import java.util.Objects;
 
 /**
@@ -29,6 +33,7 @@ public class GameObjectModule extends AbstractModule {
     protected void configure() {
         bind(GameObjectFactory.class).to(GameObjectFactoryImpl.class);
         bind(ComponentService.class).to(ComponentServiceImpl.class);
+        bindComponentServices();
         bindPrototypeMappers();
 
         var gameObjectScope = new GameObjectScope(getProvider(ComponentService.class));
@@ -41,18 +46,35 @@ public class GameObjectModule extends AbstractModule {
                 .toProvider(gameObjectScope.persistenceIdProvider()).in(GameObjectScoped.class);
     }
 
+    private void bindComponentServices() {
+        var mapBinder = MapBinder.newMapBinder(
+            binder(),
+            new TypeLiteral<Class<? extends Component>>() { },
+            new TypeLiteral<AbstractComponentLogicService>() { },
+            Names.named("ComponentServices")
+        );
+
+        GlobalContext.reflections.getSubTypesOf(AbstractComponentLogicService.class)
+            .stream()
+            .filter(e -> !Modifier.isAbstract(e.getModifiers()))
+            .forEach(e -> mapBinder.addBinding(GenericUtils.getGenericType(e, 0))
+                .to(e)
+                .in(Scopes.SINGLETON)
+            );
+    }
+
     private void bindPrototypeMappers() {
-        var mapperBinder = MapBinder.newMapBinder(
-                binder(),
-                new TypeLiteral<Class<? extends ComponentPrototype>>() { },
-                new TypeLiteral<ComponentPrototypeMapper>() { },
-                Names.named("ComponentMappers")
+        var mapBinder = MapBinder.newMapBinder(
+            binder(),
+            new TypeLiteral<Class<? extends ComponentPrototype>>() { },
+            new TypeLiteral<ComponentPrototypeMapper>() { },
+            Names.named("ComponentMappers")
         );
 
         GlobalContext.reflections.getSubTypesOf(ComponentPrototypeMapper.class)
                 .stream()
                 .filter(mapper -> !mapper.isAnnotationPresent(ComponentPrototypeMapper.Ignore.class))
-                .forEach(mapper -> registerMapper(mapper, mapperBinder));
+                .forEach(mapper -> registerMapper(mapper, mapBinder));
     }
 
     @SneakyThrows
@@ -62,7 +84,8 @@ public class GameObjectModule extends AbstractModule {
         var registrations = mapperType.getAnnotationsByType(ComponentPrototypeMapper.Register.class);
         if (registrations.isEmpty()) {
             mapperBinder.addBinding(GenericUtils.getInterfaceGenericType(mapperType, ComponentPrototypeMapper.class, 0))
-                    .to(mapperType);
+                .to(mapperType)
+                .in(Scopes.SINGLETON);
         } else {
             var ctor = ConstructorUtils.getAccessibleConstructor(mapperType, Class.class);
             if (ctor == null) {

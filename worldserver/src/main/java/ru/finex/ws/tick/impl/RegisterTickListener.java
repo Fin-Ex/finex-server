@@ -6,8 +6,8 @@ import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 import org.apache.commons.lang3.reflect.MethodUtils;
-import ru.finex.ws.tick.RegisterTick;
-import ru.finex.ws.tick.TickService;
+import ru.finex.core.tick.RegisterTick;
+import ru.finex.core.tick.TickService;
 
 import java.lang.reflect.Method;
 import java.util.List;

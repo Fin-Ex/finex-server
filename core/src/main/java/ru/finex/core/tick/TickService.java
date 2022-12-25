@@ -1,4 +1,4 @@
-package ru.finex.ws.tick;
+package ru.finex.core.tick;
 
 import java.lang.reflect.Method;
 
@@ -15,5 +15,7 @@ public interface TickService {
     float getDeltaTime();
 
     long getDeltaTimeMillis();
+
+    TickStage getTickStage();
 
 }

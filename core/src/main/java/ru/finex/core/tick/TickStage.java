@@ -1,11 +1,11 @@
-package ru.finex.ws.tick;
+package ru.finex.core.tick;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import static ru.finex.ws.tick.TickLevel.LEVEL_INPUT;
-import static ru.finex.ws.tick.TickLevel.LEVEL_PHYSICS;
-import static ru.finex.ws.tick.TickLevel.LEVEL_UPDATE;
+import static ru.finex.core.tick.TickLevel.LEVEL_INPUT;
+import static ru.finex.core.tick.TickLevel.LEVEL_PHYSICS;
+import static ru.finex.core.tick.TickLevel.LEVEL_UPDATE;
 
 /**
  * @author m0nster.mind

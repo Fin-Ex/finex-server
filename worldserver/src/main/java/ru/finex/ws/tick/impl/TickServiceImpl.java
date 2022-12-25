@@ -10,11 +10,11 @@ import net.bytebuddy.implementation.MethodCall;
 import net.bytebuddy.implementation.bytecode.member.MethodReturn;
 import ru.finex.core.command.CommandQueue;
 import ru.finex.core.command.NetworkCommandQueue;
+import ru.finex.core.tick.TickInvokeDecorator;
+import ru.finex.core.tick.TickService;
+import ru.finex.core.tick.TickStage;
 import ru.finex.ws.command.PhysicsCommandQueue;
 import ru.finex.ws.command.UpdateCommandQueue;
-import ru.finex.ws.tick.TickInvokeDecorator;
-import ru.finex.ws.tick.TickService;
-import ru.finex.ws.tick.TickStage;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -42,6 +42,8 @@ public class TickServiceImpl implements TickService {
     private float deltaTime;
     @Getter
     private long deltaTimeMillis;
+    @Getter
+    private TickStage tickStage;
 
     @Inject
     public TickServiceImpl(NetworkCommandQueue inputCommandService, PhysicsCommandQueue physicsCommandService,
@@ -140,8 +142,8 @@ public class TickServiceImpl implements TickService {
 
     private void executeTickStages(TickStage[] stages) {
         for (int i = 0; i < stages.length; i++) {
-            TickStage stage = stages[i];
-            TickStageStorage tickStorage = tickStorages[stage.ordinal()];
+            tickStage = stages[i];
+            TickStageStorage tickStorage = tickStorages[tickStage.ordinal()];
             tickStorage.execute();
         }
     }

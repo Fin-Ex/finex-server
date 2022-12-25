@@ -14,7 +14,7 @@ import ru.finex.core.inject.module.NetworkModule;
 import ru.finex.core.inject.module.PersistenceModule;
 import ru.finex.core.inject.module.PlaceholderJuelModule;
 import ru.finex.core.inject.module.PoolModule;
-import ru.finex.ws.tick.TickService;
+import ru.finex.core.tick.TickService;
 import ru.finex.ws.tick.impl.RegisterTickListener;
 import ru.finex.ws.tick.impl.TickServiceImpl;
 
