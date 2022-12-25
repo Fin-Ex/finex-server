@@ -2,8 +2,11 @@ package ru.finex.core.component.impl;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import ru.finex.core.component.Component;
+import ru.finex.core.component.ComponentService;
+import ru.finex.core.object.GameObject;
 import ru.finex.core.tick.TickService;
 import ru.finex.core.tick.TickStage;
+import ru.finex.core.utils.GenericUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -19,10 +22,15 @@ import javax.inject.Inject;
 public abstract class AbstractComponentLogicService<T extends Component> {
 
     private static final SnakeCaseStrategy SNAKE_CASE = new SnakeCaseStrategy();
+
     protected List<T> components = Collections.emptyList();
 
     @Inject
-    private TickService tickService;
+    protected TickService tickService;
+    @Inject
+    protected ComponentService componentService;
+
+    private Class<T> type;
 
     protected void addComponent(T component) {
         var components = new ArrayList<>(this.components);
@@ -36,6 +44,14 @@ public abstract class AbstractComponentLogicService<T extends Component> {
         this.components = components;
 
         return result;
+    }
+
+    protected T getComponent(GameObject gameObject) {
+        if (type == null) {
+            type = GenericUtils.getGenericType(getClass(), 0);
+        }
+
+        return componentService.getComponent(gameObject, type);
     }
 
     @PostConstruct
