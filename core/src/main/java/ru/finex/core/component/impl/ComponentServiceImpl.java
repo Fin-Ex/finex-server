@@ -77,13 +77,15 @@ public class ComponentServiceImpl implements ComponentService {
         GameObjectComponents gameObjectComponents = goComponents.computeIfAbsent(gameObject.getRuntimeId(), GameObjectComponents::new);
         Injector injector = GlobalContext.injector;
         ArrayList<Component> goComponents = gameObjectComponents.getComponents();
-        ArrayList<Component> components = this.components.computeIfAbsent(component.getClass(), e -> new ArrayList<>());
+        AbstractComponentLogicService service = services.get(component.getClass());
 
         gameObjectScope.enterScope(gameObject);
         try {
             injector.injectMembers(component);
             goComponents.add(component);
-            components.add(component);
+            if (service != null) {
+                service.addComponent(component);
+            }
         } finally {
             gameObjectScope.exitScope(gameObject);
         }
