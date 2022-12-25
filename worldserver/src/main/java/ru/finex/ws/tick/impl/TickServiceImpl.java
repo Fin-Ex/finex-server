@@ -8,6 +8,7 @@ import net.bytebuddy.implementation.FieldAccessor;
 import net.bytebuddy.implementation.Implementation.Simple;
 import net.bytebuddy.implementation.MethodCall;
 import net.bytebuddy.implementation.bytecode.member.MethodReturn;
+import ru.finex.core.command.CommandQueue;
 import ru.finex.core.command.NetworkCommandQueue;
 import ru.finex.ws.command.PhysicsCommandQueue;
 import ru.finex.ws.command.UpdateCommandQueue;
@@ -124,27 +125,17 @@ public class TickServiceImpl implements TickService {
     public void tick() {
         long startTime = System.currentTimeMillis();
 
-        inputTick();
-        physicsTick();
-        updateTick();
+        tick(inputCommandService, TickStage.INPUT_STAGES);
+        tick(physicsCommandService, TickStage.PHYSICS_STAGES);
+        tick(updateCommandService, TickStage.UPDATE_STAGES);
 
         deltaTimeMillis = System.currentTimeMillis() - startTime;
         deltaTime = deltaTimeMillis / 1000f;
     }
 
-    private void inputTick() {
-        inputCommandService.executeCommands();
-        executeTickStages(TickStage.INPUT_STAGES);
-    }
-
-    private void physicsTick() {
-        physicsCommandService.executeCommands();
-        executeTickStages(TickStage.PHYSICS_STAGES);
-    }
-
-    private void updateTick() {
-        updateCommandService.executeCommands();
-        executeTickStages(TickStage.UPDATE_STAGES);
+    private void tick(CommandQueue queue, TickStage[] stage) {
+        queue.executeCommands();
+        executeTickStages(stage);
     }
 
     private void executeTickStages(TickStage[] stages) {
