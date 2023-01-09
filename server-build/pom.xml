@@ -16,6 +16,7 @@
         <module>../core</module>
         <module>../authserver</module>
         <module>../worldserver</module>
+        <module>../relayserver</module>
         <module>../netty-network</module>
         <module>../testing</module>
     </modules>

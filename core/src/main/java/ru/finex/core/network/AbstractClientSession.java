@@ -1,11 +1,11 @@
 package ru.finex.core.network;
 
+import com.google.common.collect.ImmutableMap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.tuple.Pair;
 import ru.finex.core.command.AbstractNetworkCommand;
@@ -17,7 +17,7 @@ import ru.finex.network.netty.serial.PacketDeserializer;
 
 import java.net.SocketAddress;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import javax.inject.Inject;
 
 /**
@@ -29,13 +29,10 @@ public abstract class AbstractClientSession
     extends SimpleChannelInboundHandler<Pair<PacketMetadata<PacketDeserializer<?>>, NetworkDto>>
     implements ClientSession {
 
-    /** Login name. */
-    @Getter
-    @Setter
-    private String login;
-
     @Getter
     private volatile boolean isDetached;
+
+    private volatile Map<Object, Object> context;
 
     @Getter(AccessLevel.PROTECTED)
     private Channel channel;
@@ -45,6 +42,19 @@ public abstract class AbstractClientSession
     private NetworkCommandService networkCommandService;
 
     protected abstract NetworkCommandQueue getCommandQueue();
+
+    @Override
+    public Map<Object, Object> getContext() {
+        return context;
+    }
+
+    @Override
+    public void putContext(Object key, Object value) {
+        context = ImmutableMap.builder()
+            .putAll(context)
+            .put(key, value)
+            .build();
+    }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -107,9 +117,7 @@ public abstract class AbstractClientSession
             return "GameSession(disconnected)";
         }
 
-        return "GameSession(login=" +
-            Objects.requireNonNullElse(login, "-") +
-            ", address=" + address.toString();
+        return "GameSession(address=" + address.toString() + ")";
     }
 
 }

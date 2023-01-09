@@ -23,6 +23,7 @@
 		<finex-authserver.version>1.0.0-SNAPSHOT</finex-authserver.version>
 		<finex-core.version>1.0.0-SNAPSHOT</finex-core.version>
 		<finex-worldserver.version>1.0.0-SNAPSHOT</finex-worldserver.version>
+		<finex-relayserver.version>1.0.0-SNAPSHOT</finex-relayserver.version>
 		<finex-netty-network.version>1.0.0-SNAPSHOT</finex-netty-network.version>
 		<finex-server-testing.version>1.0.0-SNAPSHOT</finex-server-testing.version>
 	</properties>
@@ -43,6 +44,11 @@
 				<groupId>ru.finex</groupId>
 				<artifactId>finex-server-world</artifactId>
 				<version>${finex-worldserver.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ru.finex</groupId>
+				<artifactId>finex-server-relay</artifactId>
+				<version>${finex-relayserver.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ru.finex</groupId>

@@ -1,21 +1,24 @@
 package ru.finex.network.netty.model;
 
+import java.util.Map;
+
 /**
  * @author m0nster.mind
  */
 public interface ClientSession {
 
     /**
-     * Client login name.
-     * @return login name
+     * Return immutable client session context.
+     * @return immutable session context
      */
-    String getLogin();
+    Map<Object, Object> getContext();
 
     /**
-     * Set client login name.
-     * @param login login name
+     * Put key-value into session context.
+     * @param key key
+     * @param value value
      */
-    void setLogin(String login);
+    void putContext(Object key, Object value);
 
     /**
      * Determines is client detached.
