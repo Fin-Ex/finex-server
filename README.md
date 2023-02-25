@@ -33,6 +33,7 @@ Provide:
  - Persistence (JPA, repositories, [database migrations](https://github.com/Fin-Ex/finex-evolution))
  - Pools
  - Logging
+
 And many other features.
 
 ### Relay server
