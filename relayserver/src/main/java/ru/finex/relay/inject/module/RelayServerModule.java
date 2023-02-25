@@ -10,8 +10,12 @@ import ru.finex.core.inject.module.ManagementModule;
 import ru.finex.core.inject.module.NetworkModule;
 import ru.finex.core.inject.module.PlaceholderJuelModule;
 import ru.finex.core.inject.module.PoolModule;
+import ru.finex.core.tick.TickService;
 import ru.finex.relay.service.ClientSessionService;
+import ru.finex.relay.service.TopicResolverService;
 import ru.finex.relay.service.impl.ClientSessionServiceImpl;
+import ru.finex.relay.service.impl.TickServiceImpl;
+import ru.finex.relay.service.impl.TopicResolverServiceImpl;
 
 /**
  * @author m0nster.mind
@@ -30,7 +34,9 @@ public class RelayServerModule extends AbstractModule {
         install(new NetworkModule());
         install(new ManagementModule());
 
+        bind(TickService.class).to(TickServiceImpl.class);
         bind(ClientSessionService.class).to(ClientSessionServiceImpl.class);
+        bind(TopicResolverService.class).to(TopicResolverServiceImpl.class);
     }
 
 }

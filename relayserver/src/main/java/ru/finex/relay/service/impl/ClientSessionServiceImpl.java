@@ -1,9 +1,9 @@
 package ru.finex.relay.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import ru.finex.core.model.event.RelayEvent;
 import ru.finex.core.uid.RuntimeIdService;
 import ru.finex.network.netty.model.ClientSession;
-import ru.finex.relay.network.RelayNetworkDto;
 import ru.finex.relay.service.ClientSessionService;
 import ru.finex.relay.service.TopicResolverService;
 
@@ -28,7 +28,7 @@ public class ClientSessionServiceImpl implements ClientSessionService {
     private final TopicResolverService topicResolver;
 
     @Override
-    public String getServerTopic(ClientSession session, RelayNetworkDto dto) {
+    public String getServerTopic(ClientSession session, RelayEvent dto) {
         return topicResolver.resolve(session, dto);
     }
 

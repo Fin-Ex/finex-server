@@ -1,7 +1,7 @@
 package ru.finex.relay.service;
 
+import ru.finex.core.model.event.RelayEvent;
 import ru.finex.network.netty.model.ClientSession;
-import ru.finex.relay.network.RelayNetworkDto;
 
 /**
  * @author m0nster.mind
@@ -14,6 +14,6 @@ public interface TopicResolverService {
      * @param dto payload
      * @return topic name
      */
-    String resolve(ClientSession session, RelayNetworkDto dto);
+    String resolve(ClientSession session, RelayEvent dto);
 
 }

@@ -1,11 +1,11 @@
-package ru.finex.relay.network;
+package ru.finex.core.model.event;
 
-import ru.finex.network.netty.model.NetworkDto;
+import ru.finex.core.pool.Cleanable;
 
 /**
  * @author m0nster.mind
  */
-public interface RelayNetworkDto extends NetworkDto {
+public interface RelayEvent extends Cleanable {
 
     /**
      * Return client session ID.
@@ -18,5 +18,10 @@ public interface RelayNetworkDto extends NetworkDto {
      * @param clientSessionId client session ID
      */
     void setClientSessionId(int clientSessionId);
+
+    @Override
+    default void clear() {
+        // nop
+    }
 
 }

@@ -4,22 +4,24 @@ import jakarta.validation.Validator;
 import org.redisson.api.RTopic;
 import ru.finex.core.cluster.ClusterService;
 import ru.finex.core.command.AbstractNetworkCommand;
+import ru.finex.core.model.event.RelayEvent;
 import ru.finex.network.netty.model.ClientSession;
-import ru.finex.relay.network.RelayNetworkDto;
+import ru.finex.network.netty.model.NetworkDto;
 import ru.finex.relay.service.ClientSessionService;
 
 import javax.inject.Inject;
 
 /**
  * Server notification command.
- * <p>This command are validated {@link RelayNetworkDto DTO} and if validation is not break any violations,
+ * <p>This command are validated {@link RelayEvent DTO} and if validation is not break any violations,
  *  command notify subscribers by special topic name what resolved through {@link ClientSessionService session service}
  *  and {@link ru.finex.relay.service.TopicResolverService topic resolver}.
+ * @param <T> payload implementation of {@link RelayEvent RelayEvent} and {@link NetworkDto NetworkDto}
  * @author m0nster.mind
  */
-public class NotifyServer extends AbstractNetworkCommand {
+public class NotifyServer<T extends RelayEvent & NetworkDto> extends AbstractNetworkCommand {
 
-    private final RelayNetworkDto dto;
+    private final T dto;
     private final ClientSession session;
 
     private final Validator validator;
@@ -27,7 +29,7 @@ public class NotifyServer extends AbstractNetworkCommand {
     private final RTopic topic;
 
     @Inject
-    public NotifyServer(RelayNetworkDto dto, ClientSession session, Validator validator,
+    public NotifyServer(T dto, ClientSession session, Validator validator,
         ClusterService clusterService, ClientSessionService sessionService) {
         this.dto = dto;
         this.session = session;

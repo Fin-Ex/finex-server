@@ -1,7 +1,7 @@
 package ru.finex.relay.service;
 
+import ru.finex.core.model.event.RelayEvent;
 import ru.finex.network.netty.model.ClientSession;
-import ru.finex.relay.network.RelayNetworkDto;
 
 /**
  * @author m0nster.mind
@@ -14,7 +14,7 @@ public interface ClientSessionService {
      * @param dto payload
      * @return topic name
      */
-    String getServerTopic(ClientSession session, RelayNetworkDto dto);
+    String getServerTopic(ClientSession session, RelayEvent dto);
 
     /**
      * Register session in session storage.
