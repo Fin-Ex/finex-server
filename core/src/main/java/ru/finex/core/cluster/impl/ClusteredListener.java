@@ -98,7 +98,7 @@ public class ClusteredListener implements TypeListener {
             } else {
                 String methodName = method.getName();
                 String parameterName = parameter.getName();
-                String name = getName(clazz, methodName, parameterName, clustered);
+                String name = getAddress(clazz, methodName, parameterName, clustered);
                 value = provideObject(clientProvider, clazz, type, methodName, parameter, name);
 
                 if (clustered.autoManagement() && value instanceof RObject resource) {
@@ -123,7 +123,7 @@ public class ClusteredListener implements TypeListener {
         Clustered clustered = field.getAnnotation(Clustered.class);
         String name = clustered.value();
         if (StringUtils.isBlank(name)) {
-            name = clusterService.getName(type, field.getName());
+            name = clusterService.getAddress(type, field.getName());
         } else {
             name = placeholderServiceProvider.get().evaluate(name, String.class);
         }
@@ -131,11 +131,11 @@ public class ClusteredListener implements TypeListener {
         return Pair.of(name, clustered.autoManagement());
     }
 
-    private String getName(Class<?> type, String methodName, String parameterName, Clustered clustered) {
+    private String getAddress(Class<?> type, String methodName, String parameterName, Clustered clustered) {
         ClusterService clusterService = clusterServiceProvider.get();
         String name = clustered.value();
         if (StringUtils.isBlank(name)) {
-            name = clusterService.getName(type, methodName, parameterName);
+            name = clusterService.getAddress(type, methodName, parameterName);
         } else {
             name = placeholderServiceProvider.get().evaluate(name, String.class);
         }

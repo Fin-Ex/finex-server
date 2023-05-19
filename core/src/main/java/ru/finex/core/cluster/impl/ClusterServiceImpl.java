@@ -30,27 +30,27 @@ public class ClusterServiceImpl implements ClusterService {
     @Inject
     public ClusterServiceImpl(RedissonClient client, ClusterConfig config) {
         this.client = client;
-        role = config.getRole();
-        instances = client.getAtomicLong(getName(getClass(), "instances"));
+        this.role = config.getRole();
+        this.instances = client.getAtomicLong(getAddress(getClass(), "instances"));
     }
 
     @Override
-    public String getName(String name) {
+    public String getAddress(String name) {
         return role + "@" + name;
     }
 
     @Override
-    public String getName(Class<?> caller) {
+    public String getAddress(Class<?> caller) {
         return role + "@" + caller.getCanonicalName();
     }
 
     @Override
-    public String getName(Class<?> caller, String field) {
-        return getName(caller) + "#" + field;
+    public String getAddress(Class<?> caller, String field) {
+        return getAddress(caller) + "#" + field;
     }
 
     @Override
-    public String getName(Class<?> caller, String method, String parameter) {
+    public String getAddress(Class<?> caller, String method, String parameter) {
         return role + "@" + caller.getCanonicalName() + "::" + method + "#" + parameter;
     }
 
