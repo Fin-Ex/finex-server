@@ -1,14 +1,16 @@
-package ru.finex.core.math.shape.impl;
+package ru.finex.core.math.bv.impl;
 
+import javax.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.finex.core.math.shape.Shape;
-import ru.finex.core.math.shape.Shape2;
+import ru.finex.core.math.bv.BoundingVolume;
+import ru.finex.core.math.bv.BoundingVolume2;
+import ru.finex.core.math.bv.BoundingVolume3;
 import ru.finex.core.math.vector.Vector2f;
 import ru.finex.core.math.vector.Vector3f;
-import ru.finex.core.math.vector.VectorAllocator;
+import ru.finex.core.math.vector.alloc.VectorAllocator;
 import ru.finex.core.math.vector.alloc.VectorAllocators;
 
 /**
@@ -17,7 +19,7 @@ import ru.finex.core.math.vector.alloc.VectorAllocators;
  */
 @ToString
 @EqualsAndHashCode
-public class Circle2f implements Shape2, Cloneable {
+public class Circle2f implements BoundingVolume2, Cloneable {
 
     @Getter
     private final Vector2f center;
@@ -61,38 +63,76 @@ public class Circle2f implements Shape2, Cloneable {
     }
 
     @Override
+    public void move(Vector2f point) {
+        // TODO oracle: implement this
+    }
+
+    @Override
     public boolean contains(float x, float y) {
         return center.distanceSquared(x, y) <= radius * radius;
     }
 
     @Override
+    public boolean contains(Vector2f point, @Nullable VectorAllocator<Vector2f> allocator) {
+        return contains(point);
+    }
+
     public boolean contains(Vector2f point) {
         return center.distanceSquared(point) <= radius * radius;
     }
 
     @Override
+    public boolean contains(Vector3f point, @Nullable VectorAllocator<Vector2f> allocator) {
+        return contains(point);
+    }
+
     public boolean contains(Vector3f point) {
         return contains(point.getX(), point.getZ());
     }
 
-    @SuppressWarnings("checkstyle:ReturnCount")
     @Override
-    public boolean intersects(Shape shape) {
-        if (shape instanceof Box2f box) {
-            return box.intersects(this);
-        } else if (shape instanceof Box3f box) {
-            return box.intersects(this);
-        } else if (shape instanceof Circle2f circle) {
+    @SuppressWarnings("checkstyle:ReturnCount")
+    public boolean intersects(BoundingVolume2 boundingVolume, VectorAllocator<Vector2f> allocator) {
+        if (boundingVolume instanceof Box2f box) {
+            return box.intersects(this, allocator);
+        } else if (boundingVolume instanceof OrientedBox2f box) {
+            return box.intersects(this, allocator);
+        } else if (boundingVolume instanceof Circle2f circle) {
             float sumRadius = radius + radius;
             return center.distanceSquared(circle.getCenter()) <= sumRadius * sumRadius;
-        } else if (shape instanceof Sphere3f sphere) {
+        }
+
+        throw new UnsupportedOperationException("Intersection test with shape [" +
+            boundingVolume.getClass().getSimpleName() + "] is not implemented");
+    }
+
+    @SuppressWarnings("checkstyle:ReturnCount")
+    public boolean intersects(BoundingVolume3 boundingVolume, VectorAllocator<Vector2f> allocator2f,
+                              VectorAllocator<Vector3f> allocator3f) {
+        if (boundingVolume instanceof Box3f box) {
+            return box.intersects(this, allocator2f);
+        } else if (boundingVolume instanceof OrientedBox3f box) {
+            return box.intersects(boundingVolume, allocator3f);
+        } else if (boundingVolume instanceof Sphere3f sphere) {
             Vector3f sphereCenter = sphere.getCenter();
             float sumRadius = radius + radius;
             float x = center.getX() - sphereCenter.getX();
             float y = center.getY() - sphereCenter.getZ();
             return x * x + y * y <= sumRadius * sumRadius;
         }
-        return false;
+
+        throw new UnsupportedOperationException("Intersection test with shape [" +
+            boundingVolume.getClass().getSimpleName() + "] is not implemented");
+    }
+
+    @Override
+    public void encapsulate(Vector2f point, VectorAllocator<Vector2f> allocator) {
+        // TODO oracle: implement this
+    }
+
+    @Override
+    public <T extends BoundingVolume<Vector2f>> void union(T boundingVolume, VectorAllocator<Vector2f> allocator) {
+        // TODO oracle: implement this
     }
 
     /**
@@ -111,4 +151,5 @@ public class Circle2f implements Shape2, Cloneable {
     public Circle2f clone() {
         return new Circle2f(this);
     }
+
 }

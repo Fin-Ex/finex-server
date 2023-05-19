@@ -1,15 +1,15 @@
-package ru.finex.core.math.shape.impl;
+package ru.finex.core.math.bv.impl;
 
+import java.util.Arrays;
+import javax.annotation.Nullable;
 import lombok.Getter;
 import ru.finex.core.math.FloatVectorMath;
 import ru.finex.core.math.Plane;
-import ru.finex.core.math.shape.Shape;
-import ru.finex.core.math.shape.Shape3;
+import ru.finex.core.math.bv.BoundingVolume;
+import ru.finex.core.math.bv.BoundingVolume3;
 import ru.finex.core.math.vector.Vector3f;
-import ru.finex.core.math.vector.VectorAllocator;
+import ru.finex.core.math.vector.alloc.VectorAllocator;
 import ru.finex.core.math.vector.alloc.VectorAllocators;
-
-import java.util.Arrays;
 
 /**
  * Geometry 3D polygon.
@@ -17,7 +17,7 @@ import java.util.Arrays;
  * @author m0nster.mind
  * @since wgp 27.09.2018
  */
-public class Polygon3f implements Shape3, Cloneable {
+public class Polygon3f implements BoundingVolume3, Cloneable {
 
     private static final float EPSILON_ON_PLANE = 0.1f;
     private static final float EPSILON_CWW = 0.001f;
@@ -127,8 +127,8 @@ public class Polygon3f implements Shape3, Cloneable {
     public Box3f getBox() {
         if (box == null) {
             box = new Box3f();
-            for (int i = 0; i < vertices.length; i++) {
-                box.encapsulate(vertices[i]);
+            for (Vector3f vertex : vertices) {
+                box.encapsulate(vertex);
             }
         }
 
@@ -200,8 +200,9 @@ public class Polygon3f implements Shape3, Cloneable {
      */
     public Vector3f getMidPoint(Vector3f result) {
         var resultLanes = result.floatVector();
-        for (int i = 0; i < vertices.length; i++) {
-            resultLanes = resultLanes.add(vertices[i].floatVector());
+
+        for (Vector3f vertex : vertices) {
+            resultLanes = resultLanes.add(vertex.floatVector());
         }
 
         return result.set(resultLanes.div(vertices.length));
@@ -243,7 +244,7 @@ public class Polygon3f implements Shape3, Cloneable {
      * @return true if line AB intersect polygon
      */
     @SuppressWarnings("checkstyle:UnnecessaryParentheses")
-    public boolean intersect(Vector3f startLine, Vector3f endLine, Vector3f point) {
+    public boolean intersects(Vector3f startLine, Vector3f endLine, Vector3f point) {
         float aDistance = plane.distance(startLine, vertices[0]);
         float bDistance = plane.distance(endLine, vertices[0]);
 
@@ -266,13 +267,15 @@ public class Polygon3f implements Shape3, Cloneable {
     }
 
     @Override
-    public boolean contains(Vector3f point) {
+    public boolean contains(Vector3f point, @Nullable VectorAllocator<Vector3f> allocator) {
+        return contains(point);
+    }
 
+    public boolean contains(Vector3f point) {
         int low = 0;
         int high = vertices.length;
 
         do {
-
             int mid = (low + high) / 2;
 
             if (isTriangleCCW(vertices[0], vertices[mid], point)) {
@@ -310,8 +313,8 @@ public class Polygon3f implements Shape3, Cloneable {
 
     @SuppressWarnings("checkstyle:ReturnCount")
     @Override
-    public boolean intersects(Shape shape) {
-        if (shape instanceof Box3f box) {
+    public boolean intersects(BoundingVolume3 boundingVolume, VectorAllocator<Vector3f> allocator) {
+        if (boundingVolume instanceof Box3f box) {
             Box3f boundingBox = getBox();
             if (!box.intersects(boundingBox)) {
                 return false;
@@ -326,9 +329,9 @@ public class Polygon3f implements Shape3, Cloneable {
                 }
             }
 
-        } else if (shape instanceof Sphere3f sphere) {
+        } else if (boundingVolume instanceof Sphere3f sphere) {
             Box3f boundingBox = getBox();
-            if (!boundingBox.intersects(sphere)) {
+            if (!boundingBox.intersects(sphere, allocator)) {
                 return false;
             }
 
@@ -341,7 +344,8 @@ public class Polygon3f implements Shape3, Cloneable {
                 }
             }
         } else {
-            throw new RuntimeException("Unimplemented");
+            throw new UnsupportedOperationException("Intersection test with shape [" +
+                boundingVolume.getClass().getSimpleName() + "] is not implemented");
         }
 
         return false;
@@ -349,7 +353,27 @@ public class Polygon3f implements Shape3, Cloneable {
 
     @Override
     public void moveCenter(Vector3f point) {
-        //
+        // TODO oracle: implement this???
+    }
+
+    @Override
+    public void moveCenter(float x, float y, float z) {
+        // TODO oracle: implement this???
+    }
+
+    @Override
+    public void move(Vector3f point) {
+        // TODO oracle: implement this???
+    }
+
+    @Override
+    public void encapsulate(Vector3f point, VectorAllocator<Vector3f> allocator) {
+        // TODO oracle: implement this???
+    }
+
+    @Override
+    public <T extends BoundingVolume<Vector3f>> void union(T boundingVolume, VectorAllocator<Vector3f> allocator) {
+        // TODO oracle: implement this???
     }
 
     /**
@@ -364,7 +388,11 @@ public class Polygon3f implements Shape3, Cloneable {
 
     @Override
     public Polygon3f clone() {
-        return new Polygon3f(this, VectorAllocators.defaultVector3f());
+        return clone(VectorAllocators.defaultVector3f());
+    }
+
+    public Polygon3f clone(VectorAllocator<Vector3f> allocator) {
+        return new Polygon3f(this, allocator);
     }
 
 }

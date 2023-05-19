@@ -2,23 +2,22 @@ package ru.finex.core.math.bvh.aabb;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import lombok.ToString;
-import org.apache.commons.pool2.ObjectPool;
-import ru.finex.core.math.shape.Shape;
-import ru.finex.core.math.shape.impl.Box2;
-import ru.finex.core.math.shape.impl.Box2f;
-import ru.finex.core.math.shape.impl.Circle2f;
-import ru.finex.core.math.vector.Vector2f;
-import ru.finex.core.pool.Cleanable;
-import ru.finex.core.pool.PoolService;
-import ru.finex.core.pool.PooledObject;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
+import lombok.ToString;
+import org.apache.commons.pool2.ObjectPool;
+import ru.finex.core.math.bv.impl.Box2;
+import ru.finex.core.math.bv.impl.Box2f;
+import ru.finex.core.math.bv.impl.Circle2f;
+import ru.finex.core.math.shape.Shape;
+import ru.finex.core.math.vector.Vector2f;
+import ru.finex.core.pool.Cleanable;
+import ru.finex.core.pool.PoolService;
+import ru.finex.core.pool.PooledObject;
 
 /**
  * 2D AABB-tree.

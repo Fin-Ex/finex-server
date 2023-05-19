@@ -1,10 +1,8 @@
 package ru.finex.core.math.vector.alloc;
 
-import lombok.RequiredArgsConstructor;
-import ru.finex.core.math.vector.MathVector;
-import ru.finex.core.math.vector.VectorAllocator;
-
 import java.util.ArrayDeque;
+import lombok.RequiredArgsConstructor;
+import ru.finex.core.math.vector.FloatMathVector;
 
 /**
  * Cached allocator.
@@ -13,7 +11,7 @@ import java.util.ArrayDeque;
  * @author m0nster.mind
  */
 @RequiredArgsConstructor
-public class CachedAllocator<T extends MathVector> implements VectorAllocator<T> {
+public class CachedAllocator<T extends FloatMathVector<T>> implements VectorAllocator<T> {
 
     private final ArrayDeque<T> deque = new ArrayDeque<>();
     private final VectorAllocator<T> allocator;

@@ -1,4 +1,4 @@
 /**
- * @author m0nster.mind
+ * @author oracle
  */
 package ru.finex.core.math.bvh.obb;

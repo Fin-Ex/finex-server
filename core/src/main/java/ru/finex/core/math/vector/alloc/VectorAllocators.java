@@ -4,7 +4,6 @@ import lombok.experimental.UtilityClass;
 import ru.finex.core.math.vector.Vector2f;
 import ru.finex.core.math.vector.Vector3f;
 import ru.finex.core.math.vector.Vector4f;
-import ru.finex.core.math.vector.VectorAllocator;
 
 /**
  * @author m0nster.mind

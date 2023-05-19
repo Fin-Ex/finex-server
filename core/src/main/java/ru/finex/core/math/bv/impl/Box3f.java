@@ -1,11 +1,15 @@
-package ru.finex.core.math.shape.impl;
+package ru.finex.core.math.bv.impl;
 
+import javax.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import ru.finex.core.math.ExtMath;
-import ru.finex.core.math.shape.Shape;
-import ru.finex.core.math.shape.Shape3;
+import ru.finex.core.math.bv.BoundingVolume;
+import ru.finex.core.math.bv.BoundingVolume2;
+import ru.finex.core.math.bv.BoundingVolume3;
+import ru.finex.core.math.vector.Vector2f;
 import ru.finex.core.math.vector.Vector3f;
+import ru.finex.core.math.vector.alloc.VectorAllocator;
 
 /**
  * @author m0nster.mind
@@ -14,7 +18,7 @@ import ru.finex.core.math.vector.Vector3f;
 @SuppressWarnings("checkstyle:VisibilityModifier")
 @ToString
 @EqualsAndHashCode
-public class Box3f implements Shape3, Cloneable {
+public class Box3f implements BoundingVolume3, Cloneable {
 
     private static final float EPSILON_SEGMENT = 0.0001f;
 
@@ -90,6 +94,11 @@ public class Box3f implements Shape3, Cloneable {
         zmax = Math.max(zmax, z);
     }
 
+    @Override
+    public void encapsulate(Vector3f point, @Nullable VectorAllocator<Vector3f> allocator) {
+        encapsulate(point.getX(), point.getY(), point.getZ());
+    }
+
     /**
      * Expand aabb to encapsulate specified point.
      * @param point point
@@ -116,8 +125,42 @@ public class Box3f implements Shape3, Cloneable {
      * @return true if this aabb contain specified point inside, otherwise false
      */
     @Override
-    public boolean contains(Vector3f point) {
+    public boolean contains(Vector3f point, @Nullable VectorAllocator<Vector3f> allocator) {
         return contains(point.getX(), point.getY(), point.getZ());
+    }
+
+    @Override
+    public boolean intersects(BoundingVolume3 boundingVolume, VectorAllocator<Vector3f> allocator) {
+        if (boundingVolume instanceof Box3f box) {
+            return intersectsAABB(xmin, xmax, box.xmin, box.xmax) &&
+                intersectsAABB(ymin, ymax, box.ymin, box.ymax) &&
+                intersectsAABB(zmin, zmax, box.zmin, box.zmax);
+        } else if (boundingVolume instanceof OrientedBox3f box) {
+            // TODO oracle: implement this
+            return false;
+        } else if (boundingVolume instanceof Sphere3f sphere) {
+            Vector3f center = sphere.getCenter();
+            return intersects(center.getX(), center.getY(), center.getZ(), sphere.getRadius());
+        }
+
+        throw new UnsupportedOperationException("Intersection test with shape [" +
+            boundingVolume.getClass().getSimpleName() + "] is not implemented");
+    }
+
+    public boolean intersects(BoundingVolume2 boundingVolume, VectorAllocator<Vector2f> allocator) {
+        if (boundingVolume instanceof Box2f box) {
+            // todo oracle: implement this
+            return false;
+        } else if (boundingVolume instanceof OrientedBox2f box) {
+            // todo oracle: implement this
+            return false;
+        } else if (boundingVolume instanceof Circle2f circle) {
+            // todo oracle: implement this
+            return false;
+        }
+
+        throw new UnsupportedOperationException("Intersection test with shape [" +
+            boundingVolume.getClass().getSimpleName() + "] is not implemented");
     }
 
     /**
@@ -220,24 +263,6 @@ public class Box3f implements Shape3, Cloneable {
         return intersects(position.getX(), position.getY(), position.getZ(), radius);
     }
 
-    @SuppressWarnings("checkstyle:ReturnCount")
-    @Override
-    public boolean intersects(Shape shape) {
-        if (shape instanceof Box2f box) {
-            return box.intersects(this);
-        } else if (shape instanceof Box3f box) {
-            return intersectsAABB(xmin, xmax, box.xmin, box.xmax) &&
-                intersectsAABB(ymin, ymax, box.ymin, box.ymax) &&
-                intersectsAABB(zmin, zmax, box.zmin, box.zmax);
-        } else if (shape instanceof Circle2f circle) {
-            return circle.intersects(this);
-        } else if (shape instanceof Sphere3f sphere) {
-            Vector3f center = sphere.getCenter();
-            return intersects(center.getX(), center.getY(), center.getZ(), sphere.getRadius());
-        }
-        return false;
-    }
-
     private static boolean intersectsAABB(float a1, float a2, float b1, float b2) {
         return a2 >= b1 && b2 >= a1;
     }
@@ -265,8 +290,60 @@ public class Box3f implements Shape3, Cloneable {
     }
 
     @Override
+    public void move(Vector3f point) {
+        xmin = point.getX();
+        xmax = point.getX() + getWidth();
+        ymin = point.getY();
+        ymax = point.getY() + getHeight();
+        zmin = point.getZ();
+        zmax = point.getZ() + getDepth();
+    }
+
+    @Override
     public void moveCenter(Vector3f point) {
         moveCenter(point.getX(), point.getY(), point.getZ());
+    }
+
+
+    @Override
+    public <T extends BoundingVolume<Vector3f>> void union(T boundingVolume,
+                                                           @Nullable VectorAllocator<Vector3f> allocator) {
+        if (boundingVolume instanceof Box3f box) {
+            union(box);
+        } else {
+            throw new UnsupportedOperationException("Union operation of BV [" +
+                boundingVolume.getClass().getSimpleName() "] is not implemented");
+        }
+    }
+
+    /**
+     * Expand aabb to encapsulate a full other aabb.
+     * @param other other aabb
+     */
+    public void union(Box3f other) {
+        xmin = Math.min(xmin, other.xmin);
+        xmax = Math.max(xmax, other.xmax);
+        ymin = Math.min(ymin, other.ymin);
+        ymax = Math.max(ymax, other.ymax);
+        zmin = Math.min(zmin, other.zmin);
+        zmax = Math.max(zmax, other.zmax);
+    }
+
+    /**
+     * Union two boxes into one.
+     * @param b1 first aabb
+     * @param b2 second aabb
+     * @return union of boxes
+     */
+    public static Box3f union(Box3f b1, Box3f b2) {
+        return new Box3f(
+            Math.min(b1.xmin, b2.xmin),
+            Math.max(b1.xmax, b2.xmax),
+            Math.min(b1.ymin, b2.ymin),
+            Math.max(b1.ymax, b2.ymax),
+            Math.min(b1.zmin, b2.zmin),
+            Math.max(b1.zmax, b2.zmax)
+        );
     }
 
     /**

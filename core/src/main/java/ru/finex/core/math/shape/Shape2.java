@@ -22,14 +22,14 @@ public interface Shape2 extends Shape {
     boolean contains(float x, float y);
 
     /**
-     * Test this shape to containt specified point inside.
+     * Test this shape to contain specified point inside.
      * @param point point
      * @return return true if shape contains specified point inside, otherwise false
      */
     boolean contains(Vector2f point);
 
     /**
-     * Test this shape to containt specified point inside.
+     * Test this shape to contain specified point inside.
      * @param point point
      * @return return true if shape contains specified point inside, otherwise false
      */

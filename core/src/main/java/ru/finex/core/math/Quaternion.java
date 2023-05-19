@@ -13,7 +13,7 @@ import static ru.finex.core.math.FloatVectorMath.shuffle128;
 /**
  * @author m0nster.mind
  */
-public class Quaternion extends Vector4f {
+public final class Quaternion extends Vector4f {
 
     public static final Quaternion UNIT_W = new Quaternion(0, 0, 0, 1);
 

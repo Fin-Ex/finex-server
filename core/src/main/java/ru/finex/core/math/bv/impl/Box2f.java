@@ -1,20 +1,24 @@
-package ru.finex.core.math.shape.impl;
+package ru.finex.core.math.bv.impl;
 
+import javax.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import ru.finex.core.math.shape.Shape;
-import ru.finex.core.math.shape.Shape2;
+import ru.finex.core.math.bv.BoundingVolume;
+import ru.finex.core.math.bv.BoundingVolume2;
+import ru.finex.core.math.bv.BoundingVolume3;
 import ru.finex.core.math.vector.Vector2f;
 import ru.finex.core.math.vector.Vector3f;
+import ru.finex.core.math.vector.alloc.VectorAllocator;
 
 /**
  * @author m0nster.mind
+ * @author oracle
  * @since wgp 29.08.2018
  */
 @SuppressWarnings("checkstyle:VisibilityModifier")
 @ToString
 @EqualsAndHashCode
-public class Box2f implements Shape2, Cloneable {
+public class Box2f implements BoundingVolume2, Cloneable {
 
     public float xmin;
     public float xmax;
@@ -68,12 +72,21 @@ public class Box2f implements Shape2, Cloneable {
         return x >= xmin && x <= xmax && y >= ymin && y <= ymax;
     }
 
+    @Override
+    public boolean contains(Vector2f point, @Nullable VectorAllocator<Vector2f> allocator) {
+        return contains(point);
+    }
+
+    @Override
+    public boolean contains(Vector3f point, @Nullable VectorAllocator<Vector2f> allocator) {
+        return contains(point);
+    }
+
     /**
      * Test this aabb to contain specified point inside.
      * @param point point
      * @return true if this aabb contain specified point inside, otherwise false
      */
-    @Override
     public boolean contains(Vector2f point) {
         return contains(point.getX(), point.getY());
     }
@@ -83,7 +96,6 @@ public class Box2f implements Shape2, Cloneable {
      * @param point point
      * @return true if this aabb contain specified point inside, otherwise false
      */
-    @Override
     public boolean contains(Vector3f point) {
         return contains(point.getX(), point.getZ());
     }
@@ -112,23 +124,35 @@ public class Box2f implements Shape2, Cloneable {
         return intersects(position.getX(), position.getY(), radius);
     }
 
-    @SuppressWarnings("checkstyle:ReturnCount")
     @Override
-    public boolean intersects(Shape shape) {
-        if (shape instanceof Box2f box) {
+    public boolean intersects(BoundingVolume2 boundingVolume, VectorAllocator<Vector2f> allocator) {
+        if (boundingVolume instanceof Box2f box) {
             return intersectsAABB(xmin, xmax, box.xmin, box.xmax) &&
                 intersectsAABB(ymin, ymax, box.ymin, box.ymax);
-        } else if (shape instanceof Box3f box) {
-            return intersectsAABB(xmin, xmax, box.xmin, box.xmax) &&
-                intersectsAABB(ymin, ymax, box.zmin, box.zmax);
-        } else if (shape instanceof Circle2f circle) {
+        } else if (boundingVolume instanceof OrientedBox2f box) {
+            return box.intersects(box, allocator);
+        } else if (boundingVolume instanceof Circle2f circle) {
             Vector2f center = circle.getCenter();
             return intersects(center.getX(), center.getY(), circle.getRadius());
-        } else if (shape instanceof Sphere3f sphere) {
+        }
+
+        throw new UnsupportedOperationException("Intersection test with shape [" +
+            boundingVolume.getClass().getSimpleName() + "] is not implemented");
+    }
+
+    public boolean intersects(BoundingVolume3 boundingVolume, VectorAllocator<Vector3f> allocator) {
+        if (boundingVolume instanceof Box3f box) {
+            return intersectsAABB(xmin, xmax, box.xmin, box.xmax) &&
+                intersectsAABB(ymin, ymax, box.zmin, box.zmax);
+        } else if (boundingVolume instanceof OrientedBox3f box) {
+            return box.intersects(boundingVolume, allocator);
+        } else if (boundingVolume instanceof Sphere3f sphere) {
             Vector3f center = sphere.getCenter();
             return intersects(center.getX(), center.getZ(), sphere.getRadius());
         }
-        return false;
+
+        throw new UnsupportedOperationException("Intersection test with shape [" +
+            boundingVolume.getClass().getSimpleName() + "] is not implemented");
     }
 
     private static boolean isInside(float x1, float y1, float x2, float y2, float sqRadius) {
@@ -139,6 +163,16 @@ public class Box2f implements Shape2, Cloneable {
 
     private static boolean intersectsAABB(float a1, float a2, float b1, float b2) {
         return a2 >= b1 && b2 >= a1;
+    }
+
+    @Override
+    public <T extends BoundingVolume<Vector2f>> void union(T boundingVolume, VectorAllocator<Vector2f> allocator) {
+        if (boundingVolume instanceof Box2f box) {
+            union(box);
+        } else {
+            throw new UnsupportedOperationException("Union operation of BV [" +
+                boundingVolume.getClass().getSimpleName() "] is not implemented");
+        }
     }
 
     /**
@@ -184,6 +218,11 @@ public class Box2f implements Shape2, Cloneable {
      * @param point point
      */
     public void encapsulate(Vector2f point) {
+        encapsulate(point.getX(), point.getY());
+    }
+
+    @Override
+    public void encapsulate(Vector2f point, @Nullable VectorAllocator<Vector2f> allocator) {
         encapsulate(point.getX(), point.getY());
     }
 
@@ -262,7 +301,6 @@ public class Box2f implements Shape2, Cloneable {
      * Move aabb center to specified point.
      * @param point point
      */
-    @Override
     public void moveCenter(Vector3f point) {
         moveCenter(point.getX(), point.getZ());
     }

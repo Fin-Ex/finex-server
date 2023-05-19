@@ -1,6 +1,6 @@
 package ru.finex.core.math.bvh.aabb;
 
-import ru.finex.core.math.shape.impl.Box2f;
+import ru.finex.core.math.bv.impl.Box2f;
 
 /**
  * @author m0nster.mind

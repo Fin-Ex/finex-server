@@ -1,12 +1,11 @@
 package ru.finex.core.math.vector;
 
+import java.util.Arrays;
 import jdk.incubator.vector.FloatVector;
 import jdk.incubator.vector.VectorSpecies;
 import manifold.ext.rt.api.ComparableUsing;
 import ru.finex.core.math.ExtMath;
 import ru.finex.core.math.FloatVectorMath;
-
-import java.util.Arrays;
 
 import static java.lang.Float.floatToIntBits;
 import static java.lang.Float.isFinite;
@@ -16,7 +15,7 @@ import static java.lang.Float.isFinite;
  *
  * @author m0nster.mind
  */
-public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f> {
+public class Vector4f implements FloatMathVector<Vector4f>, Cloneable, ComparableUsing<Vector4f> {
 
     public static final Vector4f ZERO = new Vector4f(0, 0, 0, 0);
     public static final Vector4f NAN = new Vector4f(Float.NaN, Float.NaN, Float.NaN, Float.NaN);
@@ -114,21 +113,12 @@ public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f
         return components[3];
     }
 
-    /**
-     * Get array representation of this vector.
-     * Any changes in array reflected to this vector.
-     *
-     * @return vector components
-     */
+    @Override
     public float[] getComponents() {
         return components;
     }
 
-    /**
-     * Get array representation of this vector.
-     *
-     * @return vector components
-     */
+    @Override
     public float[] getComponentsCopy() {
         return Arrays.copyOf(components, 4);
     }
@@ -150,22 +140,13 @@ public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f
         return FloatVector.fromArray(species, components, 0);
     }
 
-    /**
-     * Save 128bit (three floats) from float vector as x, y, z components.
-     * @param floatVector float vector
-     * @return this
-     */
+    @Override
     public Vector4f set(FloatVector floatVector) {
         floatVector.intoArray(components, 0);
         return this;
     }
 
-    /**
-     * Set components from the vector to this vector.
-     *
-     * @param vector the vector.
-     * @return this vector.
-     */
+    @Override
     public Vector4f set(Vector4f vector) {
         return set(vector.getX(), vector.getY(), vector.getZ(), vector.getW());
     }
@@ -245,34 +226,18 @@ public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f
         return this;
     }
 
-    /**
-     * Add the vector to this vector.
-     *
-     * @param vector the vector.
-     * @return this vector.
-     */
+    @Override
     public Vector4f addLocal(Vector4f vector) {
         return add(vector, this);
     }
 
-    /**
-     * Adds the vector from this vector and store the result to the result vector.
-     *
-     * @param vector the vector.
-     * @param result the result.
-     * @return the result vector.
-     */
+    @Override
     public Vector4f add(Vector4f vector, Vector4f result) {
         add(floatVector(), vector.floatVector(), result.components);
         return result;
     }
 
-    /**
-     * Adds the vector from this vector.
-     *
-     * @param vector the vector.
-     * @return float vector (128bit)
-     */
+    @Override
     public FloatVector add(Vector4f vector) {
         return floatVector().add(vector.floatVector());
     }
@@ -295,34 +260,18 @@ public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f
         return this;
     }
 
-    /**
-     * Subtract the vector from this vector.
-     *
-     * @param vector the vector.
-     * @return this vector.
-     */
+    @Override
     public Vector4f subtractLocal(Vector4f vector) {
         return subtract(vector, this);
     }
 
-    /**
-     * Subtract the vector from this vector and store the result to the result vector.
-     *
-     * @param vector the vector.
-     * @param result the result.
-     * @return the result vector.
-     */
+    @Override
     public Vector4f subtract(Vector4f vector, Vector4f result) {
         subtract(floatVector(), vector.floatVector(), result.components);
         return result;
     }
 
-    /**
-     * Subtract the vector from this vector.
-     *
-     * @param vector the vector.
-     * @return float vector (128bit)
-     */
+    @Override
     public FloatVector subtract(Vector4f vector) {
         return floatVector().sub(vector.floatVector());
     }
@@ -331,12 +280,7 @@ public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f
         v1.sub(v2).intoArray(components, 0);
     }
 
-    /**
-     * Multiply this vector by the scalar.
-     *
-     * @param scalar the scalar.
-     * @return this vector.
-     */
+    @Override
     public Vector4f multLocal(float scalar) {
         floatVector().mul(scalar)
             .intoArray(components, 0);
@@ -358,34 +302,18 @@ public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f
         return this;
     }
 
-    /**
-     * Multiply this vector by the vector.
-     *
-     * @param vector the vector.
-     * @return this vector.
-     */
+    @Override
     public Vector4f multLocal(Vector4f vector) {
         return mult(vector, this);
     }
 
-    /**
-     * Multiply this vector by the vector and store result to result vector.
-     *
-     * @param vector the vector.
-     * @param result the result vector
-     * @return result vector.
-     */
+    @Override
     public Vector4f mult(Vector4f vector, Vector4f result) {
         mult(floatVector(), vector.floatVector(), result.components);
         return this;
     }
 
-    /**
-     * Multiply this vector by the vector.
-     *
-     * @param vector the vector.
-     * @return float vector (128bit)
-     */
+    @Override
     public FloatVector mult(Vector4f vector) {
         return floatVector().mul(vector.floatVector());
     }
@@ -419,40 +347,35 @@ public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f
         return this;
     }
 
-    /**
-     * Divide this vector by the vector.
-     *
-     * @param vector the divider vector.
-     * @return this vector.
-     */
+    @Override
     public Vector4f divideLocal(Vector4f vector) {
         return divide(vector, this);
     }
 
-    /**
-     * Divide this vector by the vector and store result to result vector.
-     *
-     * @param vector the divider vector.
-     * @param result result vector
-     * @return result vector.
-     */
+    @Override
     public Vector4f divide(Vector4f vector, Vector4f result) {
         divide(floatVector(), vector.floatVector(), result.components);
         return this;
     }
 
-    /**
-     * Divide this vector by the vector.
-     *
-     * @param vector the divider vector.
-     * @return float vector (128bit).
-     */
+    @Override
     public FloatVector divide(Vector4f vector) {
         return floatVector().div(vector.floatVector());
     }
 
     private static void divide(FloatVector v1, FloatVector v2, float[] components) {
         v1.div(v2).intoArray(components, 0);
+    }
+
+    @Override
+    public Vector4f perpendicularLocal() {
+        return perpendicular(this);
+    }
+
+    @Override
+    public Vector4f perpendicular(Vector4f result) {
+        // TODO oracle: need to check this
+        return result.set(getY(), -getX(), -getW(), getZ());
     }
 
     /**
@@ -489,22 +412,12 @@ public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f
         return FloatVectorMath.wedge128fd(floatVector(), vector.floatVector());
     }
 
-    /**
-     * Calculate dot to the vector.
-     *
-     * @param vector the vector.
-     * @return the dot product.
-     */
+    @Override
     public float dot(Vector4f vector) {
         return FloatVectorMath.dot128fd(floatVector(), vector.floatVector());
     }
 
-    /**
-     * Calculate distance to the vector.
-     *
-     * @param vector the vector.
-     * @return the distance.
-     */
+    @Override
     public float distance(Vector4f vector) {
         return ExtMath.sqrt(distanceSquared(vector));
     }
@@ -522,12 +435,7 @@ public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f
         return distanceSquared(floatVector(), fillOperation(x, y, z, w), operation);
     }
 
-    /**
-     * Calculate squared distance to the vector.
-     *
-     * @param vector the vector.
-     * @return the squared distance.
-     */
+    @Override
     public float distanceSquared(Vector4f vector) {
         return distanceSquared(floatVector(), vector.floatVector(), operation);
     }
@@ -540,21 +448,12 @@ public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f
         return components[0] + components[1] + components[2] + components[3];
     }
 
-    /**
-     * Invert this vector to get a negative vector.
-     *
-     * @return this vector.
-     */
+    @Override
     public Vector4f negateLocal() {
         return negate(this);
     }
 
-    /**
-     * Invert this vector and store to result vector.
-     *
-     * @param result result vector
-     * @return result changed vector.
-     */
+    @Override
     public Vector4f negate(Vector4f result) {
         floatVector().neg()
             .intoArray(result.components, 0);
@@ -562,21 +461,12 @@ public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f
         return result;
     }
 
-    /**
-     * Normalize this vector.
-     *
-     * @return this vector.
-     */
+    @Override
     public Vector4f normalizeLocal() {
         return normalize(this);
     }
 
-    /**
-     * Normalize this vector and save result to result vector.
-     *
-     * @param result the result vector
-     * @return result changed vector
-     */
+    @Override
     public Vector4f normalize(Vector4f result) {
         float length = sqrLength();
 
@@ -590,20 +480,12 @@ public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f
         return result;
     }
 
-    /**
-     * Return vector's length (magnitude).
-     *
-     * @return the vector's length.
-     */
+    @Override
     public float length() {
         return ExtMath.sqrt(sqrLength());
     }
 
-    /**
-     * Return vector's squared length (magnitude).
-     *
-     * @return the vector's squared length.
-     */
+    @Override
     public float sqrLength() {
         return components[0] * components[0] +
             components[1] * components[1] +
@@ -611,13 +493,7 @@ public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f
             components[3] * components[3];
     }
 
-    /**
-     * Move this vector to a new point by specified direction.
-     *
-     * @param direction move direction.
-     * @param distance  move distance.
-     * @return this vector.
-     */
+    @Override
     public Vector4f moveToDirection(Vector4f direction, float distance) {
         direction.floatVector()
             .fma(fillOperation(distance, distance, distance, distance), floatVector())
@@ -626,15 +502,7 @@ public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f
         return this;
     }
 
-    /**
-     * Move this vector to destination vector.
-     * If distance argument is greater or equal to real distance between this vector and
-     * destination vector then coordinates will be set to equal destination.
-     *
-     * @param destination destination vector
-     * @param distance    move distance
-     * @return this vector with new position
-     */
+    @Override
     public Vector4f moveToPoint(Vector4f destination, float distance) {
         var direction = destination.floatVector()
             .sub(floatVector());
@@ -655,14 +523,7 @@ public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f
         return this;
     }
 
-    /**
-     * Linear time-based interpolation stored to this vector.
-     *
-     * @param min the minimal vector.
-     * @param max the maximal vector.
-     * @param t the time.
-     * @return this vector.
-     */
+    @Override
     @SuppressWarnings("checkstyle:ParameterAssignment")
     public Vector4f lerp(Vector4f min, Vector4f max, float t) {
         t = ExtMath.clamp(t);
@@ -677,12 +538,7 @@ public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f
         return this;
     }
 
-    /**
-     * Return angle in radians between this vector and other vector.
-     *
-     * @param other other vector
-     * @return angle in radians
-     */
+    @Override
     public float angle(Vector4f other) {
         float length = ExtMath.sqrt(sqrLength() * other.sqrLength());
         if (length < ExtMath.EPSILON) {
@@ -746,11 +602,7 @@ public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f
             .allTrue();
     }
 
-    /**
-     * Return true if all components are zero.
-     *
-     * @return true if all components are zero.
-     */
+    @Override
     public boolean isZero() {
         return this == ZERO ||
             ExtMath.isZero(getX()) &&
@@ -893,4 +745,5 @@ public class Vector4f implements MathVector, Cloneable, ComparableUsing<Vector4f
     public EqualityMode equalityMode() {
         return EqualityMode.Equals;
     }
+
 }

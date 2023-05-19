@@ -7,7 +7,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import ru.finex.core.math.ExtMath;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ru.finex.core.math.vector.VectorUtils.assertEquals;
+import static ru.finex.core.math.vector.VectorTestUtils.assertEquals;
 
 /**
  * @author oracle

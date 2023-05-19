@@ -1,4 +1,4 @@
-package ru.finex.core.math.shape.impl;
+package ru.finex.core.math.bv.impl;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

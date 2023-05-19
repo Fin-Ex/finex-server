@@ -1,12 +1,13 @@
-package ru.finex.core.math.shape.impl;
-
-import lombok.Getter;
-import ru.finex.core.math.shape.Shape;
-import ru.finex.core.math.shape.Shape3;
-import ru.finex.core.math.vector.Vector3f;
+package ru.finex.core.math.bv.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.annotation.Nullable;
+import lombok.Getter;
+import ru.finex.core.math.bv.BoundingVolume;
+import ru.finex.core.math.bv.BoundingVolume3;
+import ru.finex.core.math.vector.Vector3f;
+import ru.finex.core.math.vector.alloc.VectorAllocator;
 
 /**
  * Complex shape consisting of other shapes.
@@ -14,13 +15,13 @@ import java.util.Collection;
  *
  * @author m0nster.mind
  */
-public class Complex3f implements Shape3 {
+public class Complex3f implements BoundingVolume3 {
 
     @Getter
-    private final ArrayList<Shape3> shapes;
+    private final ArrayList<BoundingVolume3> shapes;
     private Box3f boundingBox;
 
-    public Complex3f(Collection<Shape3> shapes) {
+    public Complex3f(Collection<BoundingVolume3> shapes) {
         this.shapes = new ArrayList<>(shapes);
         this.shapes.trimToSize();
     }
@@ -35,17 +36,15 @@ public class Complex3f implements Shape3 {
         }
 
         boundingBox = new Box3f();
-        for (int i = 0; i < shapes.size(); i++) {
-            var shape = shapes.get(i);
-
+        for (BoundingVolume3 shape : shapes) {
             if (shape instanceof Box3f box) {
                 boundingBox.encapsulate(box.xmax, box.ymax, box.zmax);
                 boundingBox.encapsulate(box.xmin, box.ymin, box.zmin);
             } else if (shape instanceof Sphere3f sphere) {
                 var min = sphere.getCenter().floatVector()
-                        .sub(sphere.getRadius());
+                    .sub(sphere.getRadius());
                 var max = sphere.getCenter().floatVector()
-                        .add(sphere.getRadius());
+                    .add(sphere.getRadius());
 
                 boundingBox.encapsulate(min.lane(0), min.lane(1), min.lane(2));
                 boundingBox.encapsulate(max.lane(0), max.lane(1), max.lane(2));
@@ -64,14 +63,28 @@ public class Complex3f implements Shape3 {
     }
 
     @Override
-    public boolean intersects(Shape shape) {
-        if (!getBoundingBox().intersects(shape)) {
+    public void move(Vector3f point) {
+        // TODO oracle: implement this???
+    }
+
+    @Override
+    public void encapsulate(Vector3f point, VectorAllocator<Vector3f> allocator) {
+        // TODO oracle: implement this???
+    }
+
+    @Override
+    public <T extends BoundingVolume<Vector3f>> void union(T boundingVolume, VectorAllocator<Vector3f> allocator) {
+        // TODO oracle: implement this???
+    }
+
+    @Override
+    public boolean intersects(BoundingVolume3 boundingVolume, VectorAllocator<Vector3f> allocator) {
+        if (!getBoundingBox().intersects(boundingVolume, allocator)) {
             return false;
         }
 
-        for (int i = 0; i < shapes.size(); i++) {
-            var element = shapes.get(i);
-            if (element.intersects(shape)) {
+        for (BoundingVolume3 element : shapes) {
+            if (element.intersects(boundingVolume, allocator)) {
                 return true;
             }
         }
@@ -81,7 +94,12 @@ public class Complex3f implements Shape3 {
 
     @Override
     public void moveCenter(Vector3f point) {
+        // TODO oracle: implement this???
+    }
 
+    @Override
+    public void moveCenter(float x, float y, float z) {
+        // TODO oracle: implement this???
     }
 
     @Override
@@ -90,8 +108,7 @@ public class Complex3f implements Shape3 {
             return false;
         }
 
-        for (int i = 0; i < shapes.size(); i++) {
-            var shape = shapes.get(i);
+        for (BoundingVolume3 shape : shapes) {
             if (shape.contains(x, y, z)) {
                 return true;
             }
@@ -101,18 +118,18 @@ public class Complex3f implements Shape3 {
     }
 
     @Override
-    public boolean contains(Vector3f point) {
-        if (!getBoundingBox().contains(point)) {
+    public boolean contains(Vector3f point, @Nullable VectorAllocator<Vector3f> allocator) {
+        if (!getBoundingBox().contains(point, allocator)) {
             return false;
         }
 
-        for (int i = 0; i < shapes.size(); i++) {
-            var shape = shapes.get(i);
-            if (shape.contains(point)) {
+        for (BoundingVolume3 shape : shapes) {
+            if (shape.contains(point, allocator)) {
                 return true;
             }
         }
 
         return false;
     }
+
 }

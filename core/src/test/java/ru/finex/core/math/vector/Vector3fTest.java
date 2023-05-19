@@ -8,7 +8,7 @@ import ru.finex.core.math.ExtMath;
 import ru.finex.core.math.Quaternion;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ru.finex.core.math.vector.VectorUtils.assertEquals;
+import static ru.finex.core.math.vector.VectorTestUtils.assertEquals;
 
 /**
  * @author m0nster.mind

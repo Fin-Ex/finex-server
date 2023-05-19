@@ -1,5 +1,8 @@
 package ru.finex.core.math.bvh;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -10,10 +13,10 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.finex.core.math.bv.impl.Box2f;
 import ru.finex.core.math.bvh.aabb.Box2Tree;
 import ru.finex.core.math.bvh.aabb.Box2Tree.Node;
 import ru.finex.core.math.bvh.aabb.Box2TreeElement;
-import ru.finex.core.math.shape.impl.Box2f;
 import ru.finex.core.math.vector.Vector2f;
 import ru.finex.core.math.vector.Vector3f;
 import ru.finex.core.pool.PoolService;
@@ -21,10 +24,6 @@ import ru.finex.core.pool.impl.ArrayDequePool;
 import ru.finex.core.pool.impl.SimplePooledObjectFactory;
 import ru.finex.core.rng.RandomGenerator;
 import ru.finex.core.rng.RandomProviders;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.eq;

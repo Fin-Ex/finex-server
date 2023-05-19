@@ -3,24 +3,23 @@ package ru.finex.core.math;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import ru.finex.core.math.vector.Vector3f;
+import ru.finex.core.math.vector.Vector2f;
 import ru.finex.core.math.vector.alloc.VectorAllocator;
 
 /**
- * @author m0nster.mind
- * @since wgp
+ * @author oracle
  */
 @Data
 @RequiredArgsConstructor
-public class Ray3f {
+public class Ray2f {
 
     @Getter
-    private final Vector3f start;
+    private final Vector2f start;
 
     @Getter
-    private final Vector3f direction;
+    private final Vector2f direction;
 
-    public Ray3f(VectorAllocator<Vector3f> allocator) {
+    public Ray2f(VectorAllocator<Vector2f> allocator) {
         start = allocator.alloc();
         direction = allocator.alloc();
     }
@@ -30,7 +29,7 @@ public class Ray3f {
      * @param start start vector
      * @return this
      */
-    public Ray3f setStart(Vector3f start) {
+    public Ray2f setStart(Vector2f start) {
         this.start.set(start);
         return this;
     }
@@ -40,7 +39,7 @@ public class Ray3f {
      * @param direction direction vector
      * @return this
      */
-    public Ray3f setDirection(Vector3f direction) {
+    public Ray2f setDirection(Vector2f direction) {
         this.direction.set(direction);
         return this;
     }

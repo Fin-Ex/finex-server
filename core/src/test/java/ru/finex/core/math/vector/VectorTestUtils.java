@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions;
  * @author m0nster.mind
  */
 @UtilityClass
-public class VectorUtils {
+public class VectorTestUtils {
 
     public static void assertEquals(Vector3f expected, Vector3f actual, float epsilon) {
         Assertions.assertEquals(expected.getX(), actual.getX(), epsilon, "Expected: " + expected + "; Actual: " + actual);

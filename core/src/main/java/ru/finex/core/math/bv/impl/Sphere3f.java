@@ -1,14 +1,16 @@
-package ru.finex.core.math.shape.impl;
+package ru.finex.core.math.bv.impl;
 
+import javax.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import ru.finex.core.math.FloatVectorMath;
-import ru.finex.core.math.shape.Shape;
-import ru.finex.core.math.shape.Shape3;
+import ru.finex.core.math.bv.BoundingVolume;
+import ru.finex.core.math.bv.BoundingVolume2;
+import ru.finex.core.math.bv.BoundingVolume3;
 import ru.finex.core.math.vector.Vector3f;
-import ru.finex.core.math.vector.VectorAllocator;
+import ru.finex.core.math.vector.alloc.VectorAllocator;
 import ru.finex.core.math.vector.alloc.VectorAllocators;
 
 /**
@@ -17,7 +19,8 @@ import ru.finex.core.math.vector.alloc.VectorAllocators;
  */
 @ToString
 @EqualsAndHashCode
-public class Sphere3f implements Shape3, Cloneable {
+public class Sphere3f implements BoundingVolume3, Cloneable {
+
     @Getter
     @Setter
     private float radius;
@@ -55,11 +58,20 @@ public class Sphere3f implements Shape3, Cloneable {
     }
 
     @Override
+    public void move(Vector3f point) {
+        // TODO oracle: implement
+    }
+
+    @Override
     public boolean contains(float x, float y, float z) {
         return center.distanceSquared(x, y, z) <= radius * radius;
     }
 
     @Override
+    public boolean contains(Vector3f point, @Nullable VectorAllocator<Vector3f> allocator) {
+        return contains(point);
+    }
+
     public boolean contains(Vector3f point) {
         return center.distanceSquared(point) <= radius * radius;
     }
@@ -86,21 +98,43 @@ public class Sphere3f implements Shape3, Cloneable {
         return b * b - c >= 0.0f;
     }
 
-    @SuppressWarnings("checkstyle:ReturnCount")
     @Override
-    public boolean intersects(Shape shape) {
-        if (shape instanceof Box3f box) {
-            return box.intersects(this);
-        } else if (shape instanceof Box2f box) {
-            return box.intersects(this);
-        } else if (shape instanceof Circle2f circle) {
-            return circle.intersects(this);
-        } else if (shape instanceof Sphere3f sphere) {
+    public boolean intersects(BoundingVolume3 boundingVolume, VectorAllocator<Vector3f> allocator) {
+        if (boundingVolume instanceof Box3f box) {
+            return box.intersects(this, allocator);
+        } else if (boundingVolume instanceof OrientedBox3f box) {
+            return box.intersects(this, allocator);
+        } else if (boundingVolume instanceof Sphere3f sphere) {
             Vector3f center = sphere.getCenter();
             float sumRadius = radius + radius;
             return center.distanceSquared(sphere.center) <= sumRadius * sumRadius;
         }
-        return false;
+
+        throw new UnsupportedOperationException("Intersection test with shape [" +
+            boundingVolume.getClass().getSimpleName() + "] is not implemented");
+    }
+
+    public boolean intersects(BoundingVolume2 boundingVolume, VectorAllocator<Vector3f> allocator) {
+        if (boundingVolume instanceof Box2f box) {
+            return box.intersects(this, allocator);
+        } else if (boundingVolume instanceof OrientedBox2f box) {
+            return box.intersects(this, allocator);
+        } else if (boundingVolume instanceof Circle2f circle) {
+            return circle.intersects(this, allocator);
+        }
+
+        throw new UnsupportedOperationException("Intersection test with shape [" +
+            boundingVolume.getClass().getSimpleName() + "] is not implemented");
+    }
+
+    @Override
+    public void encapsulate(Vector3f point, VectorAllocator<Vector3f> allocator) {
+        // TODO oracle: implement this???
+    }
+
+    @Override
+    public <T extends BoundingVolume<Vector3f>> void union(T boundingVolume, VectorAllocator<Vector3f> allocator) {
+        // TODO oracle: implement this???
     }
 
     /**
@@ -121,4 +155,5 @@ public class Sphere3f implements Shape3, Cloneable {
     public Sphere3f clone() {
         return new Sphere3f(this);
     }
+
 }

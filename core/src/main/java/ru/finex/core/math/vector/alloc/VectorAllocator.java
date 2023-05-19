@@ -1,4 +1,6 @@
-package ru.finex.core.math.vector;
+package ru.finex.core.math.vector.alloc;
+
+import ru.finex.core.math.vector.FloatMathVector;
 
 /**
  * Vector allocator.
@@ -6,7 +8,7 @@ package ru.finex.core.math.vector;
  * @param <T> vector type
  * @author m0nster.mind
  */
-public interface VectorAllocator<T extends MathVector> {
+public interface VectorAllocator<T extends FloatMathVector<T>> {
 
     /**
      * Allocates a new vector.

@@ -2,7 +2,7 @@ package ru.finex.core.math;
 
 import lombok.Getter;
 import ru.finex.core.math.vector.Vector3f;
-import ru.finex.core.math.vector.VectorAllocator;
+import ru.finex.core.math.vector.alloc.VectorAllocator;
 
 import static java.lang.Float.floatToIntBits;
 
