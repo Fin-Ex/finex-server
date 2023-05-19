@@ -28,8 +28,8 @@ public @interface Clustered {
      * <p>
      * Supports expressions.
      * @return name of object
-     * @see ru.finex.core.cluster.ClusterService#getName(Class, String)
-     * @see ru.finex.core.cluster.ClusterService#getName(Class, String, String)
+     * @see ru.finex.core.cluster.ClusterService#getAddress(Class, String)
+     * @see ru.finex.core.cluster.ClusterService#getAddress(Class, String, String)
      * @see ru.finex.core.placeholder.PlaceholderService
      */
     String value() default "";
