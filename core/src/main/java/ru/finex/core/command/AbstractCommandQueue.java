@@ -23,8 +23,8 @@ import java.util.Queue;
 @Slf4j
 public abstract class AbstractCommandQueue<T extends Command, C extends CommandContext> implements CommandQueue<T, C> {
 
-    private final Deque<Pair<T, C>> commands = createQueue();
-    private final Queue<Pair<T, C>> postCommands = createPostQueue();
+    protected final Deque<Pair<T, C>> commands = createQueue();
+    protected final Queue<Pair<T, C>> postCommands = createPostQueue();
 
     @Override
     public void executeCommands() {

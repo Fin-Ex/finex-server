@@ -1,5 +1,6 @@
 package ru.finex.relay.command.network;
 
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import org.redisson.api.RTopic;
 import ru.finex.core.cluster.ClusterService;
@@ -13,7 +14,8 @@ import javax.inject.Inject;
 
 /**
  * Server notification command.
- * <p>This command are validated {@link RelayEvent DTO} and if validation is not break any violations,
+ * <p/>
+ * This command are validated {@link RelayEvent DTO} and if validation is not break any violations,
  *  command notify subscribers by special topic name what resolved through {@link ClientSessionService session service}
  *  and {@link ru.finex.relay.service.TopicResolverService topic resolver}.
  * @param <T> payload implementation of {@link RelayEvent RelayEvent} and {@link NetworkDto NetworkDto}
@@ -42,12 +44,10 @@ public class NotifyServer<T extends RelayEvent & NetworkDto> extends AbstractNet
     public void executeCommand() {
         var violations = validator.validate(dto);
         if (!violations.isEmpty()) {
-            StringBuilder sb = new StringBuilder("Fail to validate '")
-                .append(dto.toString())
-                .append("', violations: \n");
-            violations.forEach(e -> sb.append(" - ").append(e.getMessage()).append("\n"));
+            StringBuilder sb = new StringBuilder("Fail to validate '").append(dto.toString()).append("', violations: \n");
+            violations.forEach(e -> sb.append(" - ").append(e.getMessage()).append(": ").append(e.getPropertyPath()).append("\n"));
 
-            throw new RuntimeException(sb.toString());
+            throw new ConstraintViolationException(sb.toString(), violations);
         }
 
         dto.setClientSessionId(sessionService.getSessionId(session));
